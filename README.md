@@ -1,12 +1,6 @@
-# IEEE-Tempate
-IEEE System Requirements Specification Template
+# NITCONF - SE LAB MODULE 1 
 
 # Software Requirements Specification
-## For  <project name>
-Version 1.0 approved
-Prepared by <author>
-<organization>
-<date created>
 
 Table of Contents
 =================
