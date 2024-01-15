@@ -31,21 +31,21 @@ Table of Contents
     * 3.3 [Software Interfaces](#33-software-interfaces)
     * 3.4 [Communications Interfaces](#34-communications-interfaces)
   * [System Features](#system-features)
-    * 4.1 [System Feature 1](#41-system-feature-1)
-    * 4.2 [System Feature 2 (and so on)](#42-system-feature-2-and-so-on)
+    * 4.1 [Authentication](#41-authentication)
+    * 4.2 [Dashboard](#42-dashboard)
+        * 4.2.1 [User Profile](#421-user-profile)
+        * 4.2.2 [Upload and View Submissions](#422-upload-and-view-submissions)
+        * 4.2.3 [Interaction With Reviewers](#423-interaction-with-reviewers)
+        * 4.2.4 [Notification System](#424-notification-system)
   * [Other Nonfunctional Requirements](#other-nonfunctional-requirements)
     * 5.1 [Performance Requirements](#51-performance-requirements)
-    * 5.2 [Safety Requirements](#52-safety-requirements)
-    * 5.3 [Security Requirements](#53-security-requirements)
-    * 5.4 [Software Quality Attributes](#54-software-quality-attributes)
-    * 5.5 [Business Rules](#55-business-rules)
-  * [Other Requirements](#other-requirements)
-* [Appendix A: Glossary](#appendix-a-glossary)
-* [Appendix B: Analysis Models](#appendix-b-analysis-models)
-* [Appendix C: To Be Determined List](#appendix-c-to-be-determined-list)
-
-
-
+    * 5.2 [Safety & Security Requirements](#52-safety-and-security-requirements)
+    * 5.3 [Software Quality Attributes](#53-software-quality-attributes)
+        * 5.3.1 [Reliability](#531-reliability)
+        * 5.3.2 [Adaptability](#532-adaptability)
+        * 5.3.3 [Maintainability](#533-maintainability)
+        * 5.3.4 [Portability](#534-portability)
+        * 5.3.5 [Cost Effectiveness](#535-cost-effectiveness)
 
 ## Revision History
 | Name | Date    | Reason For Changes  | Version   |
@@ -78,17 +78,17 @@ The major components of the overall system include the Author Module (Module 1),
 * Deadline enforcement to restrict abstract submission after the specified date.
 ### 2.3 User Classes and Characteristics
 1. Authors: Users who submit papers for evaluation.
-* Characteristics:
-Authors may vary in technical expertise.
-All authors must register and log in to the system.
-The primary interaction for authors involves submitting abstracts.
+    * Characteristics:
+    Authors may vary in technical expertise.
+    All authors must register and log in to the system.
+    The primary interaction for authors involves submitting abstracts.
 ### 2.4 Operating Environment
 The software will operate in a web-based environment.
 
 * Hardware Platform:
 The system should be compatible with standard web browsers on various devices.
 * Operating System:
-Compatible with major operating systems like Windows, macOS, and Linux.
+Compatible with major operating systems like Windows, macOS, Android, iOS and Linux.
 * Software Components:
 The system should coexist peacefully with common web technologies (e.g., Apache Tomcat).
 ### 2.5 Design and Implementation Constraints
@@ -103,24 +103,23 @@ User documentation components will include:
 * Tutorials guiding authors through the submission process.
 ### 2.7 Assumptions and Dependencies
 1. Assumptions:
-* Authors have access to a device with internet connectivity for submission.
-* Users will follow the registration and submission guidelines provided.
+    * Authors have access to a device with internet connectivity for submission.
+    * Users will follow the registration and submission guidelines provided.
 2. Dependencies:
-* Dependency on external libraries and frameworks compatible with Spring Boot.
-* Integration with a notification system for sending alerts to authors.
+    * Dependency on external libraries and frameworks compatible with Spring Boot.
+    * Integration with a notification system for sending alerts to authors.
 ## External Interface Requirements
 ### 3.1 User Interfaces
 1. Logical Characteristics:
 The user interface for the NITCONF website's Author Module will be a web-based application accessible through standard web browsers. Key elements of the user interface include:
-
-* User Registration and Login Screens: Simple forms for user registration and login.
-* Dashboard: A personalized dashboard displaying submission status, deadlines, and other relevant information.
-* Abstract Submission Form: An intuitive form for authors to submit papers in PDF format.
-* Deadline Notification: Clear notification regarding the submission deadline.
+    * User Registration and Login Screens: Simple forms for user registration and login.
+    * Dashboard: A personalized dashboard displaying submission status, deadlines, and other relevant information.
+    * Abstract Submission Form: An intuitive form for authors to submit papers in PDF format.
+    * Deadline Notification: Clear notification regarding the submission deadline.
 2. GUI Standards and Constraints:
-* The user interface will follow standard web design principles.
-* GUI will be responsive, adapting to different screen sizes.
-* Submission forms will enforce PDF format for paper submissions.
+    * The user interface will follow standard web design principles.
+    * GUI will be responsive, adapting to different screen sizes.
+    * Submission forms will enforce PDF format for paper submissions.
 ### 3.2 Hardware Interfaces
 The NITCONF website will interact with standard hardware components, ensuring compatibility with various devices. Key hardware interfaces include:
 * Supported Devices: The system should be compatible with desktops, laptops, tablets, and smartphones.
@@ -151,37 +150,52 @@ The NITCONF website requires specific communication functions to facilitate its 
 * HTTPS: Ensuring secure communication with encryption.
 * Data Synchronization: Real-time synchronization for timely notifications.
 ## System Features
-This template illustrates organizing the functional requirements for the product by system features, the major services provided by the product. You may prefer to organize this section by use case, mode of operation, user class, object class, functional hierarchy, or combinations of these, whatever makes the most logical sense for your product.
-### 4.1 System Feature 1
-Don’t really say “System Feature 1.” State the feature name in just a few words.
-4.1.1   Description and Priority
- Provide a short description of the feature and indicate whether it is of High, Medium, or Low priority. You could also include specific priority component ratings, such as benefit, penalty, cost, and risk (each rated on a relative scale from a low of 1 to a high of 9).
-4.1.2   Stimulus/Response Sequences
- List the sequences of user actions and system responses that stimulate the behavior defined for this feature. These will correspond to the dialog elements associated with use cases.
-4.1.3   Functional Requirements
- Itemize the detailed functional requirements associated with this feature. These are the software capabilities that must be present in order for the user to carry out the services provided by the feature, or to execute the use case. Include how the product should respond to anticipated error conditions or invalid inputs. Requirements should be concise, complete, unambiguous, verifiable, and necessary. Use “TBD” as a placeholder to indicate when necessary information is not yet available.
- 
- Each requirement should be uniquely identified with a sequence number or a meaningful tag of some kind.
+The following features are made available to the users (authors).
 
-### 4.2 System Feature 2 (and so on)
+### 4.1 Authentication
+* The user has the ability to create an account, and login with their credentials.
+* The user can request for a password reset, via the `forgot password` option, if required.
+
+### 4.2 Dashboard
+The following features are available as part of the main dashboard presented to the user.
+
+#### 4.2.1 User Profile
+* The user can view / update their details in the profile section
+
+#### 4.2.2 Upload And View Submissions
+* The user is provided with the current status of their latest submission, if any.
+* The user is then able to re-submit their abstract, with the changes suggested by reviewers.
+
+#### 4.2.3 Interaction With Reviewers
+* The user is given a list of comments provided by the reviewer assigned.
+* The user is also provided with contact information of the reviewer
+* The comments are listed along with the version of the submission, the comment was targeted to.
+
+#### 4.2.4 Notification System
+* The user is sent urgent notifications via Email in events such as a new comment, acceptance / rejection of a submission, etc.
+
 
 ## Other Nonfunctional Requirements
 ### 5.1 Performance Requirements
-If there are performance requirements for the product under various circumstances, state them here and explain their rationale, to help the developers understand the intent and make suitable design choices. Specify the timing relationships for real time systems. Make such requirements as specific as possible. You may need to state performance requirements for individual functional requirements or features.
-### 5.2 Safety Requirements
-Specify those requirements that are concerned with possible loss, damage, or harm that could result from the use of the product. Define any safeguards or actions that must be taken, as well as actions that must be prevented. Refer to any external policies or regulations that state safety issues that affect the product’s design or use. Define any safety certifications that must be satisfied.
-### 5.3 Security Requirements
-Specify any requirements regarding security or privacy issues surrounding use of the product or protection of the data used or created by the product. Define any user identity authentication requirements. Refer to any external policies or regulations containing security issues that affect the product. Define any security or privacy certifications that must be satisfied.
-### 5.4 Software Quality Attributes
-Specify any additional quality characteristics for the product that will be important to either the customers or the developers. Some to consider are: adaptability, availability, correctness, flexibility, interoperability, maintainability, portability, reliability, reusability, robustness, testability, and usability. Write these to be specific, quantitative, and verifiable when possible. At the least, clarify the relative preferences for various attributes, such as ease of use over ease of learning.
-### 5.5 Business Rules
-List any operating principles about the product, such as which individuals or roles can perform which functions under specific circumstances. These are not functional requirements in themselves, but they may imply certain functional requirements to enforce the rules.
+This system's purpose is to give users the ability to upload their abstracts in the form of PDF documents. The ssytem should be able to handle large number of simultaneously logged in users and support high speed data transfers for swift and error-free upload of data.
 
-## Other Requirements
-Define any other requirements not covered elsewhere in the SRS. This might include database requirements, internationalization requirements, legal requirements, reuse objectives for the project, and so on. Add any new sections that are pertinent to the project.
-### Appendix A: Glossary
-Define all the terms necessary to properly interpret the SRS, including acronyms and abbreviations. You may wish to build a separate glossary that spans multiple projects or the entire organization, and just include terms specific to a single project in each SRS.
-### Appendix B: Analysis Models
-Optionally, include any pertinent analysis models, such as data flow diagrams, class diagrams, state-transition diagrams, or entity-relationship diagrams.
-### Appendix C: To Be Determined List
-Collect a numbered list of the TBD (to be determined) references that remain in the SRS so they can be tracked to closure. 
+### 5.2 Safety and Security Requirements
+The system ensures data security through a dedicated database. Regular users can view information but lack the authorization to make any changes. 
+
+In terms of security, the system is meticulously designed to shield users from any potential harm. It employs strict access controls and user permissions, guaranteeing the safety and integrity of data. Users can interact with the system with confidence, as it effectively safeguards their information against any threats or unauthorized access.
+
+### 5.3 Software Quality Attributes
+#### 5.3.1 Reliability
+* The system will not lag and will provide instant and accurate results to all the users.
+
+#### 5.3.2 Adaptability
+* The system is open source. The system can be extended to other organizations as well.
+
+#### 5.3.3 Maintainability
+* In case of errors, it can be rectified by any developer due to the ease of maintenance.
+
+#### 5.3.4 Portability
+* The system can be accessed on any smartphone or laptop.
+
+#### 5.3.5 Cost-effectiveness
+* This system is less in cost and bearable to any organization.
