@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
-
-@RequestMapping("/")
+@RequestMapping("/dfdf")
 public class TestController {
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<String> index() {
         return ResponseEntity.ok("Hello world");
     }
