@@ -22,12 +22,17 @@ public class Tagcontroller {
     private TagsRepository repository;
     
     @GetMapping("/{title}")
-    public ResponseEntity<List<Session>> FindSessions(@PathVariable String title)
-    {
+    public ResponseEntity<List<Session>> FindSessions(@PathVariable String title) {
         Tags tag =  repository.findByTitle(title).orElseThrow();
         List<Session> relatedSessions = tag.getSessions();
 
         return ResponseEntity.ok(relatedSessions);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<Tags>> FindAll() {
+        List<Tags> tags = repository.findAll();
+        return ResponseEntity.ok(tags);
     }
 
 }
