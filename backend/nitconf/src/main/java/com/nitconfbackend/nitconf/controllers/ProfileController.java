@@ -65,7 +65,7 @@ public class ProfileController {
     public ResponseEntity<User> getUser(@PathVariable @NonNull String id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Role currentUserRole = userRepo.findByEmail(email).orElseThrow().getRole();
-        if (currentUserRole != Role.REVIEWER || currentUserRole != Role.PROGRAM_COMMITTEE)
+        if (currentUserRole != Role.REVIEWER && currentUserRole != Role.PROGRAM_COMMITTEE)
             return ResponseEntity.badRequest().build();
         User user = userRepo.findById(id).orElseThrow();
         return ResponseEntity.ok(user);
