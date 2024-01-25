@@ -2,6 +2,7 @@ package com.nitconfbackend.nitconf.models;
 
 import java.util.Date;
 
+import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -23,7 +24,7 @@ public class DocumentVersion {
     @Id public String id;
 
     @JsonProperty public String changesDesc;
-    @JsonProperty public Byte[] file;
+    @JsonProperty public Binary file;
     @JsonProperty public Integer version;
     @JsonIgnore public Date date;
 
