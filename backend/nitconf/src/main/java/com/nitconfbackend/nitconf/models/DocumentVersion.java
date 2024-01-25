@@ -24,7 +24,7 @@ public class DocumentVersion {
     @Id public String id;
 
     @JsonProperty public String changesDesc;
-    @JsonProperty public Binary file;
+    @JsonProperty public byte[] file;
     @JsonProperty public Integer version;
     @JsonIgnore public Date date;
 

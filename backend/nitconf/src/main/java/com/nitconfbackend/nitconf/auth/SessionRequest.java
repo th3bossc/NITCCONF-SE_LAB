@@ -6,7 +6,7 @@ import com.nitconfbackend.nitconf.models.Tags;
 import java.util.Date;
 import java.util.List;
 
-public class Sessionrequest {
+public class SessionRequest {
     public String title;
     public String description;
     public String language;
