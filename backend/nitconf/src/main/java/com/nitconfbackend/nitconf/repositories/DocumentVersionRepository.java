@@ -9,5 +9,5 @@ import com.nitconfbackend.nitconf.models.Session;
 
 
 public interface DocumentVersionRepository extends MongoRepository<DocumentVersion, String>  {
-    List<DocumentVersion> findBySessionOrderByDate(Session session);
+    List<DocumentVersion> findBySession(Session session);
 }

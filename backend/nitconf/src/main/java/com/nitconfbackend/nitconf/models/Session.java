@@ -7,11 +7,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @Builder
@@ -25,11 +26,19 @@ public class Session {
     public String language;
     public Level level;
     public Status status;
-    public User user;
+    @JsonIgnore public User user;
     public Date date;
 
-    @DBRef 
-    public DocumentVersion doc;
+
+    public Session(String title, String description, String language, Level level, Status status, List<Tags> tags) {
+        this.title = title;
+        this.description = description;
+        this.language = language;
+        this.level = level;
+        this.status = status;
+        this.date = new Date();
+        this.tags = tags;
+    }
 
     @DBRef
     public List<Tags> tags;
