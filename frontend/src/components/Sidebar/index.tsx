@@ -3,6 +3,7 @@
 import { oswald } from "@/fonts";
 import NavItem from "../NavItem";
 import { Session } from "@/types";
+import Link from "next/link";
 const Sidebar = ({
     sessions,
 } : {
@@ -22,6 +23,9 @@ const Sidebar = ({
                     ))
                 }
             </div>
+            <Link className="mt-auto mb-8 w-full text-center text-xl" href="/dashboard/profile">
+                view profile
+            </Link>
         </div>
     )
 }

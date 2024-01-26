@@ -7,6 +7,7 @@ export type Session = {
     status: Status,
     tags: Tag[],
     date: Date,
+    documentVersions: DocumentVersion[]
 }
 
 export type Tag = {
@@ -28,6 +29,14 @@ export type User = {
     email: string,
     phoneNumber: string,
     role: Role,
+}
+
+export type DocumentVersion = {
+    id: string,
+    changesDesc: string,
+    version: number,
+    date: Date,
+    reviews: Review[]
 }
 
 export type Role = "USER" | "REVIEWER" | "PROGRAM_COMMITTEE";
