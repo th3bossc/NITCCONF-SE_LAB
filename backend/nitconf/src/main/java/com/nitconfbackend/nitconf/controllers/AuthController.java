@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nitconfbackend.nitconf.RequestTypes.RegisterRequest;
 import com.nitconfbackend.nitconf.auth.AuthenticationRequest;
 import com.nitconfbackend.nitconf.auth.AuthenticationResponse;
 import com.nitconfbackend.nitconf.auth.AuthenticationService;
-import com.nitconfbackend.nitconf.auth.RegisterRequest;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 

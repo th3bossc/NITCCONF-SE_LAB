@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 
-@RequestMapping("/api")
+@RequestMapping("/api/review")
 public class ReviewController{
 
     @Autowired
@@ -36,7 +36,7 @@ public class ReviewController{
     private UserRepository userRepo;
 
 
-    @GetMapping("/reviews/{id}")
+    @GetMapping("/doc/{id}")
     public ResponseEntity<List<Review>> getMethodName(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
@@ -44,7 +44,7 @@ public class ReviewController{
         return ResponseEntity.ok(revRepo.findByDoc(doc));
     }
 
-    @GetMapping("/review/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Review> getReview(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
@@ -52,7 +52,7 @@ public class ReviewController{
         return ResponseEntity.ok(revi);
     }
     
-    @PostMapping("/review/{id}")
+    @PostMapping("/{id}")
     public ResponseEntity<String> createReview(@RequestBody ReviewRequest body, @PathVariable String id) {
         Review rev = new Review();
         rev.comment=body.comment;
@@ -61,8 +61,7 @@ public class ReviewController{
         System.out.println(profile);
         if (id == null)
             return ResponseEntity.notFound().build();
-        if (profile.role != Role.REVIEWER && profile.role != Role.PROGRAM_COMMITTEE)
-        {
+        if (profile.role != Role.REVIEWER && profile.role != Role.PROGRAM_COMMITTEE) {
             System.out.println("Helloooooo");
             return ResponseEntity.badRequest().build();
         }

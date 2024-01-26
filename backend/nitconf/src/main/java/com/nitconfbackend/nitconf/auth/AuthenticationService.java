@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.nitconfbackend.nitconf.RequestTypes.RegisterRequest;
 import com.nitconfbackend.nitconf.config.JwtService;
 import com.nitconfbackend.nitconf.models.Role;
 import com.nitconfbackend.nitconf.models.User;

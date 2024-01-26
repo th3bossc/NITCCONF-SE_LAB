@@ -1,4 +1,4 @@
-package com.nitconfbackend.nitconf.auth;
+package com.nitconfbackend.nitconf.RequestTypes;
 import com.nitconfbackend.nitconf.models.Level;
 import com.nitconfbackend.nitconf.models.Status;
 

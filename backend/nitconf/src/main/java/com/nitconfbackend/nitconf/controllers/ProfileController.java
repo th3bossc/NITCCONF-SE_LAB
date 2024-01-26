@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nitconfbackend.nitconf.auth.ProfileRequest;
+import com.nitconfbackend.nitconf.RequestTypes.ProfileRequest;
 import com.nitconfbackend.nitconf.models.Role;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
