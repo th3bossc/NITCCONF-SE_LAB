@@ -55,40 +55,17 @@ public class SessionController {
     private TagsRepository tagsRepo;
 
 
+    @GetMapping("")
+    public ResponseEntity<List<Session>> getAllSessions() {
 
-    // @PostMapping("/new")
-    // public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity, @RequestParam("file") MultipartFile file){
-    //     Session session = new Session();
-    //     session.setTitle(entity.title);
-    //     session.setLanguage(entity.language);
-    //     session.setLevel(entity.level);
-    //     session.setStatus(entity.status);
-    //     session.setDate(entity.date);
-    //     session.setTags(entity.tags);
-    //     session.setDescription(entity.description);
-    //     sessionRepo.save(session);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userRepo.findByEmail(email).orElseThrow();
 
+        List<Session> sessions = sessionRepo.findByUser(currentUser);
+        return ResponseEntity.ok(sessions);
+    }
 
-
-    //     DocumentVersion newDoc = new DocumentVersion();
-    //     newDoc.changesDesc = "First Submission";
-    //     newDoc.date = new Date();
-    //     newDoc.session = session;
-    //     String email = SecurityContextHolder.getContext().getAuthentication().getName();
-    //     User user = userRepo.findByEmail(email).orElseThrow();
-    //     newDoc.user = user;
-    //     newDoc.version = 1;
-    //     try {
-    //         newDoc.file = file.getBytes();
-    //         docRepo.save(newDoc);
-    //         return ResponseEntity.ok(session);
-    //     }
-    //     catch (Exception e) {
-    //         return ResponseEntity.badRequest().build();
-    //     }
-    // }
-
-    @PostMapping("/new")
+    @PostMapping("")
     public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null)
             return ResponseEntity.badRequest().build();
