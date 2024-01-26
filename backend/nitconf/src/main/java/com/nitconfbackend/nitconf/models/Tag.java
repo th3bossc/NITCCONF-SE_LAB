@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection="tags")
-public class Tags {
+public class Tag {
     @Id public String id;
     public String title;
 

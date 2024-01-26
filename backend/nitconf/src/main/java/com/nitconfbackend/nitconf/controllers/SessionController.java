@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nitconfbackend.nitconf.RequestTypes.SessionRequest;
 import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Session;
-import com.nitconfbackend.nitconf.models.Tags;
+import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.SessionRepository;
@@ -61,18 +61,18 @@ public class SessionController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
 
-        List<Session> sessions = sessionRepo.findByUser(currentUser);
+        List<Session> sessions = currentUser.getSessions();
         return ResponseEntity.ok(sessions);
     }
 
     @PostMapping("")
     public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
-        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null)
+        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
 
-        List<Tags> tags = new ArrayList<Tags>();
+        List<Tag> tags = new ArrayList<Tag>();
         entity.tags.forEach(tag -> {
-            Tags newTag = tagsRepo.findByTitle(tag).orElseThrow();
+            Tag newTag = tagsRepo.findByTitle(tag).orElseThrow();
             tags.add(newTag);
      });
 
@@ -87,9 +87,12 @@ public class SessionController {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
-        session.setUser(currentUser);
+        // session.setUser(currentUser);
 
         sessionRepo.save(session);
+
+        currentUser.getSessions().add(session);
+        userRepo.save(currentUser);
 
         tags.forEach(tag -> {
             tag.getSessions().add(session);
@@ -107,16 +110,18 @@ public class SessionController {
         Session session = sessionRepo.findById(id).orElseThrow();
         try {
             byte[] data = documentUtility.pdfToByte(file);
-            List<DocumentVersion> allDocs = docRepo.findBySession(session);
+            List<DocumentVersion> allDocs = session.getDocumentVersions();
             if (data == null)
                 return ResponseEntity.notFound().build();
             DocumentVersion newDoc = new DocumentVersion(
                 "New Submission",
                 data,
-                allDocs.size() + 1,
-                session
+                allDocs.size() + 1
+                // session
             );
             docRepo.save(newDoc);
+            session.getDocumentVersions().add(newDoc);
+            sessionRepo.save(session);
         }
         catch (Exception e) {
             System.err.println(e.getMessage());
@@ -132,7 +137,7 @@ public class SessionController {
         if (id == null)
             return ResponseEntity.notFound().build();
         Session session = sessionRepo.findById(id).orElseThrow();
-        List<DocumentVersion> allDocs = docRepo.findBySession(session);
+        List<DocumentVersion> allDocs = session.getDocumentVersions();
         ByteArrayResource resource = documentUtility.downloadFile(allDocs);
         if (resource == null)
             return ResponseEntity.notFound().build();
