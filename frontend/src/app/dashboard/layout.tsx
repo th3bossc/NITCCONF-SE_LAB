@@ -1,22 +1,23 @@
 "use client";
 
 import Sidebar from "@/components/Sidebar";
+import { useAuthContext } from "@/hooks/useAuthContext";
 import { getAllSessions } from "@/lib/sessions";
-import { Session } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 export default function RootLayout({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    const [sessions, setSessions] = useState<Session[]>([]);
+    const {sessions, setSessions, logIn} = useAuthContext();
+    logIn();
     useEffect(() => {
       const fetchData = async () => {
         const data = await getAllSessions();
         setSessions(data);
       }
       fetchData()
-    }, [])
+    }, [setSessions])
 
     return (
         <div className="h-screen w-full bg-[#050729] text-white grid grid-cols-6 grid-rows-1">

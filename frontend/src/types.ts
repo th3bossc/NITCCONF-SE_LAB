@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react"
+
 export type Session = {
     id: string,
     title: string,
@@ -44,3 +46,13 @@ export type Role = "USER" | "REVIEWER" | "PROGRAM_COMMITTEE";
 export type Level = "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "EXPERT";
 
 export type Status = "ACCEPTED" | "PENDING" | "REJECTED";
+
+
+export type AuthDetails = {
+    isLoggedIn: boolean,
+    user: User | null,
+    sessions: Session[],
+    setSessions: Dispatch<SetStateAction<Session[]>>
+    logIn: () => void
+    logOut: () => void
+}
