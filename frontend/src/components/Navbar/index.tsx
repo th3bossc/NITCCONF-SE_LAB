@@ -58,9 +58,29 @@ const Navbar = ({
                                             </Link>
                                         ))
                                     }
+                                    <Link
+                                        href={`/dashboard/add`}
+                                        style={{
+                                            color: current === "add" ? "var(--primary)" : "#fff",
+                                            textDecoration: current === "add" ? "underline" : "none"
+                                        }}
+                                    >
+                                        Add new session +
+                                    </Link>
+                                    <div className="w-full p-[0.1rem] bg-white my-4" />
+                                    <Link
+                                        href={`/dashboard/profile`}
+                                        style={{
+                                            color: current === "profile" ? "var(--primary)" : "#fff",
+                                            textDecoration: current === "profile" ? "underline" : "none"
+                                        }}
+                                    >
+                                        Profile
+                                    </Link>
                             </motion.div>
                         )
                     }
+                    
                 </AnimatePresence>
             </div>
         </div>
