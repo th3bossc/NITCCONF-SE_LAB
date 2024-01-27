@@ -12,7 +12,7 @@ export default function Home() {
     const { loginStatus } = useAuthContext();
     const [login, setLogin] = useState(false);
     const [register, setRegister] = useState(false);
-    loginStatus();
+    // loginStatus();
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-backgroundprimary">
             <div className={`${oswald.className} text-6xl font-semibold`}>

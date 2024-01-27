@@ -85,3 +85,32 @@ export type LoginFields = {
     email: boolean,
     password: boolean,
 }
+
+export type UpdateProfileRequest = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    phoneNumber: string,
+}
+
+export type UpdateProfileFields = {
+    firstName: boolean,
+    lastName: boolean,
+    email: boolean,
+    phoneNumber: boolean,
+}
+
+export type SessionRequest = {
+    title: string,
+    description: string,
+    language: string,
+    level: Level,
+    tags: string[],
+    status: Status,
+}
+
+export type SessionFields = {
+    title: boolean,
+    description: boolean,
+    language: boolean,
+}

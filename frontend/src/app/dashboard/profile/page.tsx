@@ -6,14 +6,11 @@ import profileImage from '/public/profile.svg';
 import Image from 'next/image';
 import profileBg from '/public/profileBg.svg';
 import AnimatedButton from "@/components/AnimatedButton";
-import { useEffect } from "react";
-import { updateProfile } from "@/lib/profile";
+import { useEffect, useState } from "react";
+import EditProfile from "@/components/EditProfile";
 const Profile = () => {
     const { user, sessions, logOut } = useAuthContext();
-
-    useEffect(() => {
-    }, [])
-
+    const [editProfile, setEditProfile] = useState(false);
     return (
         <div className="w-full h-screen flex justify-center items-center">
             <div className="w-full h-full lg:w-[900px] lg:h-[500px] bg-[#d2d2d2] lg:bg-backgroundprimary rounded-lg text-black p-10 pt-32 xl:p-10 relative overflow-hidden z-10 shadow-2xl">
@@ -33,7 +30,7 @@ const Profile = () => {
                         </span>
                     </div>
                     <div className={`${oswald.className} text-lg lg:text-2xl ms-auto hidden lg:block`}>
-                        <AnimatedButton onClick={() => true}>
+                        <AnimatedButton onClick={() => setEditProfile(true)}>
                                 <span className="font-medium text-center">
                                     Edit profile &nbsp;
                                 </span>
@@ -85,7 +82,7 @@ const Profile = () => {
                             </span>
                     </AnimatedButton>
                     <div className={`${oswald.className} text-lg lg:text-2xl ms-auto lg:hidden`}>
-                        <AnimatedButton onClick={() => true}>
+                        <AnimatedButton onClick={() => setEditProfile(true)}>
                                 <span className="font-medium text-center">
                                     Edit profile &nbsp;
                                 </span>
@@ -94,6 +91,11 @@ const Profile = () => {
                 </div>
                 
             </div>
+            {
+                editProfile && user && (
+                    <EditProfile setClose={() => setEditProfile(false)} initialData={user} />
+                )
+            }
         </div>
     )
 }
