@@ -1,14 +1,11 @@
 import { Session } from '@/types';
 import { motion } from 'framer-motion';
-import { usePathname, useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction } from 'react';
 
-const NavItem = ({session} : {
+const NavItem = ({session, current, onClick} : {
     session: Session,
+    current: string,
+    onClick: () => void
 }) => {
-    const pathname = usePathname();
-    const router = useRouter();
-    const current = pathname.split("/")[2];
     return (
 
         <motion.span 
@@ -16,7 +13,7 @@ const NavItem = ({session} : {
             style={{
                 color: current === session.id ? "var(--primary)" : "#fff"
             }}
-            onClick={() => router.push(`/dashboard/${session.id}`)}
+            onClick={onClick}
             
         >
             {session.title}

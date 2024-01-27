@@ -1,5 +1,6 @@
 "use client";
 
+import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { getAllSessions } from "@/lib/sessions";
@@ -10,7 +11,7 @@ export default function RootLayout({
     children: React.ReactNode;
   }>) {
     const {sessions, setSessions, logIn} = useAuthContext();
-    logIn();
+    // logIn();
     useEffect(() => {
       const fetchData = async () => {
         const data = await getAllSessions();
@@ -20,7 +21,8 @@ export default function RootLayout({
     }, [setSessions])
 
     return (
-        <div className="h-screen w-full bg-[#050729] text-white grid grid-cols-6 grid-rows-1">
+      <>
+        <div className="hidden h-screen w-full bg-[#050729] text-white xl:grid grid-cols-6 grid-rows-1">
             <div className="hidden xl:block col-start-1 col-span-1">
                 <Sidebar
                   sessions={sessions}
@@ -30,5 +32,12 @@ export default function RootLayout({
               {children}
             </div>
         </div>
+        <div className="xl:hidden"> 
+          <Navbar 
+            sessions={sessions}
+          />
+          {children}
+        </div>
+      </>
     )
 }

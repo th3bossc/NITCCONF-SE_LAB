@@ -21,7 +21,7 @@ export const AuthContextProvider = ({
         let jwt = localStorage.getItem('jwt');
         if (jwt)
             setAuthenticatedUser(jwt);
-    })
+    }, [])
 
     const setAuthenticatedUser = async (jwt : string) : Promise<void> => {
         const currentUser = await getProfile(jwt);

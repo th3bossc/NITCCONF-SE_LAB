@@ -142,7 +142,7 @@ public class SessionController {
         if (resource == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + id) 
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + id + ".pdf") 
                     .contentType(MediaType.APPLICATION_PDF)
                     .contentLength(resource.contentLength())
                     .body(resource);

@@ -78,23 +78,25 @@ const SessionPage = ({
         }
     ]
     return (
-        <div className="w-full h-screen flex justify-center pt-16 text-[#111]">
-                <div className="w-[80%] rounded-t-[40px] p-10 2xl:p-16 bg-white relative overflow-y-scroll">
+        <div className="w-full h-screen xl:flex xl:justify-center xl:pt-16 text-[#111]">
+                <div className="w-full xl:w-[80%] xl:rounded-t-[40px] pt-32 p-4 xl:p-10 2xl:p-16 bg-white relative overflow-y-scroll">
             {
                 session ? (
                     <>
-                        <span className={`${oswald.className} font-bold text-4xl 2xl:text-6xl uppercase`}>{session.title}</span>
-                        <div className="mt-4 flex gap-4">
+                        <div className={`${oswald.className} font-bold text-4xl 2xl:text-6xl uppercase text-center xl:text-left w-full`}>
+                            {session.title}
+                        </div>
+                        <div className="mt-4 flex gap-4 justify-center xl:justify-start">
                             {
                                 tagTemp.map((tag) => (
                                     <Tags key={tag.id} {...tag} />
                                 ))
                             }
                         </div>
-                        <div className="mt-16 2xl:mt-32 w-[30rem] 2xl:w-[50rem] font-medium text-md 2xl:text-2xl">
+                        <div className="mt-16 2xl:mt-32 w-full xl:w-[30rem] 2xl:w-[50rem] font-medium text-md 2xl:text-2xl text-center xl:text-left">
                             {session.description}
                         </div>
-                        <div className="flex flex-col mt-4 2xl:mt-8 gap-2 font-regular text-sm 2xl:text-2xl">
+                        <div className="flex flex-col mt-4 2xl:mt-8 gap-2 font-regular text-md 2xl:text-2xl text-center xl:text-left">
                             <span> language: {session.language} </span>
                             <span> level: {session.level} </span>
                         </div>

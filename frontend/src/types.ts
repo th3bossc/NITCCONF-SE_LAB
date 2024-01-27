@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 
 export type Session = {
-    id: string,
+    id?: string,
     title: string,
     description: string,
     language: string,
@@ -13,7 +13,7 @@ export type Session = {
 }
 
 export type Tag = {
-    id: string,
+    id?: string,
     title: string,
     sessions: Session[],
 }
@@ -25,7 +25,7 @@ export type Review = {
 }
 
 export type User = {
-    id: string,
+    id?: string,
     firstName: string,
     lastName: string,
     email: string,
@@ -34,7 +34,7 @@ export type User = {
 }
 
 export type DocumentVersion = {
-    id: string,
+    id?: string,
     changesDesc: string,
     version: number,
     date: Date,

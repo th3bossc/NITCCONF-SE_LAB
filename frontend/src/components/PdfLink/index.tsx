@@ -21,18 +21,18 @@ const PdfLink = ({
             setBgColor("#B13C39")
     }, [status])
     return (
-    <div className="absolute top-10 2xl:top-16 right-10 2xl:right-16 flex flex-col gap-4">
+    <div className="xl:absolute top-10 2xl:top-16 right-10 2xl:right-16 flex xl:flex-col justify-center xl:justify-start items-center xl:items-start gap-4 mt-4 xl:mt-0">
         <motion.div 
             whileTap={{scale: 0.95}}
             whileHover={{rotate: 5}}
-            className="w-[200px] h-[200px] bg-black rounded-lg flex justify-center items-center"
+            className="w-[40px] h-[40px] xl:w-[200px] xl:h-[200px] bg-black rounded-lg flex justify-center items-center"
         >
             <Link href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session/doc/${id}`}>
                     <Image src={pdfImage} alt="pdf" width={100} height={100} />
             </Link>
         </motion.div>
         <motion.span 
-            className="w-[200px] text-center rounded-lg font-medium p-1"
+            className="w-[200px] text-center rounded-lg font-medium p-2"
             style={{
                 backgroundColor: bgColor,
                 color: status === 'REJECTED' ? "#fff" : "#000",
