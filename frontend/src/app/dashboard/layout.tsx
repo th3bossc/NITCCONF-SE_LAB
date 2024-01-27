@@ -12,9 +12,9 @@ export default function RootLayout({
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    const {sessions, setSessions, logIn} = useAuthContext();
+    const {sessions, setSessions, loginStatus} = useAuthContext();
     const [loading, setLoading] = useState(false);
-    // logIn();
+    loginStatus();
     useEffect(() => {
       const fetchData = async () => {
         setLoading(true);

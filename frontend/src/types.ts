@@ -53,6 +53,35 @@ export type AuthDetails = {
     user: User | null,
     sessions: Session[],
     setSessions: Dispatch<SetStateAction<Session[]>>
-    logIn: () => void
+    jwt: string | null,
+    loginStatus : () => void,
+    logIn: (jwt: string) => void
     logOut: () => void
+}
+
+
+export type RegisterRequest = {
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    phoneNumber: string,
+}
+
+export type LoginRequest = {
+    email: string,
+    password: string,
+}
+
+export type RegisterFields = {
+    firstName: boolean,
+    lastName: boolean,
+    email: boolean,
+    password: boolean,
+    phoneNumber: boolean,
+}
+
+export type LoginFields = {
+    email: boolean,
+    password: boolean,
 }

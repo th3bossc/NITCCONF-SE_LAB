@@ -31,16 +31,23 @@ export const AuthContextProvider = ({
     }
 
 
-    const logIn = () : void => {
+    const loginStatus = () : void => {
         if (user !== null)
             router.push("/dashboard/profile");
         else
             router.push("/")
     }
 
+    const logIn = (jwt : string) : void => {
+        setIsLoggedIn(true);
+        setAuthenticatedUser(jwt);
+        router.push('/dashboard/profile');
+    }
+
     const logOut = () : void => {
         localStorage.removeItem('jwt');
         setJwt(null);
+        setUser(null);
         router.push("/");
     }
 
@@ -51,6 +58,8 @@ export const AuthContextProvider = ({
                 user,
                 sessions,
                 setSessions,
+                jwt,
+                loginStatus,
                 logIn,
                 logOut,
             }}
