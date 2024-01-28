@@ -30,6 +30,7 @@ public class Tag {
 
     public Tag(String title) {
         this.title = title;
+        this.sessions=new ArrayList();
     }
 }
 
