@@ -1,7 +1,6 @@
 package com.nitconfbackend.nitconf.models;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -30,7 +29,7 @@ public class Tag {
 
     public Tag(String title) {
         this.title = title;
-        this.sessions=new ArrayList();
+        this.sessions= new ArrayList<Session>();
     }
 }
 
