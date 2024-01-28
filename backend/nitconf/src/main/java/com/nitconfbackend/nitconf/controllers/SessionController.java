@@ -74,8 +74,10 @@ public class SessionController {
 
         List<Tag> tags = new ArrayList<Tag>();
         entity.tags.forEach(tag -> {
-            Tag newTag = tagsRepo.findByTitle(tag).orElseThrow();
-            tags.add(newTag);
+            if (tag != null) {
+                Tag newTag = tagsRepo.findById(tag).orElseThrow();
+                tags.add(newTag);
+            }
      });
 
         Session session = new Session(

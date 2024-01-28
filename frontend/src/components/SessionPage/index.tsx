@@ -91,7 +91,7 @@ const SessionPage = ({
                                 </div>
                                 <div className="mt-4 flex gap-4 justify-center xl:justify-start">
                                     {
-                                        tagTemp.map((tag) => (
+                                        session.tags.map((tag) => (
                                             <Tags key={tag.id} {...tag} />
                                         ))
                                     }

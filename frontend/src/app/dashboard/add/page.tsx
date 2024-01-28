@@ -1,9 +1,15 @@
 "use client";
 
-import { SessionFields, SessionRequest } from "@/types";
+import AnimatedButton from "@/components/AnimatedButton";
+import { useAuthContext } from "@/hooks/useAuthContext";
+import { createSession, uploadDoc } from "@/lib/sessions";
+import { getTags } from "@/lib/tags";
+import { SessionFields, SessionRequest, Tag } from "@/types";
 import { ChangeEvent, useEffect, useState } from "react";
+import Select, { MultiValue } from 'react-select';
 
 const AddSession = () => {
+    const { jwt } = useAuthContext();
     const [formData, setFormData] = useState<SessionRequest>({
         title: "",
         description: "",
@@ -19,10 +25,21 @@ const AddSession = () => {
         language: false,
     })
 
+    const [file, setFile] = useState<File | null>(null);
+
     const [titleRed,setTitleRed] = useState(false);
     const [descRed,setDescRed] = useState(false);
     const [langRed,setLangRed] = useState(false);
+    const [tags, setTags] = useState<Tag[]>([]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await getTags(jwt);
+            if (res)
+                setTags(res);
+        }
+        fetchData();
+    }, [jwt])
     useEffect(() => {
         if(changedData.title && formData.title=="")
             setTitleRed(true);
@@ -57,6 +74,18 @@ const AddSession = () => {
 
     const handleSubmit = () => {
         console.log(formData);
+        console.log(file);
+        const sendData = async () => {
+            const res = await createSession(formData, jwt);
+            const id = res?.id;
+            if (id && file) {
+                const upload = await uploadDoc(id, file, jwt);
+                if (upload ) {
+                    console.log("File upload successful " + upload);
+                }
+            }
+        }
+        sendData();
     }
 
     return (
@@ -69,8 +98,8 @@ const AddSession = () => {
                                 <label htmlFor="title" className="text-lg font-medium mb-2">Title</label>
                                 <input
                                     className={titleRed?
-                                        "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                                        :"text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                        "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                        :"text-gray-900 mt-1 block w-full rounded-md bg-white border border-[#ccc] py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                     type="text"
                                     name="title"
                                     id="title"
@@ -83,8 +112,8 @@ const AddSession = () => {
                                     <label htmlFor="language" className="text-lg font-medium mb-2">Language</label>
                                     <input
                                         className={langRed?
-                                            "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                                            :"text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                            "text-gray-900 mt-1 block w-full rounded-md bg-white border-red-700 py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                            :"text-gray-900 mt-1 block w-full rounded-md bg-white border border-[#ccc] py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                         type="text"
                                         name="language"
                                         id="language"
@@ -95,7 +124,7 @@ const AddSession = () => {
                                 <div className="w-full">
                                     <label htmlFor="level" className="text-lg font-medium mb-2">Level</label>
                                     <select
-                                        className={`w-full rounded-md p-2 outline-none ${langRed ? "border-red-500" : "border-[#111]"}`}
+                                        className={`text-gray-900 mt-1 block w-full rounded-md bg-white border border-[#ccc] py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500`}
                                         name="level"
                                         id="level"
                                         value={formData.level}
@@ -107,13 +136,29 @@ const AddSession = () => {
                                         <option className="bg-neutral-100" value="EXPERT"> Expert </option>
                                     </select>
                                 </div>
+                                <div className="w-full">
+                                    <label htmlFor="tags" className="text-lg font-medium mb-2">Tags</label>
+                                    <Select
+                                        id="tags"
+                                        options={tags.map((tag) => ({ value: tag.id, label: tag.title }))}
+                                        className="w-full rounded-md p-2 outline-none border-[#111]"
+                                        isMulti
+                                        onChange={(selected : MultiValue<{value: string | undefined, label: string}>) => {
+                                            setFormData({
+                                                ...formData,
+                                                tags: selected && selected ? selected.map((s) => s.value || "") : [],
+                                            });
+                                        
+                                        }}
+                                    />
+                                </div>
                             </div>
-                            <div className="w-full">
+                            <div className="w-full mb-2">
                                 <label htmlFor="description" className="text-lg font-medium mb-2">Description</label>
                                 <textarea
                                     className={descRed?
-                                        "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                                        :"text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                        "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                        :"text-gray-900 mt-1 block w-full rounded-md bg-white border border-[#ccc] py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                     name="description"
                                     id="description"
                                     value={formData.description}
@@ -122,9 +167,22 @@ const AddSession = () => {
                                 />
                             </div>
                             <div>
-
+                                <div className="w-full mb-2">
+                                    <input
+                                        className={langRed?
+                                            "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                            :"text-gray-900 mt-1 block w-full rounded-md bg-white border border-[#ccc] py-2 pl-4 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                        type="file"
+                                        name="file"
+                                        id="file"
+                                        onChange={(e) => setFile(e.target.files ? e.target.files[0] : null)}
+                                    />
+                                </div>
                             </div>
                         </form>
+                        <AnimatedButton onClick={handleSubmit}>
+                            Submit
+                        </AnimatedButton>
                     </div>
                 </div>    
             </div>

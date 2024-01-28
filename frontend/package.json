@@ -16,6 +16,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-loading": "^2.0.3",
+    "react-select": "^5.8.0",
     "redirect": "^0.2.0"
   },
   "devDependencies": {

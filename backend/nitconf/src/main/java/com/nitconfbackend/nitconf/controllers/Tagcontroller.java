@@ -33,7 +33,7 @@ public class Tagcontroller {
         return ResponseEntity.ok(relatedSessions);
     }
 
-    @GetMapping("/all")
+    @GetMapping("")
     public ResponseEntity<List<Tag>> FindAll() {
         List<Tag> tags = repository.findAll();
         return ResponseEntity.ok(tags);

@@ -16,7 +16,8 @@ export default function RootLayout({
       const fetchData = async () => {
         setLoading(true)
         const data = await getAllSessions(jwt);
-        setSessions(data);
+        if (data)
+          setSessions(data);
         setLoading(false);
       }
       fetchData()

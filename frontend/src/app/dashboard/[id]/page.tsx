@@ -12,7 +12,8 @@ const SlugPage = ({params} : {params: {id : string}}) => {
     useEffect(() => {
         const fetchData = async () => {
             const data = await getSession(params.id, jwt)
-            setSession(data);
+            if (data)
+                setSession(data);
         }
         fetchData();
     }, [params.id, jwt])
