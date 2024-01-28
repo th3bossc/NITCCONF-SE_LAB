@@ -69,8 +69,8 @@ const AddSession = () => {
                                 <label htmlFor="title" className="text-lg font-medium mb-2">Title</label>
                                 <input
                                     className={titleRed?
-                                        "inputPhone text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                                        :"inputPhone text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                        "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                        :"text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                     type="text"
                                     name="title"
                                     id="title"
@@ -83,8 +83,8 @@ const AddSession = () => {
                                     <label htmlFor="language" className="text-lg font-medium mb-2">Language</label>
                                     <input
                                         className={langRed?
-                                            "inputPhone text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                                            :"inputPhone text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                            "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                            :"text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                         type="text"
                                         name="language"
                                         id="language"
@@ -112,8 +112,8 @@ const AddSession = () => {
                                 <label htmlFor="description" className="text-lg font-medium mb-2">Description</label>
                                 <textarea
                                     className={descRed?
-                                        "inputPhone text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                                        :"inputPhone text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
+                                        "text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-red-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                                        :"text-gray-900 mt-1 block w-full rounded-lg bg-neutral-100 border-gray-700 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-900 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                     name="description"
                                     id="description"
                                     value={formData.description}

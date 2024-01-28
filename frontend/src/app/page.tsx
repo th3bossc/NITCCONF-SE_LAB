@@ -10,9 +10,9 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 
 export default function Home() {
     const { loginStatus } = useAuthContext();
+    loginStatus("home");
     const [login, setLogin] = useState(false);
     const [register, setRegister] = useState(false);
-    // loginStatus();
     return (
         <div className="h-screen w-screen flex flex-col items-center justify-center bg-backgroundprimary">
             <div className={`${oswald.className} text-6xl font-semibold`}>

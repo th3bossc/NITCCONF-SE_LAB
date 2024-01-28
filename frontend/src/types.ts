@@ -54,7 +54,9 @@ export type AuthDetails = {
     sessions: Session[],
     setSessions: Dispatch<SetStateAction<Session[]>>
     jwt: string | null,
-    loginStatus : () => void,
+    loginStatus : (currentRoute : "home" | "dashboard") => void,
+    loading: boolean,
+    setLoading: Dispatch<SetStateAction<boolean>>,
     logIn: (jwt: string) => void
     logOut: () => void
 }

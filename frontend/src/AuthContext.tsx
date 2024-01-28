@@ -3,7 +3,7 @@
 import { createContext, useEffect, useState } from "react";
 import { AuthDetails, Session, User } from "./types";
 import { getProfile } from "./lib/profile";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 
 export const AuthContext = createContext<AuthDetails | null>(null);
 
@@ -16,6 +16,7 @@ export const AuthContextProvider = ({
     const [user, setUser] = useState<User | null>(null);
     const [jwt, setJwt] = useState<string | null>(null);
     const [sessions, setSessions] = useState<Session[]>([]);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
     useEffect(() => {
         let jwt = localStorage.getItem('jwt');
@@ -31,24 +32,28 @@ export const AuthContextProvider = ({
     }
 
 
-    const loginStatus = () : void => {
-        if (user !== null)
-            router.push("/dashboard/profile");
-        else
-            router.push("/")
+    const loginStatus = (currentRoute: "home" | "dashboard") : void => {
+        setLoading(true);
+        if (user !== null && currentRoute === "home")
+            redirect("/dashboard/profile");
+        else if (user === null && currentRoute === "dashboard")
+            redirect("/")
     }
 
     const logIn = (jwt : string) : void => {
+        setLoading(true);
         setIsLoggedIn(true);
         setAuthenticatedUser(jwt);
-        router.push('/dashboard/profile');
+        redirect('/dashboard/profile');
     }
 
     const logOut = () : void => {
+        setLoading(true)
         localStorage.removeItem('jwt');
         setJwt(null);
         setUser(null);
         router.push("/");
+        setLoading(false);
     }
 
     return (
@@ -60,6 +65,8 @@ export const AuthContextProvider = ({
                 setSessions,
                 jwt,
                 loginStatus,
+                loading,
+                setLoading,
                 logIn,
                 logOut,
             }}
