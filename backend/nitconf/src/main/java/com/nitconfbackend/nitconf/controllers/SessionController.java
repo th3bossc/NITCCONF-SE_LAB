@@ -21,6 +21,8 @@ import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
+import com.nitconfbackend.nitconf.models.Status;
+
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.SessionRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
@@ -154,6 +156,24 @@ public class SessionController {
             return ResponseEntity.notFound().build();
         Session session = sessionRepo.findById(id).orElseThrow();
         return ResponseEntity.ok(session);
+    }
+
+    @PutMapping("/status/accepted/{id}")
+    public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        Session session=sessionRepo.findById(id).orElseThrow();
+        session.setStatus(Status.ACCEPTED);
+        return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
+    }
+
+    @PutMapping("/status/rejected/{id}")
+    public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        Session session=sessionRepo.findById(id).orElseThrow();
+        session.setStatus(Status.REJECTED);
+        return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
     
 }
