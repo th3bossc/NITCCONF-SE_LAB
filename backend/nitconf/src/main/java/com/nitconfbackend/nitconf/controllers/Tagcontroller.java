@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import com.nitconfbackend.nitconf.RequestTypes.TagRequest;
+
 
 
 
@@ -29,10 +33,17 @@ public class Tagcontroller {
         return ResponseEntity.ok(relatedSessions);
     }
 
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<List<Tag>> FindAll() {
         List<Tag> tags = repository.findAll();
         return ResponseEntity.ok(tags);
     }
 
+    @PostMapping("")
+    public ResponseEntity<Tag> newtag(@RequestBody TagRequest entity) {
+       Tag newtag= new Tag(entity.title);
+        repository.save(newtag);
+        return ResponseEntity.ok(newtag);
+    }
+    
 }
