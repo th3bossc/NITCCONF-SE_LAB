@@ -32,7 +32,6 @@ public class AuthController {
         if (user.getFirstName() == null || user.getLastName() == null || user.getEmail() == null || user.getPassword() == null || user.getPhoneNumber() == null)
             return ResponseEntity.badRequest().build();
         Optional<User> userExists = userRepo.findByEmail(user.getEmail());
-        System.out.print(userExists);
         if (userExists.isPresent())
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(service.register(user));

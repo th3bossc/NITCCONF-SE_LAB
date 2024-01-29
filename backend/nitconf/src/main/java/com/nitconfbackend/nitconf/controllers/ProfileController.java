@@ -46,7 +46,7 @@ public class ProfileController {
         User user = userRepo.findByEmail(email).orElseThrow();
         
         if (user != null) {
-            userRepo.delete(user);
+            // userRepo.delete(user);
             if (entity.firstName != null)
                 user.setFirstName(entity.firstName);
             if (entity.lastName != null)

@@ -1,5 +1,7 @@
 package com.nitconfbackend.nitconf.auth;
 
+import java.util.ArrayList;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.nitconfbackend.nitconf.RequestTypes.RegisterRequest;
 import com.nitconfbackend.nitconf.config.JwtService;
 import com.nitconfbackend.nitconf.models.Role;
+import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 
@@ -34,6 +37,7 @@ public class AuthenticationService {
             .email(request.getEmail())
             .password(encoder.encode(request.getPassword()))
             .role(Role.USER)
+            .sessions(new ArrayList<Session>())
             .build();
         if (user != null)
             repository.save(user);

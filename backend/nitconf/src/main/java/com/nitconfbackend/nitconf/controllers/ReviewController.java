@@ -41,34 +41,34 @@ public class ReviewController{
         if (id == null)
             return ResponseEntity.notFound().build();
         DocumentVersion doc = docRepo.findById(id).orElseThrow();
-        return ResponseEntity.ok(revRepo.findByDoc(doc));
+        return ResponseEntity.ok(doc.getReviews());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Review> getReview(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Review revi = revRepo.findById(id).orElseThrow();
-        return ResponseEntity.ok(revi);
+        Review review = revRepo.findById(id).orElseThrow();
+        return ResponseEntity.ok(review);
     }
     
     @PostMapping("/{id}")
     public ResponseEntity<String> createReview(@RequestBody ReviewRequest body, @PathVariable String id) {
-        Review rev = new Review();
-        rev.comment=body.comment;
+        Review review = new Review();
+        review.setComment(body.comment);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User profile = userRepo.findByEmail(email).orElseThrow();
-        System.out.println(profile);
         if (id == null)
             return ResponseEntity.notFound().build();
         if (profile.role != Role.REVIEWER && profile.role != Role.PROGRAM_COMMITTEE) {
-            System.out.println("Helloooooo");
             return ResponseEntity.badRequest().build();
         }
-        DocumentVersion docu = docRepo.findById(id).orElseThrow() ;
-        rev.doc=docu;
-        rev.reviewer=profile;
-        revRepo.save(rev);
+        DocumentVersion targetDoc = docRepo.findById(id).orElseThrow() ;
+        // review.doc=docu;
+        review.setReviewer(profile);
+        revRepo.save(review);
+        targetDoc.getReviews().add(review);
+        docRepo.save(targetDoc);
         return ResponseEntity.ok("Review created");
     }
     

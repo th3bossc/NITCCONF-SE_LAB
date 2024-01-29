@@ -1,5 +1,6 @@
 package com.nitconfbackend.nitconf.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -17,11 +18,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection="tags")
-public class Tags {
+public class Tag {
     @Id public String id;
     public String title;
 
     @DBRef
     @JsonIgnore
     public List<Session> sessions;
+
+
+    public Tag(String title) {
+        this.title = title;
+        this.sessions= new ArrayList<Session>();
+    }
 }
+
+
