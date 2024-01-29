@@ -130,8 +130,13 @@ Communication Nature:
 #### Communication Functions:
 The NITCONF website requires specific communication functions to facilitate its operation.
 
-* Email Notifications: Sending notifications, including registration confirmation and deadline reminders via email.
-* Web Browser Communications: Interaction with web browsers for user access and data submission.
+1. Email Notifications: Notifications are sent via email for the following:
+  * Registration confirmation
+  * Deadline Reminders
+  * Notifying user when their session is reviewd by assigned reviewer
+  * Notifying reviewer when assigner user submits a paper for review
+
+2. Web Browser Communications: Interaction with web browsers for user access and data submission.
 #### Communication Standards:
 * SMTP Protocol: For sending email notifications.
 * HTTP/HTTPS Protocols: For web browser communications.
@@ -142,6 +147,7 @@ The NITCONF website requires specific communication functions to facilitate its 
 ## System Features
 The following features are made available to the users (authors).
 
+## Functional Requirements
 ### 4.1 Authentication
 * The user has the ability to create an account, and login with their credentials.
 * The user can request for a password reset, via the `forgot password` option, if required.
@@ -150,7 +156,7 @@ The following features are made available to the users (authors).
 The following features are available as part of the main dashboard presented to the user.
 
 #### 4.2.1 User Profile
-* The user can view / update their details in the profile section
+* The user can view / update their details in the profile section-First name, Last name, Email, Phone number
 
 #### 4.2.2 Upload And View Submissions
 * The user is provided with the current status of their latest submission, if any.
@@ -158,7 +164,7 @@ The following features are available as part of the main dashboard presented to 
 
 #### 4.2.3 Interaction With Reviewers
 * The user is given a list of comments provided by the reviewer assigned.
-* The user is also provided with contact information of the reviewer
+* The user is also provided with contact information of the reviewer.
 * The comments are listed along with the version of the submission, the comment was targeted to.
 
 #### 4.2.4 Tags
@@ -200,3 +206,15 @@ In terms of security, the system is meticulously designed to shield users from a
 
 #### 5.3.5 Cost-effectiveness
 * This system is less in cost and bearable to any organization.
+
+
+## Use Case Model
+### 6.1 Authentication
+
+#### 6.1.1 Register
+* Purpose: To create an account in NITCONF
+
+#### 6.1.2 Login
+* Purpose: To login in to the user account
+* Input: Email, Password
+* 
