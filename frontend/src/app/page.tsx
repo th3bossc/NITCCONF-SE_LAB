@@ -6,11 +6,8 @@ import { useState } from "react";
 import { oswald } from "@/fonts";
 import AnimatedButton from "@/components/AnimatedButton";
 import { AnimatePresence } from "framer-motion";
-import { useAuthContext } from "@/hooks/useAuthContext";
 
 export default function Home() {
-    const { loginStatus } = useAuthContext();
-    loginStatus("home");
     const [login, setLogin] = useState(false);
     const [register, setRegister] = useState(false);
     return (

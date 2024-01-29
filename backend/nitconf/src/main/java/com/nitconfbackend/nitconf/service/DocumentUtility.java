@@ -1,4 +1,4 @@
-package com.nitconfbackend.nitconf.services;
+package com.nitconfbackend.nitconf.service;
 
 import java.io.IOException;
 import java.util.List;

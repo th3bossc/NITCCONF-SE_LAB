@@ -1,9 +1,10 @@
 "use client";
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { AuthDetails, Session, User } from "./types";
 import { getProfile } from "./lib/profile";
-import { useRouter, redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { getAllSessions } from "./lib/sessions";
 
 export const AuthContext = createContext<AuthDetails | null>(null);
 
@@ -15,46 +16,51 @@ export const AuthContextProvider = ({
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [jwt, setJwt] = useState<string | null>(null);
-    const [sessions, setSessions] = useState<Session[]>([]);
     const [loading, setLoading] = useState(false);
+    const [sessions, setSessions] = useState<Session[]>([]);
     const router = useRouter();
+
+    const setAuthenticatedUser = useCallback(async (token : string) : Promise<void> => {
+        setLoading(true);
+        const currentUser = await getProfile(token);
+        localStorage.setItem('jwt', token);
+        setJwt(token);
+        const currentSessions = await getAllSessions(token);
+        setUser(currentUser);
+        if (currentSessions)
+            setSessions(currentSessions);
+        router.push('/dashboard/profile');
+        setLoading(false);
+    }, [router])
+
     useEffect(() => {
         let jwt = localStorage.getItem('jwt');
         if (jwt)
             setAuthenticatedUser(jwt);
-    }, [])
+    }, [setAuthenticatedUser])
 
-    const setAuthenticatedUser = async (jwt : string) : Promise<void> => {
-        const currentUser = await getProfile(jwt);
-        localStorage.setItem('jwt', jwt);
-        setJwt(jwt);
-        setUser(currentUser);
-    }
-
-
-    const loginStatus = (currentRoute: "home" | "dashboard") : void => {
-        setLoading(true);
-        if (user !== null && currentRoute === "home")
-            redirect("/dashboard/profile");
-        else if (user === null && currentRoute === "dashboard")
-            redirect("/")
-    }
 
     const logIn = (jwt : string) : void => {
-        setLoading(true);
         setIsLoggedIn(true);
         setAuthenticatedUser(jwt);
-        redirect('/dashboard/profile');
     }
 
     const logOut = () : void => {
-        setLoading(true)
         localStorage.removeItem('jwt');
         setJwt(null);
         setUser(null);
         router.push("/");
-        setLoading(false);
     }
+
+    const updateSessions = useCallback(async () : Promise<void> => {
+        if (!jwt)
+            return;
+        setLoading(true);
+        const currentSessions = await getAllSessions(jwt!);
+        if (currentSessions)
+            setSessions(currentSessions);
+        setLoading(false);
+    }, [jwt]);
 
     return (
         <AuthContext.Provider
@@ -64,11 +70,10 @@ export const AuthContextProvider = ({
                 sessions,
                 setSessions,
                 jwt,
-                loginStatus,
-                loading,
-                setLoading,
                 logIn,
                 logOut,
+                loading,
+                updateSessions,
             }}
         >
             {children}

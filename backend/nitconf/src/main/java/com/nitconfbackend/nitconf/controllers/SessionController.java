@@ -27,7 +27,7 @@ import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.SessionRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
-import com.nitconfbackend.nitconf.services.DocumentUtility;
+import com.nitconfbackend.nitconf.service.DocumentUtility;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -103,6 +103,34 @@ public class SessionController {
             tagsRepo.save(tag);
         });
 
+
+        return ResponseEntity.ok(session);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Session> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null || entity.tags == null)
+            return ResponseEntity.badRequest().build();
+        Session session = sessionRepo.findById(id).orElseThrow();
+
+        List<Tag> tags = new ArrayList<Tag>();
+        entity.tags.forEach(tag -> {
+            if (tag != null) {
+                Tag newTag = tagsRepo.findById(tag).orElseThrow();
+                tags.add(newTag);
+            }
+        });
+
+        session.setTitle(entity.title);
+        session.setDescription(entity.description);
+        session.setLanguage(entity.language);
+        session.setLevel(entity.level);
+        session.setStatus(entity.status);
+        session.setTags(tags);
+
+        sessionRepo.save(session);          
 
         return ResponseEntity.ok(session);
     }

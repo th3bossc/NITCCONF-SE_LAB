@@ -1,29 +1,38 @@
 "use client";
 
+import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { getAllSessions } from "@/lib/sessions";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 export default function RootLayout({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
-    const {jwt, sessions, setSessions, setLoading, loginStatus} = useAuthContext();
-    loginStatus("dashboard");
-    useEffect(() => {
-      const fetchData = async () => {
-        setLoading(true)
-        const data = await getAllSessions(jwt);
-        if (data)
-          setSessions(data);
-        setLoading(false);
-      }
-      fetchData()
-    }, [setSessions, jwt, setLoading])
+    const {sessions} = useAuthContext();
+    const [loading, setLoading] = useState(false);
+    // useEffect(() => {
+    //   const fetchData = async () => {
+    //     setLoading(true)
+    //     const data = await getAllSessions(jwt);
+    //     if (data)
+    //       setSessions(data);
+    //     setLoading(false);
+    //   }
+    //   fetchData()
+    // }, [setSessions, jwt, setLoading])
     return (
       <>
+        <AnimatePresence>
+          {
+            loading && (
+              <Loading />
+            )
+          }
+        </AnimatePresence>
         <div className="hidden h-screen w-full bg-[#050729] text-white xl:grid grid-cols-6 grid-rows-1">
           <div className="hidden xl:block col-start-1 col-span-1">
             <Sidebar

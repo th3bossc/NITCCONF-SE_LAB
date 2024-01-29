@@ -36,6 +36,17 @@ export const createSession = async (session: SessionRequest, jwt: string | null)
     return res.data;
 }
 
+export const updateSession = async (id: string, session: SessionRequest, jwt: string | null) : Promise<Session | void> => {
+    if (!url || !jwt)
+        return;
+    const res = await axios.put<Session>(`${url}/api/session/${id}`, session, {
+        headers: {
+            Authorization: `Bearer ${jwt}`,
+        }
+    })
+    return res.data;
+}
+
 export const uploadDoc = async (id: string, file: File, jwt: string | null) : Promise<number | void> => {
     if (!url || !jwt)
         return;

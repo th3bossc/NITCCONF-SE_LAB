@@ -1,34 +1,18 @@
 import { Review, Session, Tag } from "@/types";
 import { oswald } from "@/fonts";
 import PdfLink from "../PdfLink";
+import Image from "next/image";
+import editIcon from '/public/edit.svg';
 import Comment from "../Comment";
 import Tags from "../Tags";
 import { AnimatePresence, motion } from "framer-motion";
 import ReactLoading from 'react-loading';
+import Link from "next/link";
 const SessionPage = ({
     session,
 }: {
     session: Session | null
 }) => {
-    const tagTemp : Tag[] = [
-        {
-            id: "1234",
-            title: "hello",
-            sessions: [],
-        },
-
-        {
-            id: "12334",
-            title: "hello",
-            sessions: [],
-        },
-
-        {
-            id: "12342",
-            title: "hello",
-            sessions: [],
-        }
-    ]
     const commentsTemp : Review[] = [
         {
             id: "1234",
@@ -86,8 +70,18 @@ const SessionPage = ({
                     {
                         session ? (
                             <motion.div>
-                                <div className={`${oswald.className} font-bold text-4xl 2xl:text-6xl uppercase text-center xl:text-left w-full`}>
+                                <div className={`${oswald.className} font-bold text-4xl 2xl:text-6xl uppercase text-center xl:text-left w-full flex justify-center xl:justify-start items-center gap-2`}>
                                     {session.title}
+                                    <Link 
+                                        href={`/dashboard/${session.id}/edit`}
+                                    > 
+                                        <motion.div
+                                            whileHover={{ rotate: 5}}
+                                            whileTap={{ scale: 0.95}}
+                                        >
+                                            <Image src={editIcon} alt="edit-icon" />
+                                        </motion.div>
+                                    </Link>
                                 </div>
                                 <div className="mt-4 flex gap-4 justify-center xl:justify-start">
                                     {

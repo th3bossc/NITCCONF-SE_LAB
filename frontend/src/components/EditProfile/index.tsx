@@ -122,7 +122,8 @@ const EditProfile = ({
                                             :"inputName text-gray-400 mt-1 block w-[96%] rounded-lg border bg-zinc-900 border-gray-700 px-3 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                         autoComplete="off"
                                         onChange={handleChange}
-                                        value={formData.firstName} />
+                                        value={formData.firstName} 
+                                    />
                                     {fNameRed?<p className="font-normal text-red-500 text-xs pt-2">First Name cannot be empty</p>:<></>}
                                 </div>
 
@@ -134,7 +135,8 @@ const EditProfile = ({
                                             :"inputName text-gray-400 mt-1 block w-[100%] rounded-lg border bg-zinc-900 border-gray-700 px-3 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                         autoComplete="off"
                                         onChange={handleChange}
-                                        value={formData.lastName} />
+                                        value={formData.lastName} 
+                                    />
                                     {lNameRed?<p className="font-normal text-red-500 text-xs pt-2">Last Name cannot be empty</p>:<></>}
                                 </div>
 
@@ -146,7 +148,9 @@ const EditProfile = ({
                                             :"inputUser text-gray-400 mt-1 block w-full rounded-lg border bg-zinc-900 border-gray-700 px-3 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                         autoComplete="off"
                                         onChange={handleChange}
-                                        value={formData.email} />
+                                        value={formData.email} 
+                                        disabled
+                                    />
                                     {userRed?<p className="font-normal text-red-500 text-xs pt-2">Email cannot be empty</p>:<></>}
                                 </div>
 
@@ -158,7 +162,8 @@ const EditProfile = ({
                                             :"inputPhone text-gray-400 mt-1 block w-full rounded-lg border bg-zinc-900 border-gray-700 px-3 py-2 pl-12 shadow-sm outline-none placeholder:text-gray-400 focus:border-gray-500 focus:ring-1 focus:ring-gray-500"}
                                         autoComplete="off"
                                         onChange={handleChange}
-                                        value={formData.phoneNumber} />
+                                        value={formData.phoneNumber} 
+                                    />
                                     {phoneRed?<p className="font-normal text-red-500 text-xs pt-2">Phone Number cannot be empty</p>:<></>}
                                 </div>
                             </form>
