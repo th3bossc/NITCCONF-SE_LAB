@@ -19,13 +19,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.nitconfbackend.nitconf.RequestTypes.SessionRequest;
 import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Session;
-import com.nitconfbackend.nitconf.models.Tags;
+import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
+import com.nitconfbackend.nitconf.models.Status;
+
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.SessionRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
-import com.nitconfbackend.nitconf.services.DocumentUtility;
+import com.nitconfbackend.nitconf.service.DocumentUtility;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,19 +63,21 @@ public class SessionController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
 
-        List<Session> sessions = sessionRepo.findByUser(currentUser);
+        List<Session> sessions = currentUser.getSessions();
         return ResponseEntity.ok(sessions);
     }
 
     @PostMapping("")
     public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
-        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null)
+        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
 
-        List<Tags> tags = new ArrayList<Tags>();
+        List<Tag> tags = new ArrayList<Tag>();
         entity.tags.forEach(tag -> {
-            Tags newTag = tagsRepo.findByTitle(tag).orElseThrow();
-            tags.add(newTag);
+            if (tag != null) {
+                Tag newTag = tagsRepo.findById(tag).orElseThrow();
+                tags.add(newTag);
+            }
      });
 
         Session session = new Session(
@@ -87,15 +91,46 @@ public class SessionController {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
-        session.setUser(currentUser);
+        // session.setUser(currentUser);
 
         sessionRepo.save(session);
+
+        currentUser.getSessions().add(session);
+        userRepo.save(currentUser);
 
         tags.forEach(tag -> {
             tag.getSessions().add(session);
             tagsRepo.save(tag);
         });
 
+
+        return ResponseEntity.ok(session);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Session> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null || entity.tags == null)
+            return ResponseEntity.badRequest().build();
+        Session session = sessionRepo.findById(id).orElseThrow();
+
+        List<Tag> tags = new ArrayList<Tag>();
+        entity.tags.forEach(tag -> {
+            if (tag != null) {
+                Tag newTag = tagsRepo.findById(tag).orElseThrow();
+                tags.add(newTag);
+            }
+        });
+
+        session.setTitle(entity.title);
+        session.setDescription(entity.description);
+        session.setLanguage(entity.language);
+        session.setLevel(entity.level);
+        session.setStatus(entity.status);
+        session.setTags(tags);
+
+        sessionRepo.save(session);          
 
         return ResponseEntity.ok(session);
     }
@@ -107,16 +142,18 @@ public class SessionController {
         Session session = sessionRepo.findById(id).orElseThrow();
         try {
             byte[] data = documentUtility.pdfToByte(file);
-            List<DocumentVersion> allDocs = docRepo.findBySession(session);
+            List<DocumentVersion> allDocs = session.getDocumentVersions();
             if (data == null)
                 return ResponseEntity.notFound().build();
             DocumentVersion newDoc = new DocumentVersion(
                 "New Submission",
                 data,
-                allDocs.size() + 1,
-                session
+                allDocs.size() + 1
+                // session
             );
             docRepo.save(newDoc);
+            session.getDocumentVersions().add(newDoc);
+            sessionRepo.save(session);
         }
         catch (Exception e) {
             System.err.println(e.getMessage());
@@ -132,12 +169,12 @@ public class SessionController {
         if (id == null)
             return ResponseEntity.notFound().build();
         Session session = sessionRepo.findById(id).orElseThrow();
-        List<DocumentVersion> allDocs = docRepo.findBySession(session);
+        List<DocumentVersion> allDocs = session.getDocumentVersions();
         ByteArrayResource resource = documentUtility.downloadFile(allDocs);
         if (resource == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + id) 
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + id + ".pdf") 
                     .contentType(MediaType.APPLICATION_PDF)
                     .contentLength(resource.contentLength())
                     .body(resource);
@@ -149,6 +186,24 @@ public class SessionController {
             return ResponseEntity.notFound().build();
         Session session = sessionRepo.findById(id).orElseThrow();
         return ResponseEntity.ok(session);
+    }
+
+    @PutMapping("/status/accepted/{id}")
+    public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        Session session=sessionRepo.findById(id).orElseThrow();
+        session.setStatus(Status.ACCEPTED);
+        return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
+    }
+
+    @PutMapping("/status/rejected/{id}")
+    public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        Session session=sessionRepo.findById(id).orElseThrow();
+        session.setStatus(Status.REJECTED);
+        return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
     
 }

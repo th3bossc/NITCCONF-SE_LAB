@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nitconfbackend.nitconf.models.Session;
-import com.nitconfbackend.nitconf.models.Tags;
+import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import com.nitconfbackend.nitconf.RequestTypes.TagRequest;
+
 
 
 
@@ -23,16 +27,23 @@ public class Tagcontroller {
     
     @GetMapping("/{title}")
     public ResponseEntity<List<Session>> FindSessions(@PathVariable String title) {
-        Tags tag =  repository.findByTitle(title).orElseThrow();
+        Tag tag =  repository.findByTitle(title).orElseThrow();
         List<Session> relatedSessions = tag.getSessions();
 
         return ResponseEntity.ok(relatedSessions);
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Tags>> FindAll() {
-        List<Tags> tags = repository.findAll();
+    public ResponseEntity<List<Tag>> FindAll() {
+        List<Tag> tags = repository.findAll();
         return ResponseEntity.ok(tags);
     }
 
+    @PostMapping("")
+    public ResponseEntity<Tag> newtag(@RequestBody TagRequest entity) {
+       Tag newtag= new Tag(entity.title);
+        repository.save(newtag);
+        return ResponseEntity.ok(newtag);
+    }
+    
 }

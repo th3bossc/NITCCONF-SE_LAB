@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #A276FF;
+}
+
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  &::selection, &::-moz-selection {
+    background-color: #ddd;
+    color: var(--primary);
+  }
+}
+
+body {
+  background-color: #050729;
+  height: 100%;
+  width: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+::-webkit-file-upload-button {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--primary);
+  color: white;
+  align-items: center;
+}

@@ -9,10 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "app-router": "^0.0.8",
+    "async-local-storage": "^2.3.1",
     "framer-motion": "^11.0.3",
     "next": "14.1.0",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-loading": "^2.0.3",
+    "react-select": "^5.8.0",
+    "redirect": "^0.2.0"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -20,6 +25,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "axios": "^1.6.7",
+    "encoding": "^0.1.13",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",

@@ -20,7 +20,7 @@ public class Review {
     public User reviewer;
     public String comment;
     
-    @DBRef
-    public DocumentVersion doc;
+    // @DBRef
+    // public DocumentVersion doc;
     
 }
