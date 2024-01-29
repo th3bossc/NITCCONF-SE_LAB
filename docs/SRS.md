@@ -149,30 +149,60 @@ The following features are made available to the users (authors).
 
 ## Functional Requirements
 ### 4.1 Authentication
-* The user has the ability to create an account, and login with their credentials.
-* The user can request for a password reset, via the `forgot password` option, if required.
+
+#### 4.1.1 Register
+* Purpose: To create an account in NITCONF
+* Input: First name, Last name, Email, Phone number, Password
+* A new account is created for the user with the given email and password as login credentials if the email does not exist already in the database and valid inputs are given. Else appropriate error message is displayed.
+
+#### 4.1.2 Login
+* Purpose: To login in to the user account
+* Input: Email, Password
+* The user is logged into the account if the email and password entered are valid by providing a token.     Else appropriate error message is displayed.
 
 ### 4.2 Dashboard
-The following features are available as part of the main dashboard presented to the user.
+The below functionalities require the user to be authenticated. Else an error message is displayed.
 
-#### 4.2.1 User Profile
-* The user can view / update their details in the profile section-First name, Last name, Email, Phone number
+#### 4.2.1 Get Profile
+* Purpose: To display the profile details to the user
+* Input: Valid token
+* The profile details of the user are displayed- First name, Last name, Email, Phone number
 
-#### 4.2.2 Upload And View Submissions
-* The user is provided with the current status of their latest submission, if any.
-* The user is then able to re-submit their abstract, with the changes suggested by reviewers.
+#### 4.2.2 Update Profile
+* Purpose: To update the profile details to the user(First name, Last name, Phone number)
+* Input: Valid token, updated user info
+* The user profile details are updated in the database
 
-#### 4.2.3 Interaction With Reviewers
-* The user is given a list of comments provided by the reviewer assigned.
-* The user is also provided with contact information of the reviewer.
-* The comments are listed along with the version of the submission, the comment was targeted to.
+#### 4.2.3 Get All sessions
+* Purpose: To display all the sessions of the user
+* Input: Valid token
+* All sessions of the logged-in user are listed
 
-#### 4.2.4 Tags
-* The user can add a list of pre-determined tags indicating the major topics covered in the abstract
-* The Program Committee can later use these tags to assign reviewers accordingly
+#### 4.2.4 Get Session by ID
+* Purpose: To display a specific session of the user
+* Input: Valid token, session ID
+* The details of the session with given ID
 
-#### 4.2.5 Notification System
-* The user is sent urgent notifications via Email in events such as a new comment, acceptance / rejection of a submission, etc.
+#### 4.2.5 Create new session
+* Purpose: To create a new session for the user
+* Input: Valid token, session title, session description, language, level, tags, abstract(PDF format)
+* A new session is created for the logged-in user with the given session details, if valid. Else appropriate error message is displayed.
+
+
+#### 4.2.6 Update session
+* Purpose: To update the details of an existing session
+* Input: Valid token, session ID, updated session details(session title, session description, language, level, tags)
+* The session details are updated in the database for the session with inputted ID
+
+#### 4.2.7 Get latest Abstract
+* Purpose: To get the PDF of the latest submission of the user in the session
+* Input: Valid token, session ID
+* The latest submission made by logged-in user for the given session available in PDF format
+
+#### 4.2.8 Update Abstract
+* Purpose: To make a new submission in a particular session
+* Input: Valid token, session ID, abstract PDF
+* The PDF is added to the database and the version of latest submission updated
 
 
 ## Other Nonfunctional Requirements
@@ -208,13 +238,9 @@ In terms of security, the system is meticulously designed to shield users from a
 * This system is less in cost and bearable to any organization.
 
 
-## Use Case Model
-### 6.1 Authentication
 
-#### 6.1.1 Register
-* Purpose: To create an account in NITCONF
 
-#### 6.1.2 Login
-* Purpose: To login in to the user account
-* Input: Email, Password
-* 
+
+
+
+
