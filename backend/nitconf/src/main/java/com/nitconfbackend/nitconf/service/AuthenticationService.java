@@ -39,6 +39,7 @@ public class AuthenticationService {
             .password(encoder.encode(request.getPassword()))
             .role(Role.USER)
             .sessions(new ArrayList<Session>())
+            .isVerified(false)
             .build();
         if (user != null)
             repository.save(user);
