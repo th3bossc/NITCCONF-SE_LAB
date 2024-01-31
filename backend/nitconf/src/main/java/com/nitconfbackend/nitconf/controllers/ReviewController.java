@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.nitconfbackend.nitconf.RequestTypes.ReviewRequest;
 import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Review;
 import com.nitconfbackend.nitconf.models.Role;
@@ -16,6 +15,7 @@ import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.ReviewRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
+import com.nitconfbackend.nitconf.types.ReviewRequest;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PostMapping;

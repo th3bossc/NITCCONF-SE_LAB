@@ -1,4 +1,4 @@
-package com.nitconfbackend.nitconf.config;
+package com.nitconfbackend.nitconf.service;
 
 
 import java.security.Key;
@@ -14,24 +14,53 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
+/**
+ * JwtService
+ * Service class for JWT
+ * @version 1.0
+ * @author Diljith P D
+ */
 @Service
 public class JwtService {
 
     private static final String SECRET_KEY="96ce18b33f216ffb1da5a7fad4853ae1d374b8759ea3c555";
 
+
+    /**
+     * extractUsername
+     * extracts the username from the given token
+     * @param token
+     * @return username string
+     */
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
+
+    /**
+     * extractExpiration
+     * extracts the expiration date from the given token
+     * @param token
+     * @return expiration date
+     */
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    /**
+     * generateToken
+     * generates a JWT token with the given user credentials
+     * @param userDetails - user details
+     * @return token string
+     */
     public String generateToken(UserDetails userDetails) {
         return generateToken(Map.of(), userDetails);
     }
 
-    public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+
+    
+    private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts
             .builder()
             .setClaims(claims)
@@ -42,7 +71,7 @@ public class JwtService {
             .compact();
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }

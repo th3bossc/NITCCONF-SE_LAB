@@ -1,4 +1,4 @@
-package com.nitconfbackend.nitconf.RequestTypes;
+package com.nitconfbackend.nitconf.types;
 import com.nitconfbackend.nitconf.models.Level;
 import com.nitconfbackend.nitconf.models.Status;
 

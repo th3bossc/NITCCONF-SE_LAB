@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.nitconfbackend.nitconf.service.JwtService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,6 +20,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+
+
+/**
+ * JwtAuthFilter
+ * Uses the JwtService to validate the token and set the user in the SecurityContext
+ * @version 1.0
+ * @author Diljith P D
+ */
 
 @Component
 @RequiredArgsConstructor

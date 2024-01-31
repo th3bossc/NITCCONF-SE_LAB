@@ -1,4 +1,4 @@
-package com.nitconfbackend.nitconf.auth;
+package com.nitconfbackend.nitconf.service;
 
 import java.util.ArrayList;
 
@@ -7,12 +7,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.nitconfbackend.nitconf.RequestTypes.RegisterRequest;
-import com.nitconfbackend.nitconf.config.JwtService;
 import com.nitconfbackend.nitconf.models.Role;
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
+import com.nitconfbackend.nitconf.types.AuthenticationRequest;
+import com.nitconfbackend.nitconf.types.AuthenticationResponse;
+import com.nitconfbackend.nitconf.types.RegisterRequest;
 
 // import com.example.demo.config.JwtService;
 // import com.example.demo.models.Role;

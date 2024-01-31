@@ -1,5 +1,5 @@
 "use client"
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import "./index.css";
 import AnimatedButton from "../AnimatedButton/index";
 import { LoginFields, LoginRequest } from "@/types";
@@ -56,8 +56,8 @@ const Login = ({
 
     const handleSubmit = async () => {
         const { token } = await login(formData);
-        logIn(token);
         console.log("loggedIn")
+        logIn(token);
     }
 
     return (

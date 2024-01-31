@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nitconfbackend.nitconf.RequestTypes.ProfileRequest;
 import com.nitconfbackend.nitconf.models.Role;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
+import com.nitconfbackend.nitconf.types.ProfileRequest;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,7 +32,11 @@ public class ProfileController {
     public UserRepository userRepo;
 
 
-    //currently logged in user can get his profile details
+    /**
+     * profileDetails
+     * returns the profile details of the currently logged in user
+     * @return User : {@link User}
+     */
     @GetMapping("")
     public ResponseEntity<User> profileDetails() {
         User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -39,7 +44,12 @@ public class ProfileController {
     }
 
 
-    //currently logged in user can update his profile details
+    /**
+     * updateProfile
+     * updates the profile details of the currently logged in user
+     * @param entity : {@link ProfileRequest}
+     * @return success message
+     */
     @PutMapping("")
     public ResponseEntity<Object> updateProfile(@RequestBody ProfileRequest entity) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -60,7 +70,13 @@ public class ProfileController {
     }
 
 
-    //any reviewer or program committee can get profile details of any user
+    /**
+     * getUser
+     * if request is done by REVIEWER or PROGRAM_COMMITTE ({@link Role}) returns the profile details of the user with the given id
+     * else returns error response
+     * @param id
+     * @return user : {@link User}
+     */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable @NonNull String id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

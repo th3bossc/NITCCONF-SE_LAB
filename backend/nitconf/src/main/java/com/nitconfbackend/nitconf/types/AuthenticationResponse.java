@@ -1,4 +1,4 @@
-package com.nitconfbackend.nitconf.auth;
+package com.nitconfbackend.nitconf.types;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

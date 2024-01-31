@@ -23,9 +23,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Document(collection="document")
 public class DocumentVersion {
-
-    
-    
     @Id public String id;
     
     public String changesDesc;

@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nitconfbackend.nitconf.RequestTypes.RegisterRequest;
-import com.nitconfbackend.nitconf.auth.AuthenticationRequest;
-import com.nitconfbackend.nitconf.auth.AuthenticationResponse;
-import com.nitconfbackend.nitconf.auth.AuthenticationService;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
+import com.nitconfbackend.nitconf.service.AuthenticationService;
+import com.nitconfbackend.nitconf.types.AuthenticationRequest;
+import com.nitconfbackend.nitconf.types.AuthenticationResponse;
+import com.nitconfbackend.nitconf.types.RegisterRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +27,13 @@ public class AuthController {
     @Autowired
     private UserRepository userRepo;
 
+
+    /**
+     * registerUser
+     * registers a new user
+     * @param user : {@link RegisterRequest}
+     * @return access token : {@link AuthenticationResponse}
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegisterRequest user) {
         if (user.getFirstName() == null || user.getLastName() == null || user.getEmail() == null || user.getPassword() == null || user.getPhoneNumber() == null)
@@ -37,7 +44,12 @@ public class AuthController {
         return ResponseEntity.ok(service.register(user));
     }
 
-
+    /**
+     * login
+     * logs in a user
+     * @param user : {@link AuthenticationRequest}
+     * @return access token : {@link AuthenticationResponse}
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest user) {
         if (user.getEmail() == null || user.getPassword() == null)
