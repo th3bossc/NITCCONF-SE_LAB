@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-export const getAllSessions = async (jwt: string | null) : Promise<Session[] | void> => {
+export const getAllSessions = async (jwt: string | null): Promise<Session[] | void> => {
     if (!url || !jwt)
         return;
     const res = await axios.get<Session[]>(`${url}/api/session`, {
@@ -14,29 +14,29 @@ export const getAllSessions = async (jwt: string | null) : Promise<Session[] | v
     return res.data;
 }
 
-export const getSession = async (id: string, jwt: string | null) : Promise<Session | void> => {
+export const getSession = async (id: string, jwt: string | null): Promise<Session | void> => {
     if (!url || !jwt)
         return;
     const res = await axios.get<Session>(`${url}/api/session/${id}`, {
         headers: {
             Authorization: `Bearer ${jwt}`,
         }
-    })  
-    return res.data;
-}
-
-export const createSession = async (session: SessionRequest, jwt: string | null) : Promise<Session | void>  => {
-    if (!url || !jwt) 
-        return;
-    const res = await axios.post<Session>(`${url}/api/session`, session, {
-        headers: {
-            Authorization: `Bearer ${jwt}`,
-    }
     })
     return res.data;
 }
 
-export const updateSession = async (id: string, session: SessionRequest, jwt: string | null) : Promise<Session | void> => {
+export const createSession = async (session: SessionRequest, jwt: string | null): Promise<Session | void> => {
+    if (!url || !jwt)
+        return;
+    const res = await axios.post<Session>(`${url}/api/session`, session, {
+        headers: {
+            Authorization: `Bearer ${jwt}`,
+        }
+    })
+    return res.data;
+}
+
+export const updateSession = async (id: string, session: SessionRequest, jwt: string | null): Promise<Session | void> => {
     if (!url || !jwt)
         return;
     const res = await axios.put<Session>(`${url}/api/session/${id}`, session, {
@@ -47,7 +47,7 @@ export const updateSession = async (id: string, session: SessionRequest, jwt: st
     return res.data;
 }
 
-export const uploadDoc = async (id: string, file: File, jwt: string | null) : Promise<number | void> => {
+export const uploadDoc = async (id: string, file: File, jwt: string | null): Promise<number | void> => {
     if (!url || !jwt)
         return;
     const formData = new FormData();
@@ -59,4 +59,14 @@ export const uploadDoc = async (id: string, file: File, jwt: string | null) : Pr
         }
     })
     return res.status;
+}
+
+export const deleteSession = async (id: string, jwt: string | null): Promise<void> => {
+    if (!url || !jwt)
+        return;
+    await axios.delete(`${url}/api/session/${id}`, {
+        headers: {
+            Authorization: `Bearer ${jwt}`,
+        }
+    })
 }

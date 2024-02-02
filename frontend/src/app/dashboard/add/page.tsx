@@ -76,13 +76,16 @@ const AddSession = () => {
         console.log(formData);
         console.log(file);
         const sendData = async () => {
-            const res = await createSession(formData, jwt);
-            const id = res?.id;
-            if (id && file) {
-                const upload = await uploadDoc(id, file, jwt);
-                if (upload) {
-                    console.log("File upload successful " + upload);
-                }
+            try {
+                const res = await createSession(formData, jwt);
+                const id = res?.id;
+                if (id && file)
+                    await uploadDoc(id, file, jwt);
+                //TODO: toastify session created successfullly
+            }
+            catch (error) {
+                console.log(error);
+                //TODO: toastify something went wrong
             }
         }
         sendData();

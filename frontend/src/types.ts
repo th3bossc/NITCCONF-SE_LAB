@@ -52,6 +52,7 @@ export type Status = "ACCEPTED" | "PENDING" | "REJECTED";
 export type AuthDetails = {
     isLoggedIn: boolean,
     user: User | null,
+    setUser: Dispatch<SetStateAction<User | null>>,
     sessions: Session[],
     setSessions: Dispatch<SetStateAction<Session[]>>
     jwt: string | null,

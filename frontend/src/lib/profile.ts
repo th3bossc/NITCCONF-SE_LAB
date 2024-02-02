@@ -2,7 +2,7 @@ import { UpdateProfileRequest, User } from '@/types';
 import axios from 'axios';
 
 const url = process.env.NEXT_PUBLIC_BACKEND_URL;
-export const getProfile = async (jwt: string): Promise<User> => {
+export const getProfile = async (jwt: string | null): Promise<User> => {
     if (!url || !jwt)
         return ({
             firstName: "",
@@ -33,25 +33,11 @@ export const updateProfile = async (user: UpdateProfileRequest, jwt: string | nu
 export const updatePassword = async (password: string, token: string | null): Promise<void> => {
     if (!url || !token)
         return
-    try {
-        console.log("updating password");
-        await axios.put(`${url}/api/email/reset/${token}`, { password });
-        console.log("password updated");
-    }
-    catch (e) {
-        console.error(e);
-    }
+    await axios.put(`${url}/api/email/reset/${token}`, { password });
 }
 
 export const sendPasswordEmail = async (body: { email: string }) => {
     if (!url)
         return
-    try {
-        console.log("email sending")
-        await axios.post(`${url}/api/email/reset`, body);
-        console.log("email Sent")
-    }
-    catch (error) {
-        console.error(error);
-    }
+    await axios.post(`${url}/api/email/reset`, body);
 }

@@ -93,13 +93,20 @@ const EditSession = ({ params }: { params: { id: string } }) => {
         console.log(formData);
         console.log(file);
         const sendData = async () => {
-            const res = await updateSession(params.id, formData, jwt);
-            updateSessions();
-            const id = res?.id;
-            if (id && file) {
-                const upload = await uploadDoc(id, file, jwt);
+            try {
+                const res = await updateSession(params.id, formData, jwt);
+                updateSessions();
+                const id = res?.id;
+                if (id && file) {
+                    await uploadDoc(id, file, jwt);
+                }
+                router.push(`/dashboard/${id}`);
+                //TODO : toastify session edited succcessfully
             }
-            router.push(`/dashboard/${id}`);
+            catch (error) {
+                console.log(error);
+                //TODO: toastify something went wrong
+            }
         }
         sendData();
     }

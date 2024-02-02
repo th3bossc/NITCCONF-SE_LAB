@@ -1,10 +1,12 @@
 "use client";
 
 import { createContext, useCallback, useEffect, useState } from "react";
-import { AuthDetails, Session, User } from "./types";
+import { AuthDetails, Session, Tag, User } from "./types";
 import { getProfile } from "./lib/profile";
 import { useRouter, usePathname } from "next/navigation";
 import { getAllSessions } from "./lib/sessions";
+import { getTags } from "./lib/tags";
+import { AxiosError } from "axios";
 
 export const AuthContext = createContext<AuthDetails | null>(null);
 
@@ -27,26 +29,34 @@ export const AuthContextProvider = ({
             return;
         setLoading(true);
         try {
-            console.log("...starting");
             const currentUser = await getProfile(token);
-            console.log("...got user");
             localStorage.setItem('jwt', token);
             setJwt(token);
-            console.log('...getting sessions')
             const currentSessions = await getAllSessions(token);
-            console.log('...got sessions')
             setUser(currentUser);
             if (currentSessions)
                 setSessions(currentSessions);
-            console.log("...done");
+            if (currentPath === "dashboard") {
+                setLoading(false)
+                return;
+            }
             router.push('/dashboard/profile');
+
         }
-        catch (error) {
-            console.log(error);
+        catch (error: any) {
+            console.log(error.response);
             localStorage.removeItem('jwt');
             setJwt(null);
             setUser(null);
             router.push("/");
+            /*
+            TODO: error handling
+            if (error.response.status === 500)
+                SERVER IS NOT RESPONDING
+            else
+                INVALID TOKEN
+            */
+
         }
         setLoading(false);
     }, [router, pathname])
@@ -85,6 +95,7 @@ export const AuthContextProvider = ({
             value={{
                 isLoggedIn,
                 user,
+                setUser,
                 sessions,
                 setSessions,
                 jwt,

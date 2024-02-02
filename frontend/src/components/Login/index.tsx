@@ -55,14 +55,20 @@ const Login = ({
     }
 
     const handleSubmit = async () => {
-        const { token } = await login(formData);
-        console.log("loggedIn")
-        logIn(token);
+        try {
+            const { token } = await login(formData);
+            console.log("loggedIn")
+            logIn(token);
+            //TODO: toastify logged in successfully
+        }
+        catch (err) {
+            console.log(err);
+            //TODO: toastify something went wrong
+        }
     }
 
     const handleResetPassword = async () => {
         router.push("/reset")
-        //TODO: react toastify message 
     }
     return (
         <div className="w-screen h-screen fixed top-0 left-0 z-10 backdrop-blur">

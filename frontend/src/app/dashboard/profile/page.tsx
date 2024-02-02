@@ -7,7 +7,7 @@ import Image from 'next/image';
 import profileBg from '/public/profileBg.svg';
 import warningIcon from '/public/alert.svg';
 import AnimatedButton from "@/components/AnimatedButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import EditProfile from "@/components/EditProfile";
 const Profile = () => {
     const { user, sessions, logOut } = useAuthContext();
