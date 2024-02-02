@@ -13,7 +13,7 @@ const SessionPage = ({
 }: {
     session: Session | null
 }) => {
-    const commentsTemp : Review[] = [
+    const commentsTemp: Review[] = [
         {
             id: "1234",
             reviewer: {
@@ -22,7 +22,8 @@ const SessionPage = ({
                 lastName: "Dileep",
                 email: "diljith2003@gmail.com",
                 phoneNumber: "8075762993",
-                role: "REVIEWER"
+                role: "REVIEWER",
+                isVerified: true,
             },
             comment: "comcomcomententent"
         },
@@ -34,7 +35,8 @@ const SessionPage = ({
                 lastName: "Dileep",
                 email: "diljith2003@gmail.com",
                 phoneNumber: "8075762993",
-                role: "REVIEWER"
+                role: "REVIEWER",
+                isVerified: true,
             },
             comment: "comcomcomententent"
         },
@@ -46,7 +48,8 @@ const SessionPage = ({
                 lastName: "Dileep",
                 email: "diljith2003@gmail.com",
                 phoneNumber: "8075762993",
-                role: "REVIEWER"
+                role: "REVIEWER",
+                isVerified: true,
             },
             comment: "comcomcomententent"
         },
@@ -58,7 +61,8 @@ const SessionPage = ({
                 lastName: "Dileep",
                 email: "diljith2003@gmail.com",
                 phoneNumber: "8075762993",
-                role: "REVIEWER"
+                role: "REVIEWER",
+                isVerified: true,
             },
             comment: "comcomcomententent"
         }
@@ -72,12 +76,12 @@ const SessionPage = ({
                             <motion.div>
                                 <div className={`${oswald.className} font-bold text-4xl 2xl:text-6xl uppercase text-center xl:text-left w-full flex justify-center xl:justify-start items-center gap-2`}>
                                     {session.title}
-                                    <Link 
+                                    <Link
                                         href={`/dashboard/${session.id}/edit`}
-                                    > 
+                                    >
                                         <motion.div
-                                            whileHover={{ rotate: 5}}
-                                            whileTap={{ scale: 0.95}}
+                                            whileHover={{ rotate: 5 }}
+                                            whileTap={{ scale: 0.95 }}
                                         >
                                             <Image src={editIcon} alt="edit-icon" />
                                         </motion.div>

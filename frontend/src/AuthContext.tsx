@@ -26,15 +26,19 @@ export const AuthContextProvider = ({
         if (currentPath === "reset")
             return;
         setLoading(true);
-
         try {
+            console.log("...starting");
             const currentUser = await getProfile(token);
+            console.log("...got user");
             localStorage.setItem('jwt', token);
             setJwt(token);
+            console.log('...getting sessions')
             const currentSessions = await getAllSessions(token);
+            console.log('...got sessions')
             setUser(currentUser);
             if (currentSessions)
                 setSessions(currentSessions);
+            console.log("...done");
             router.push('/dashboard/profile');
         }
         catch (error) {
@@ -45,13 +49,13 @@ export const AuthContextProvider = ({
             router.push("/");
         }
         setLoading(false);
-    }, [router])
+    }, [router, pathname])
 
     useEffect(() => {
         let jwt = localStorage.getItem('jwt');
         if (jwt)
             setAuthenticatedUser(jwt);
-    }, [setAuthenticatedUser])
+    }, [])
 
 
     const logIn = (jwt: string): void => {
