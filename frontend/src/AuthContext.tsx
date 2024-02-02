@@ -5,8 +5,6 @@ import { AuthDetails, Session, Tag, User } from "./types";
 import { getProfile } from "./lib/profile";
 import { useRouter, usePathname } from "next/navigation";
 import { getAllSessions } from "./lib/sessions";
-import { getTags } from "./lib/tags";
-import { AxiosError } from "axios";
 
 export const AuthContext = createContext<AuthDetails | null>(null);
 
@@ -65,6 +63,7 @@ export const AuthContextProvider = ({
         let jwt = localStorage.getItem('jwt');
         if (jwt)
             setAuthenticatedUser(jwt);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
