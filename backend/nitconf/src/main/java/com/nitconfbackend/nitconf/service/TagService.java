@@ -25,13 +25,13 @@ public class TagService {
         return tagsRepository.findAll();
     }
 
-    public Tag CreateNewTag(string title)
+    public Tag CreateNewTag(String title)
     {
         Tag newtag= new Tag(title);
         tagsRepository.save(newtag);
         return newtag;
     }
-    public List<Session> findSessions(string title){
+    public List<Session> findSessions(String title){
         Tag tag =  tagsRepository.findByTitle(title).orElseThrow();
         List<Session> relatedSessions = tag.getSessions();
         return relatedSessions;

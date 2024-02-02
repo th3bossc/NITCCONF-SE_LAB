@@ -1,6 +1,6 @@
 package com.nitconfbackend.nitconf.service;
+
 import com.nitconfbackend.nitconf.models.Tag;
-import com.nitconfbackend.nitconf.controllers.Tagcontroller;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -9,45 +9,41 @@ import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 
-import org.junit.jupiter.api.Test;
-
 @ExtendWith(MockitoExtension.class)
 public class TagServiceTest {
 
-    @Mock
-    private TagsRepository tagsrepo;
-   
-      @InjectMocks
-    private TagService tagService;
+	@Mock
+	private TagsRepository tagsrepo;
 
-    @Test
-    void testCreateNewTag() {
+	@InjectMocks
+	private TagService tagService;
 
-    }
+	@Test
+	void testCreateNewTag() {
 
-    @Test
-    void testFindSessions() {
+	}
 
-    }
+	@Test
+	void testFindSessions() {
 
-    @Test
-    void testGetAllTags() {
-        Tag Tag= new Tag("AI");
-       Tag Tag2= new Tag("Blockchain");
-      //When
-       given(tagsrepo.findAll())
-      .willReturn(List.of(Tag,Tag2));
-      var  TagList = TagService.getAllTags();
-       //Then
-    //Make sure to import assertThat From org.assertj.core.api package
-         assertThat(TagList).isNotNull();
-         assertThat(TagList.size()).isEqualTo(2);
-  }
+	}
+
+	@Test
+	void testGetAllTags() {
+		Tag Tag = new Tag("AI");
+		Tag Tag2 = new Tag("Blockchain");
+		// When
+		given(tagsrepo.findAll())
+				.willReturn(List.of(Tag, Tag2));
+		var TagList = tagService.getAllTags();
+		// Then
+		// Make sure to import assertThat From org.assertj.core.api package
+		assertThat(TagList).isNotNull();
+		assertThat(TagList.size()).isEqualTo(2);
+	}
 }
-
-
-

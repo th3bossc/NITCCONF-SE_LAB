@@ -11,26 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.Tag;
-import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.service.TagService;
 import com.nitconfbackend.nitconf.types.TagRequest;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
-
 @RestController
 @RequestMapping("/api/tags")
 public class Tagcontroller {
 
-    private final TagService tagService;
-    public Tagcontroller(TagService tagService){
-        this.TagService=tagService;
-    }
-    
-    
+    @Autowired
+    private TagService tagService;
+
     @GetMapping("/{title}")
     public ResponseEntity<List<Session>> FindSessions(@PathVariable String title) {
         return ResponseEntity.ok(tagService.findSessions(title));
@@ -38,7 +31,7 @@ public class Tagcontroller {
 
     @GetMapping("/findall")
     public ResponseEntity<List<Tag>> FindAll() {
-        
+
         return ResponseEntity.ok(tagService.getAllTags());
     }
 
@@ -46,5 +39,5 @@ public class Tagcontroller {
     public ResponseEntity<Tag> newtag(@RequestBody TagRequest entity) {
         return ResponseEntity.ok(tagService.CreateNewTag(entity.title));
     }
-    
+
 }
