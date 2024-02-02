@@ -19,7 +19,7 @@ export type Tag = {
 }
 
 export type Review = {
-    id : string,
+    id: string,
     reviewer: User,
     comment: string,
 }
@@ -31,6 +31,7 @@ export type User = {
     email: string,
     phoneNumber: string,
     role: Role,
+    isVerified: boolean,
 }
 
 export type DocumentVersion = {
@@ -51,13 +52,14 @@ export type Status = "ACCEPTED" | "PENDING" | "REJECTED";
 export type AuthDetails = {
     isLoggedIn: boolean,
     user: User | null,
+    setUser: Dispatch<SetStateAction<User | null>>,
     sessions: Session[],
     setSessions: Dispatch<SetStateAction<Session[]>>
     jwt: string | null,
     logIn: (jwt: string) => void
     logOut: () => void,
     loading: boolean,
-    updateSessions : () => void,
+    updateSessions: () => void,
 }
 
 

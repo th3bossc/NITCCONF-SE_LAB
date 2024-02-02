@@ -31,6 +31,7 @@ public class User implements UserDetails {
     public String phoneNumber;
     @JsonIgnore public String password;
     public Role role;
+    public Boolean isVerified;
 
     @JsonIgnore
     @DBRef

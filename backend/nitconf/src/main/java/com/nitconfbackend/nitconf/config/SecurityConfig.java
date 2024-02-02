@@ -1,6 +1,5 @@
 package com.nitconfbackend.nitconf.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -16,19 +15,22 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
+
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-    //whitelisted urls
+
+    // whitelisted urls
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(res -> res.disable())
-            .authorizeHttpRequests(res -> res.requestMatchers("/api/auth/**", "/api/session/doc/**").permitAll().anyRequest().authenticated())
-            // .authorizeHttpRequests(res -> res.anyRequest().permitAll())
-            .sessionManagement(res -> res.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(res -> res.disable())
+                .authorizeHttpRequests(
+                        res -> res.requestMatchers("/api/auth/**", "/api/session/doc/**", "/api/email/**")
+                                .permitAll().anyRequest().authenticated())
+                // .authorizeHttpRequests(res -> res.anyRequest().permitAll())
+                .sessionManagement(res -> res.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

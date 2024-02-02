@@ -31,14 +31,12 @@ import com.nitconfbackend.nitconf.types.SessionRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
-
 @RestController
 @RequestMapping("/api/session")
-
 
 public class SessionController {
     @Autowired
@@ -56,7 +54,6 @@ public class SessionController {
     @Autowired
     private TagsRepository tagsRepo;
 
-
     @GetMapping("")
     public ResponseEntity<List<Session>> getAllSessions() {
 
@@ -69,7 +66,8 @@ public class SessionController {
 
     @PostMapping("")
     public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
-        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null || entity.tags == null)
+        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
+                || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
 
         List<Tag> tags = new ArrayList<Tag>();
@@ -78,16 +76,15 @@ public class SessionController {
                 Tag newTag = tagsRepo.findById(tag).orElseThrow();
                 tags.add(newTag);
             }
-     });
+        });
 
         Session session = new Session(
-            entity.title,
-            entity.description,
-            entity.language,
-            entity.level,
-            entity.status,
-            tags
-        );
+                entity.title,
+                entity.description,
+                entity.language,
+                entity.level,
+                entity.status,
+                tags);
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
@@ -103,7 +100,6 @@ public class SessionController {
             tagsRepo.save(tag);
         });
 
-
         return ResponseEntity.ok(session);
     }
 
@@ -111,7 +107,8 @@ public class SessionController {
     public ResponseEntity<Session> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null || entity.status == null || entity.tags == null)
+        if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
+                || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
         Session session = sessionRepo.findById(id).orElseThrow();
 
@@ -130,7 +127,7 @@ public class SessionController {
         session.setStatus(entity.status);
         session.setTags(tags);
 
-        sessionRepo.save(session);          
+        sessionRepo.save(session);
 
         return ResponseEntity.ok(session);
     }
@@ -146,20 +143,18 @@ public class SessionController {
             if (data == null)
                 return ResponseEntity.notFound().build();
             DocumentVersion newDoc = new DocumentVersion(
-                "New Submission",
-                data,
-                allDocs.size() + 1
-                // session
+                    "New Submission",
+                    data,
+                    allDocs.size() + 1
+            // session
             );
             docRepo.save(newDoc);
             session.getDocumentVersions().add(newDoc);
             sessionRepo.save(session);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
 
         return ResponseEntity.ok().build();
     }
@@ -174,10 +169,10 @@ public class SessionController {
         if (resource == null)
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + id + ".pdf") 
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .contentLength(resource.contentLength())
-                    .body(resource);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename= " + id + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .contentLength(resource.contentLength())
+                .body(resource);
     }
 
     @GetMapping("/{id}")
@@ -192,7 +187,7 @@ public class SessionController {
     public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session=sessionRepo.findById(id).orElseThrow();
+        Session session = sessionRepo.findById(id).orElseThrow();
         session.setStatus(Status.ACCEPTED);
         return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
     }
@@ -201,10 +196,20 @@ public class SessionController {
     public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session=sessionRepo.findById(id).orElseThrow();
+        Session session = sessionRepo.findById(id).orElseThrow();
         session.setStatus(Status.REJECTED);
         return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
-    
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteSession(@PathVariable String id) {
+        if (id == null)
+            return ResponseEntity.notFound().build();
+        Session session = sessionRepo.findById(id).orElseThrow();
+        if (session != null)
+            sessionRepo.delete(session);
+        return ResponseEntity.ok("DELETED SESSION");
+    }
+
 }
-//New session created to be added to user sessions
+// New session created to be added to user sessions
