@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
+import com.nitconfbackend.nitconf.service.TagService;
 import com.nitconfbackend.nitconf.types.TagRequest;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,28 +24,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/api/tags")
 public class Tagcontroller {
-    @Autowired
-    private TagsRepository repository;
+
+    private final TagService tagService;
+    public Tagcontroller(TagService tagService){
+        this.TagService=tagService;
+    }
+    
     
     @GetMapping("/{title}")
     public ResponseEntity<List<Session>> FindSessions(@PathVariable String title) {
-        Tag tag =  repository.findByTitle(title).orElseThrow();
-        List<Session> relatedSessions = tag.getSessions();
-
-        return ResponseEntity.ok(relatedSessions);
+        return ResponseEntity.ok(tagService.findSessions(title));
     }
 
-    @GetMapping("")
+    @GetMapping("/findall")
     public ResponseEntity<List<Tag>> FindAll() {
-        List<Tag> tags = repository.findAll();
-        return ResponseEntity.ok(tags);
+        
+        return ResponseEntity.ok(tagService.getAllTags());
     }
 
-    @PostMapping("")
+    @PostMapping("/newtag")
     public ResponseEntity<Tag> newtag(@RequestBody TagRequest entity) {
-       Tag newtag= new Tag(entity.title);
-        repository.save(newtag);
-        return ResponseEntity.ok(newtag);
+        return ResponseEntity.ok(tagService.CreateNewTag(entity.title));
     }
     
 }
