@@ -20,9 +20,12 @@ const NavItem = ({ session, current, onClick }: {
         try {
             await deleteSession(id, jwt);
             setSessions(prev => prev.filter(session => session.id !== id));
+            //TODO: add a dialog prompt before deletion
+            //TODO: toastify session deleted successfully
         }
         catch (error) {
             console.log(error);
+            //TODO: toastify something went wrong
         }
     }
 

@@ -91,9 +91,11 @@ const Register = ({
             const { token } = await register(formData);
             logIn(token)
             console.log("registered");
+            //TODO: toastify registered successfully
         }
         catch (error) {
             console.log(error);
+            //TODO: toastify something went wrong
         }
     }
 
