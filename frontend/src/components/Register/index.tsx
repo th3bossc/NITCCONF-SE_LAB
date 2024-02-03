@@ -5,6 +5,8 @@ import AnimatedButton from "../AnimatedButton/index";
 import { RegisterFields, RegisterRequest } from "@/types";
 import { register } from "@/lib/authentication";
 import { useAuthContext } from "@/hooks/useAuthContext";
+import { ToastContainer, toast, Flip } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 
 const Register = ({
@@ -90,12 +92,20 @@ const Register = ({
         try {
             const { token } = await register(formData);
             logIn(token)
-            console.log("registered");
-            //TODO: toastify registered successfully
         }
         catch (error) {
             console.log(error);
-            //TODO: toastify something went wrong
+            toast.error('Something went wrong!', {
+                position: "bottom-right",
+                autoClose: 1500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip
+                });
         }
     }
 
@@ -202,6 +212,7 @@ const Register = ({
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     )
 }

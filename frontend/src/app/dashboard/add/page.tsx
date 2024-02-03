@@ -7,6 +7,8 @@ import { getTags } from "@/lib/tags";
 import { SessionFields, SessionRequest, Tag } from "@/types";
 import { ChangeEvent, useEffect, useState } from "react";
 import Select, { MultiValue } from 'react-select';
+import { ToastContainer, toast, Flip } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 const AddSession = () => {
     const { jwt, user } = useAuthContext();
@@ -81,11 +83,31 @@ const AddSession = () => {
                 const id = res?.id;
                 if (id && file)
                     await uploadDoc(id, file, jwt);
-                //TODO: toastify session created successfullly
+                    toast.success('Added session successfully.', {
+                        position: "bottom-right",
+                        autoClose: 1500,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        transition: Flip,
+                        });
             }
             catch (error) {
-                console.log(error);
-                //TODO: toastify something went wrong
+                console.log(error);            
+                toast.error('Something went wrong!', {
+                    position: "bottom-right",
+                    autoClose: 1500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Flip
+                    });
             }
         }
         sendData();
@@ -196,6 +218,7 @@ const AddSession = () => {
                     )
                 }
             </div>
+            <ToastContainer />
         </div>
     )
 }

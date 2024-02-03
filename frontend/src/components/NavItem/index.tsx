@@ -5,6 +5,8 @@ import deleteIcon from '/public/trash.svg';
 import { useState } from 'react';
 import { useAuthContext } from '@/hooks/useAuthContext';
 import { deleteSession } from '@/lib/sessions';
+import { ToastContainer, toast, Flip } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 const NavItem = ({ session, current, onClick }: {
     session: Session,
@@ -21,11 +23,31 @@ const NavItem = ({ session, current, onClick }: {
             await deleteSession(id, jwt);
             setSessions(prev => prev.filter(session => session.id !== id));
             //TODO: add a dialog prompt before deletion
-            //TODO: toastify session deleted successfully
+            toast.success('Deleted session successfully.', {
+                position: "bottom-right",
+                autoClose: 1500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip,
+                });
         }
         catch (error) {
             console.log(error);
-            //TODO: toastify something went wrong
+            toast.error('Something went wrong!', {
+                position: "bottom-right",
+                autoClose: 1500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip
+                });
         }
     }
 
@@ -63,7 +85,7 @@ const NavItem = ({ session, current, onClick }: {
                     )
                 }
             </AnimatePresence>
-
+            <ToastContainer />
         </motion.span>
     )
 }
