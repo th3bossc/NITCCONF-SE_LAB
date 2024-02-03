@@ -2,6 +2,7 @@ package com.nitconfbackend.nitconf.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -18,6 +19,10 @@ import org.springframework.http.ResponseEntity;
 
 import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Review;
+import com.nitconfbackend.nitconf.models.User;
+import com.nitconfbackend.nitconf.models.Role;
+
+
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.ReviewRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
@@ -43,7 +48,7 @@ public class ReviewControllerTest {
     }
 
     @Test
-    public void testGetMethodName() {
+    public void testGetReviewsDoc() {
        
         String docId = "1";
         List<Review> reviews = new ArrayList<>();
@@ -55,30 +60,30 @@ public class ReviewControllerTest {
         when(documentVersionRepository.findById(docId)).thenReturn(Optional.of(documentVersion));
 
        
-        ResponseEntity<List<Review>> responseEntity = reviewController.getMethodName(docId);
+        ResponseEntity<List<Review>> responseEntity = reviewController.GetReviewsDoc(docId);
 
        
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testGetDocReviews_NullId() {
+    public void testGetReviewsDoc_NullId() {
        
         String nullId = null;
         when(documentVersionRepository.findById(nullId)).thenReturn(Optional.empty());
 
-        ResponseEntity<List<Review>> responseEntity = reviewController.getMethodName(nullId);
+        ResponseEntity<List<Review>> responseEntity = reviewController.GetReviewsDoc(nullId);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testGetMethodName_WrongDocId() {
+    public void testGetReviewsDoc_WrongDocId() {
         String wrongDocId = "WongID";
         when(documentVersionRepository.findById(wrongDocId)).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            reviewController.getMethodName(wrongDocId);
+            reviewController.GetReviewsDoc(wrongDocId);
         });
     }
 
@@ -108,7 +113,53 @@ public class ReviewControllerTest {
         when(reviewRepository.findById(nonExistingReviewId)).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            reviewController.getMethodName(nonExistingReviewId);
+            reviewController.getReview(nonExistingReviewId);
+        });
+    }
+
+    @Test
+    public void testCreateReview() {
+        String documentId = "1";
+        ReviewRequest reviewRequest = new ReviewRequest();
+        reviewRequest.setComment("Test comment");
+
+        DocumentVersion documentVersion = new DocumentVersion();
+        documentVersion.setId(documentId);
+
+        User user = new User();
+        user.setRole(Role.REVIEWER);
+        user.setEmail("trial@gmail.com");
+        user.setFirstName("Sreeshma");
+        user.setLastName("Sangesh");
+        user.setPassword("Sree123");
+        user.setPhoneNumber("6736254812");
+
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        when(documentVersionRepository.findById(documentId)).thenReturn(Optional.of(documentVersion));
+
+        ResponseEntity<String> responseEntity = reviewController.createReview(reviewRequest, documentId);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("Review created", responseEntity.getBody());
+    }
+
+    @Test
+    public void testCreateReview_InvalidRole() {
+        String documentId = "1";
+        ReviewRequest reviewRequest = new ReviewRequest();
+        reviewRequest.setComment("Test comment");
+
+        User user = new User();
+        user.setRole(Role.USER);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        // ResponseEntity<String> responseEntity = reviewController.createReview(reviewRequest, documentId);
+
+        // assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertThrows(Exception.class, () -> {
+            reviewController.createReview(reviewRequest, documentId);
         });
     }
     
