@@ -10,6 +10,9 @@ import Select, { MultiValue } from 'react-select';
 import ReactLoading from 'react-loading';
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast, Flip } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
+
 
 const EditSession = ({ params }: { params: { id: string } }) => {
     const router = useRouter();
@@ -102,11 +105,31 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                     await uploadDoc(id, file, jwt);
                 }
                 router.push(`/dashboard/${id}`);
-                //TODO : toastify session edited succcessfully
+                toast.success('Edited successfully.', {
+                    position: "bottom-right",
+                    autoClose: 1500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Flip,
+                    });
             }
             catch (error) {
                 console.log(error);
-                //TODO: toastify something went wrong
+                toast.error('Something went wrong!', {
+                    position: "bottom-right",
+                    autoClose: 1500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Flip
+                    });
             }
         }
         sendData();
@@ -229,6 +252,7 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                     }
                 </AnimatePresence>
             </div>
+            <ToastContainer />
         </div>
     )
 }

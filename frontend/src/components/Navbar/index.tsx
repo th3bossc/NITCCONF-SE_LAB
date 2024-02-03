@@ -55,7 +55,6 @@ const Navbar = ({
                 theme: "dark",
                 transition: Flip
                 });
-            //TODO: toastify something went wrong
         }
     }
     return (

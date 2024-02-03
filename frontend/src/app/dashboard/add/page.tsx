@@ -97,7 +97,17 @@ const AddSession = () => {
             }
             catch (error) {
                 console.log(error);
-                //TODO: toastify something went wrong
+                toast.error('Something went wrong!', {
+                    position: "bottom-right",
+                    autoClose: 1500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Flip
+                    });
             }
         }
         sendData();
