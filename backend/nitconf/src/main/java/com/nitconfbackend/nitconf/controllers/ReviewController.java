@@ -36,6 +36,14 @@ public class ReviewController{
     private UserRepository userRepo;
 
 
+    /**
+     * getReviews
+     * gets all the reviews of a document
+     * @param id
+     * @return Reviews : {@link Review}
+     * @version 1.0
+     * @author Ashwin Suresh Babu
+     */
     @GetMapping("/doc/{id}")
     public ResponseEntity<List<Review>> getReviews(@PathVariable String id) {
         if (id == null)
@@ -44,6 +52,15 @@ public class ReviewController{
         return ResponseEntity.ok(doc.getReviews());
     }
 
+    
+    /**
+     * getReview
+     * gets the details of a review
+     * @param id
+     * @return Reviews : {@link Review}
+     * @version 1.0
+     * @author Ashwin Suresh Babu
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Review> getReview(@PathVariable String id) {
         if (id == null)
@@ -52,6 +69,16 @@ public class ReviewController{
         return ResponseEntity.ok(review);
     }
     
+    
+    /**
+     * createReview
+     * Creates a review for a particular abstract.
+     * @param id
+     * @param body {@link ReviewRequest}
+     * @return Response : {@link Review}
+     * @version 1.0
+     * @author Ashwin Suresh Babu
+     */
     @PostMapping("/{id}")
     public ResponseEntity<String> createReview(@RequestBody ReviewRequest body, @PathVariable String id) {
         Review review = new Review();
