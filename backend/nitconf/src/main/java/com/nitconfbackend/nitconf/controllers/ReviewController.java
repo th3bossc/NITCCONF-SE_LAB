@@ -37,7 +37,7 @@ public class ReviewController{
 
 
     @GetMapping("/doc/{id}")
-    public ResponseEntity<List<Review>> getMethodName(@PathVariable String id) {
+    public ResponseEntity<List<Review>> getReviews(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
         DocumentVersion doc = docRepo.findById(id).orElseThrow();
