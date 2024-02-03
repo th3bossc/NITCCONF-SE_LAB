@@ -38,6 +38,7 @@ public class AuthenticationService {
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(encoder.encode(request.getPassword()))
+                .phoneNumber(request.getPhoneNumber())
                 .role(Role.USER)
                 .sessions(new ArrayList<Session>())
                 .isVerified(false)

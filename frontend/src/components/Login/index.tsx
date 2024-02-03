@@ -6,6 +6,8 @@ import { LoginFields, LoginRequest } from "@/types";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { login } from "@/lib/authentication";
 import { useRouter } from "next/navigation";
+import { ToastContainer, toast, Flip } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 const Login = ({
     setClose,
@@ -63,6 +65,17 @@ const Login = ({
         }
         catch (err) {
             console.log(err);
+            toast.error('Something went wrong!', {
+                position: "bottom-right",
+                autoClose: 1500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip
+                });
             //TODO: toastify something went wrong
         }
     }
@@ -139,6 +152,7 @@ const Login = ({
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     )
 }
