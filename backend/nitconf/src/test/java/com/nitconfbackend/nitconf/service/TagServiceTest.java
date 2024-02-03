@@ -9,11 +9,10 @@ import static org.mockito.BDDMockito.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
-
-import org.junit.jupiter.api.Test;
 
 @ExtendWith(MockitoExtension.class)
 public class TagServiceTest {
@@ -41,7 +40,7 @@ public class TagServiceTest {
       //When
        given(tagsrepo.findAll())
       .willReturn(List.of(Tag,Tag2));
-      var  TagList = TagService.getAllTags();
+      var  TagList = tagService.getAllTags();
        //Then
     //Make sure to import assertThat From org.assertj.core.api package
          assertThat(TagList).isNotNull();
