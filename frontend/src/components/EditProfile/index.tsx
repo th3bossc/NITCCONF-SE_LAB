@@ -5,6 +5,7 @@ import AnimatedButton from "../AnimatedButton/index";
 import { UpdateProfileFields, UpdateProfileRequest, User } from "@/types";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { getProfile, updateProfile } from "@/lib/profile";
+import { motion } from "framer-motion";
 
 
 const EditProfile = ({
@@ -93,29 +94,37 @@ const EditProfile = ({
     }
 
     return (
-        <div className="w-screen h-screen z-10 fixed top-0 left-0">
+        <motion.div 
+        exit={{opacity:0}}
+        className="w-screen h-screen z-10 fixed top-0 left-0">
             <div id="Register-popup"
                 className="bg-black/75 registerContainer">
-                <div className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
+                <motion.div 
+                initial={{scale:0.9}}
+                animate={{scale:1}}
+                exit={{scale:1.1,opacity:0}}
+                className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
 
                     <div className="relative bg-zinc-900 rounded-lg shadow">
-                        <button type="button"
+                        <motion.button type="button"
                             onClick={setClose}
-                            className="exitButton absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg
-                                aria-hidden="true" className="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"
+                            whileHover={{backgroundColor:"#A276FF"}}
+                            transition={{duration:0.1}}
+                            className="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg   
+                            aria-hidden="true" className="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fillRule="evenodd"
                                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                 ></path>
                             </svg>
                             <span className="sr-only">Close popup</span>
-                        </button>
+                        </motion.button>
 
                         <div className="p-5">
                             <p className="mb-4 text-sm font-normal text-gray-800"></p>
 
                             <div className="text-center">
-                                <p className="mb-6 text-2xl font-semibold leading-5 purpleText">
+                                <p className="mb-6 text-2xl font-semibold leading-5 text-white">
                                     Edit Profile
                                 </p>
                             </div>
@@ -181,14 +190,14 @@ const EditProfile = ({
                                 <AnimatedButton
                                     onClick={handleSubmit}
                                 >
-                                    <div className="submitButton purpleText">Submit</div>
+                                    <div className="submitButton">Submit</div>
                                 </AnimatedButton>
                             </div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
