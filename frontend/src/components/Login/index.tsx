@@ -8,6 +8,7 @@ import { login } from "@/lib/authentication";
 import { useRouter } from "next/navigation";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
+import { motion } from "framer-motion";
 
 const Login = ({
     setClose,
@@ -82,15 +83,24 @@ const Login = ({
         router.push("/reset")
     }
     return (
-        <div className="w-screen h-screen fixed top-0 left-0 z-10 backdrop-blur">
+        <motion.div
+        exit={{opacity:0}}
+        className="w-screen h-screen fixed top-0 left-0 z-10 backdrop-blur">
             <div id="login-popup"
                 className="bg-black/75 loginContainer">
-                <div className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
+                <motion.div 
+                initial={{scale:0.9}}
+                animate={{scale:1}}
+                exit={{scale:1.1,opacity:0}}
+                transition={{duration:0.25,type:"tween"}}
+                className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
 
-                    <div className="relative bg-zinc-900 rounded-lg shadow outline">
-                        <button type="button"
+                    <div className="p-1 relative bg-zinc-900 rounded-lg shadow outline">
+                        <motion.button type="button"
+                            whileHover={{backgroundColor:"#A276FF"}}
+                            transition={{duration:0.1}}
                             onClick={setClose}
-                            className="exitButton absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg
+                            className="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg
                                 aria-hidden="true" className="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fillRule="evenodd"
@@ -98,7 +108,7 @@ const Login = ({
                                 ></path>
                             </svg>
                             <span className="sr-only">Close popup</span>
-                        </button>
+                        </motion.button>
 
                         <div className="p-5">
                             <p className="mb-4 text-sm font-normal text-gray-800"></p>
@@ -148,10 +158,10 @@ const Login = ({
                             </div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
             </div>
             <ToastContainer />
-        </div>
+        </motion.div>
     )
 }
 
