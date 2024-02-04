@@ -1,5 +1,7 @@
 package com.nitconfbackend.nitconf.controllers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -44,49 +46,59 @@ public class TagcontrollerTest {
         sessions.add(session2);
         tag.setSessions(sessions);
 
-        // Mock repository behavior
         when(tagsRepository.findByTitle(title)).thenReturn(Optional.of(tag));
 
-        // Call the controller method
         ResponseEntity<List<Session>> responseEntity = tagController.FindSessions(title);
 
-        // Verify the response
         assertEquals(sessions, responseEntity.getBody());
     }
 
     @Test
+    public void testFindSessions_notExist() {
+        String title = "TestTag";
+        String title1 = "NonExistent";
+        Tag tag = new Tag();
+        tag.setTitle(title);
+        List<Session> sessions = new ArrayList<>();
+        Session session1 = new Session();
+        Session session2 = new Session();
+        sessions.add(session1);
+        sessions.add(session2);
+        tag.setSessions(sessions);
+
+        when(tagsRepository.findByTitle(title1)).thenReturn(Optional.empty());
+        assertThrows(Exception.class, () -> {
+            tagController.FindSessions(title1);
+        });
+
+       
+    }
+
+    @Test
     public void testFindAll() {
-        // Prepare test data
         List<Tag> tags = new ArrayList<>();
         Tag tag1 = new Tag();
         Tag tag2 = new Tag();
         tags.add(tag1);
         tags.add(tag2);
 
-        // Mock repository behavior
         when(tagsRepository.findAll()).thenReturn(tags);
 
-        // Call the controller method
         ResponseEntity<List<Tag>> responseEntity = tagController.FindAll();
 
-        // Verify the response
         assertEquals(tags, responseEntity.getBody());
     }
 
     @Test
     public void testNewTag() {
-        // Prepare test data
         TagRequest tagRequest = new TagRequest();
         tagRequest.setTitle("TestTag");
         Tag newTag = new Tag(tagRequest.getTitle());
 
-        // Mock repository behavior
         when(tagsRepository.save(any(Tag.class))).thenReturn(newTag);
 
-        // Call the controller method
         ResponseEntity<Tag> responseEntity = tagController.newtag(tagRequest);
 
-        // Verify the response
         assertEquals(newTag, responseEntity.getBody());
     }
 }

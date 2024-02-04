@@ -2,6 +2,7 @@ package com.nitconfbackend.nitconf.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -13,9 +14,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.Authentication;
+
 
 import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Review;
@@ -29,6 +36,9 @@ import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.ReviewRequest;
 
 public class ReviewControllerTest {
+
+    @Mock
+    private Authentication authentication;
 
     @Mock
     private DocumentVersionRepository documentVersionRepository;
@@ -119,24 +129,26 @@ public class ReviewControllerTest {
 
     @Test
     public void testCreateReview() {
+        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+
         String documentId = "1";
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setComment("Test comment");
 
         DocumentVersion documentVersion = new DocumentVersion();
         documentVersion.setId(documentId);
-
+        documentVersion.setReviews(new ArrayList<Review>());
+        
         User user = new User();
         user.setRole(Role.REVIEWER);
-        user.setEmail("trial@gmail.com");
-        user.setFirstName("Sreeshma");
-        user.setLastName("Sangesh");
-        user.setPassword("Sree123");
-        user.setPhoneNumber("6736254812");
 
-
+        when(reviewRepository.save(any(Review.class))).thenReturn(new Review());
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(documentVersionRepository.findById(documentId)).thenReturn(Optional.of(documentVersion));
+        when(documentVersionRepository.findById(anyString())).thenReturn(Optional.of(documentVersion)); // Mock to return an Optional containing a DocumentVersion object
+
 
         ResponseEntity<String> responseEntity = reviewController.createReview(reviewRequest, documentId);
 
@@ -145,7 +157,14 @@ public class ReviewControllerTest {
     }
 
     @Test
+
     public void testCreateReview_InvalidRole() {
+        
+        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+
         String documentId = "1";
         ReviewRequest reviewRequest = new ReviewRequest();
         reviewRequest.setComment("Test comment");
@@ -155,12 +174,11 @@ public class ReviewControllerTest {
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        // ResponseEntity<String> responseEntity = reviewController.createReview(reviewRequest, documentId);
+        assertEquals(HttpStatus.BAD_REQUEST, reviewController.createReview(reviewRequest, documentId).getStatusCode());
 
-        // assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        assertThrows(Exception.class, () -> {
-            reviewController.createReview(reviewRequest, documentId);
-        });
     }
+
     
 }
+
+
