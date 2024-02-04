@@ -20,13 +20,13 @@ import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.types.TagRequest;
 
-public class TagcontrollerTest {
+public class TagControllerTest {
 
     @Mock
     private TagsRepository tagsRepository;
 
     @InjectMocks
-    private Tagcontroller tagController;
+    private TagController tagController;
 
     @BeforeEach
     public void setUp() {
