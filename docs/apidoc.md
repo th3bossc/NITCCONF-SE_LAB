@@ -26,7 +26,7 @@ TABLE OF CONTENTS
     * 4.3 [Get session](#43-get-session)
     * 4.4 [Update session](#44-update-session)
     * 4.5 [Upload PDF](#45-upload-pdf)
-    * 4.6 [Get all files of the session](#46-get-all-files-of-the-session)
+    * 4.6 [Get latest PDF of session](#46-get-latest-pdf-of-session)
     * 4.7 [Update status to ACCEPTED](#47-update-status-to-accepted)
     * 4.8 [Update status to REJECTED](#48-update-status-to-rejected)
 * 5-TAG
@@ -43,6 +43,7 @@ TABLE OF CONTENTS
     Body: { email: string, password: string }
     Response: { token: string }
 
+![](./screenshots/login.png)
 
 
 ### 1.2 Register
@@ -50,6 +51,8 @@ TABLE OF CONTENTS
     To create an account    
     Body: { firstName:string,  lastName:string, phoneNumber: string, email: string, password: string }
     Response: { token: string }
+
+![](./screenshots/register.png)
 
 ## 2 PROFILE
 
@@ -66,6 +69,8 @@ TABLE OF CONTENTS
         role: USER
     }
 
+![](./screenshots/getCurrentProfile.png)
+
 ### 2.2 Update profile 
     [PUT] /api/auth/profile 
     To update the profile details of the current user
@@ -75,8 +80,10 @@ TABLE OF CONTENTS
         lastName: string,
         email: string,
         phoneNumber: string
-    }
+    },
     Response: "Updated successfully"
+
+![](./screenshots/updateProfile.png)
 
 ### 2.3 Get any user profile
     [GET] /api/profile/<id:string>
@@ -92,12 +99,16 @@ TABLE OF CONTENTS
         role: USER
     }
 
+![](./screenshots/getAnyUserProfile.png)
+
 ### 2.4 Verify email
     [GET] /api/email/verify/<token:string>
     To verify the email of the user
     Headers: None
     Body: None
     Response: "Email verified successfully"
+
+![](./screenshots/verifyEmail.png)
 
 ### 2.5 Resend email verification code
     [POST] /api/email/resend
@@ -106,6 +117,8 @@ TABLE OF CONTENTS
     Body: { email: string }
     Response: "Email sent successfully"
 
+![](./screenshots/resendMail.png)
+
 ### 2.6 Request forgot password mail
     [POST] /api/email/reset
     To reset password(FORGOT password)
@@ -113,12 +126,16 @@ TABLE OF CONTENTS
     Body: { email: string }
     Response: "Email sent successfully"
 
+![](./screenshots/requestResetPassword.png)
+
 ### 2.7 Update password
     [PUT] /api/email/reset/<token: string>
     To update the password
     Headers: None
     Body: { password: string }
     Response: "Password reset successfully"
+
+![](./screenshots/updatePassword.png)
 
 ## 3 REVIEW
 
@@ -138,6 +155,7 @@ TABLE OF CONTENTS
         },
         comment: string
     }
+
 
 ### 3.2 Get Review
     [GET] /api/review/<id:string>
@@ -198,6 +216,8 @@ TABLE OF CONTENTS
         }
     }
 
+![](./screenshots/getAllSessions.png)
+
 ### 4.2 Create new session
     [POST] /api/session    
     Creates a new session for the user
@@ -236,6 +256,8 @@ TABLE OF CONTENTS
         }
     }
 
+![](./screenshots/createSession.png)
+
 ### 4.3 Get session
     [GET] /api/session/<id:string>
     Returns the session with given id
@@ -268,6 +290,8 @@ TABLE OF CONTENTS
             title: string
         }
     }
+
+![](./screenshots/getASession.png)
 
 ### 4.4 Update session
     [PUT] /api/session/<id:string>
@@ -302,6 +326,8 @@ TABLE OF CONTENTS
         }
     }
 
+![](./screenshots/updateSession.png)
+
 ### 4.5 Upload PDF
     [PUT] /api/session/doc/<id:string>
     Uploads the PDF file to the session with given id
@@ -309,12 +335,16 @@ TABLE OF CONTENTS
     Body: { id: string, file: PDF }
     Response: { None }
 
-### 4.6 Get all files of the session
+![](./screenshots/uploadNewDoc.png)
+
+### 4.6 Get latest PDF of session
     [GET] /api/session/doc/<id:string>
     Returns the latest document of the given session id
     Headers: { Authorization: "Bearer <token>" }
     Body: { id: string }
     Response: PDF file of session id
+
+![](./screenshots/getLatestDoc.png)
 
 ### 4.7 Update status to ACCEPTED
     [PUT] /api/session/status/accepted/<id:string>
@@ -323,12 +353,16 @@ TABLE OF CONTENTS
     Body: { id: string }
     Response: "UPDATED STATUS TO ACCEPTED"
 
+![](./screenshots/acceptDoc.png)
+
 ### 4.8 Update status to REJECTED
     [PUT] /api/session/doc/rejected/<id:string>
     Sets the status of session with given id as REJECTED
     Headers: { Authorization: "Bearer <token>" }
     Body: {  id: string}
     Response: "UPDATED STATUS TO REJECTED"
+
+![](./screenshots/rejectDoc.png)
 
 ## 5 TAG
 
@@ -365,6 +399,8 @@ TABLE OF CONTENTS
         }
     }
 
+![](./screenshots/getSessionByTag.png)
+
 ### 5.2 Get all tags
     [GET] /api/tags
     Lists all the pre-defined tags
@@ -374,6 +410,8 @@ TABLE OF CONTENTS
         id: string,
         title: string
     }
+
+![](./screenshots/getAllTags.png)
 
 ### 5.3 Create new tag
     [POST] /api/tags
@@ -385,4 +423,5 @@ TABLE OF CONTENTS
         title: string
     }
 
+![](./screenshots/createNewTag.png)
 
