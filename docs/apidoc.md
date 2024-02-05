@@ -131,7 +131,7 @@ TABLE OF CONTENTS
     Returns all the sessions pertaining to the user
     Headers: { Authorization: "Bearer <token>" }
     Body: { None }
-    Response: { List of sessions(Refer session object) }
+    Response: List of all sessions of current user
 
 ## 4.2 Create new session
     [POST] /api/session    
@@ -166,7 +166,7 @@ TABLE OF CONTENTS
     Returns all the PDF files of the session with given id
     Headers: { Authorization: "Bearer <token>" }
     Body: { id: string }
-    Response: { List of files }
+    Response: List of PDF files of session id
 
 ## 4.7 Update status to ACCEPTED
     [PUT] /api/session/status/accepted/<id:string>
@@ -189,14 +189,14 @@ TABLE OF CONTENTS
     Returns all the sessions containing the tag with given title
     Headers: { Authorization: "Bearer <token>" }
     Body: { title: string }
-    Response: { List of sessions(Refer session object) }
+    Response: List of sessions containing the tag with given title
 
 ## 5.2 Get all tags
     [GET] /api/tags
     Lists all the pre-defined tags
     Headers: { Authorization: "Bearer <token>" }
     Body: { None }
-    Response: { List of tags(Refer tag object) }
+    Response: List of all tags
 
 ## 5.3 Create new tag
     [POST] /api/tags
