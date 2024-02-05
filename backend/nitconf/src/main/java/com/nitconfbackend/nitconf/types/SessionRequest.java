@@ -1,7 +1,6 @@
 package com.nitconfbackend.nitconf.types;
 import com.nitconfbackend.nitconf.models.Level;
 import com.nitconfbackend.nitconf.models.Status;
-import com.nitconfbackend.nitconf.models.Tag;
 
 
 import java.util.List;

@@ -66,7 +66,8 @@ TABLE OF CONTENTS
         lastName: string,
         email: string,
         phoneNumber: string,
-        role: USER
+        role: USER,
+        isVerified: boolean
     }
 
 ![](./screenshots/getCurrentProfile.png)
@@ -96,7 +97,8 @@ TABLE OF CONTENTS
         lastName: string,
         email: string,
         phoneNumber: string,
-        role: USER
+        role: USER,
+        isVerified: boolean
     }
 
 ![](./screenshots/getAnyUserProfile.png)
@@ -151,10 +153,13 @@ TABLE OF CONTENTS
             lastName: string,
             email: string,
             phoneNumber: string,
-            role: REVIEWER
+            role: REVIEWER,
+            isVerified: boolean
         },
         comment: string
     }
+
+![](./screenshots/getReviewsOfDoc.png)
 
 
 ### 3.2 Get Review
@@ -169,10 +174,13 @@ TABLE OF CONTENTS
             lastName: string,
             email: string,
             phoneNumber: string,
-            role: REVIEWER
+            role: REVIEWER,
+            isVerified: boolean
         },
         comment: string
     }
+
+![](./screenshots/getAReview.png)
 
 ### 3.3 Create Review
     [POST] /api/review/<id:string>
@@ -180,6 +188,8 @@ TABLE OF CONTENTS
     Headers: { Authorization: "Bearer <token>" }
     Body: { comment: string }
     Response: "Review created"
+
+![](./screenshots/createReview.png)
 
 ## 4 SESSION
 
@@ -205,7 +215,8 @@ TABLE OF CONTENTS
                     lastName: string,
                     email: string,
                     phoneNumber: string,
-                    role: REVIEWER
+                    role: REVIEWER,
+                    isVerified: boolean
                 },
                 comment: string
             }
@@ -245,7 +256,8 @@ TABLE OF CONTENTS
                     lastName: string,
                     email: string,
                     phoneNumber: string,
-                    role: REVIEWER
+                    role: REVIEWER,
+                    isVerified: boolean
                 },
                 comment: string
             }
@@ -280,7 +292,8 @@ TABLE OF CONTENTS
                     lastName: string,
                     email: string,
                     phoneNumber: string,
-                    role: REVIEWER
+                    role: REVIEWER,
+                    isVerified: boolean
                 },
                 comment: string
             }
@@ -315,7 +328,8 @@ TABLE OF CONTENTS
                     lastName: string,
                     email: string,
                     phoneNumber: string,
-                    role: REVIEWER
+                    role: REVIEWER,
+                    isVerified: boolean
                 },
                 comment: string
             }
@@ -388,7 +402,8 @@ TABLE OF CONTENTS
                     lastName: string,
                     email: string,
                     phoneNumber: string,
-                    role: REVIEWER
+                    role: REVIEWER,
+                    isVerified: boolean
                 },
                 comment: string
             }
