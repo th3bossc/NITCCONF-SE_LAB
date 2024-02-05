@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +33,6 @@ import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.SessionRequest;
 
-import lombok.experimental.PackagePrivate;
 
 public class SessionControllerTest {
 
@@ -93,6 +94,62 @@ public class SessionControllerTest {
     }
 
     @Test
+    public void testNewSession_nullLanguage() {
+
+        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+        SessionRequest request = new SessionRequest();
+        request.setTitle("Test Title");
+        request.setDescription("Test Description");
+        request.setLevel(Level.INTERMEDIATE);
+        request.setStatus(Status.PENDING);
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        request.setTags(tags);
+
+        User mockUser = new User();
+        mockUser.setEmail("test@example.com");
+        mockUser.sessions=new ArrayList<Session>();
+
+        Tag mockTag = new Tag("Java");
+        List<Tag> mockTags = new ArrayList<>();
+        mockTags.add(mockTag);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+        when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
+
+        assertEquals(HttpStatus.BAD_REQUEST, sessionController.newSession(request).getStatusCode());
+    }
+
+    @Test
+    public void testNewSession_Invalidtag() {
+
+        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+        SessionRequest request = new SessionRequest();
+        request.setTitle("Test Title");
+        request.setDescription("Test Description");
+        request.setLevel(Level.INTERMEDIATE);
+        request.setStatus(Status.PENDING);
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        request.setTags(tags);
+
+        User mockUser = new User();
+        mockUser.setEmail("test@example.com");
+        mockUser.sessions=new ArrayList<Session>();
+
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+        ResponseEntity<Session> responseEntity = sessionController.newSession(request);
+
+    }
+
+    @Test
     public void testUpdateSession_ValidRequest() {
 
         SecurityContext securityContext=mock(SecurityContext.class);
@@ -118,22 +175,35 @@ public class SessionControllerTest {
         List<Tag> mockTags = new ArrayList<>();
         mockTags.add(mockTag);
 
-        // Mock repository behavior
         when(sessionRepository.findById(anyString())).thenReturn(Optional.of(mockSession));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
         when(sessionRepository.save(any(Session.class))).thenReturn(mockSession);
 
-        // Test
         ResponseEntity<Session> responseEntity = sessionController.updateSession(sessionId, request);
 
-        // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("Updated Title", responseEntity.getBody().getTitle());
         assertEquals("Updated Description", responseEntity.getBody().getDescription());
         assertEquals("Updated Language", responseEntity.getBody().getLanguage());
-
-
     }
 
-    // Add more test cases for other methods as needed
+    @Test
+    public void testUpdateSession_WrongSessionId() {
+        // Mock behavior of sessionRepository to return an empty Optional when findById is called with invalid session ID
+        when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        // Prepare a SessionRequest object with valid attributes
+        SessionRequest sessionRequest = new SessionRequest();
+        sessionRequest.setTitle("Updated Title");
+        sessionRequest.setDescription("Updated Description");
+        sessionRequest.setLanguage("English");
+        sessionRequest.setLevel(Level.INTERMEDIATE);
+        sessionRequest.setStatus(Status.PENDING);
+        sessionRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
+
+        // Call the updateSession method with an invalid session ID
+        ResponseEntity<Session> responseEntity = sessionController.updateSession("wrongSessionId", sessionRequest);
+
+        // Assertion is not needed here because the method is expected to throw NoSuchElementException
+    }
 }

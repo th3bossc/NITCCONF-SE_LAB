@@ -102,8 +102,6 @@ public class SessionController {
             tag.getSessions().add(session);
             tagsRepo.save(tag);
         });
-
-
         return ResponseEntity.ok(session);
     }
 
