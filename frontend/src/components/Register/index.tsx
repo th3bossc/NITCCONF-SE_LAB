@@ -94,7 +94,6 @@ const Register = ({
             logIn(token)
         }
         catch (error) {
-            console.log(error);
             toast.error('Something went wrong!', {
                 position: "bottom-right",
                 autoClose: 1500,
@@ -105,27 +104,27 @@ const Register = ({
                 progress: undefined,
                 theme: "dark",
                 transition: Flip
-                });
+            });
         }
     }
 
     return (
-        <motion.div 
-        exit={{opacity:0}}
-        className="w-screen h-screen z-10 fixed top-0 left-0">
+        <motion.div
+            exit={{ opacity: 0 }}
+            className="w-screen h-screen z-10 fixed top-0 left-0">
             <div id="Register-popup"
                 className="bg-black/75 registerContainer">
-                <motion.div 
-                initial={{scale:0.9}}
-                animate={{scale:1}}
-                exit={{scale:1.1,opacity:0}}
-                transition={{duration:0.25,type:"tween"}}
-                className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
+                <motion.div
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 1.1, opacity: 0 }}
+                    transition={{ duration: 0.25, type: "tween" }}
+                    className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
 
                     <div className="p-1 relative bg-zinc-900 rounded-lg shadow">
                         <motion.button type="button"
-                            whileHover={{backgroundColor:"#A276FF"}}
-                            transition={{duration:0.1}}
+                            whileHover={{ backgroundColor: "#A276FF" }}
+                            transition={{ duration: 0.1 }}
                             onClick={setClose}
                             className="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg
                                 aria-hidden="true" className="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"

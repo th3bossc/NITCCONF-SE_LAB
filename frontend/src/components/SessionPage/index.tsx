@@ -13,63 +13,20 @@ const SessionPage = ({
 }: {
     session: Session | null
 }) => {
-    const commentsTemp: Review[] = [
-        {
-            id: "1234",
-            reviewer: {
-                id: "12",
-                firstName: "Diljith",
-                lastName: "Dileep",
-                email: "diljith2003@gmail.com",
-                phoneNumber: "8075762993",
-                role: "REVIEWER",
-                isVerified: true,
-            },
-            comment: "comcomcomententent"
-        },
-        {
-            id: "431",
-            reviewer: {
-                id: "12",
-                firstName: "Diljith",
-                lastName: "Dileep",
-                email: "diljith2003@gmail.com",
-                phoneNumber: "8075762993",
-                role: "REVIEWER",
-                isVerified: true,
-            },
-            comment: "comcomcomententent"
-        },
-        {
-            id: "123234344",
-            reviewer: {
-                id: "123",
-                firstName: "Diljith",
-                lastName: "Dileep",
-                email: "diljith2003@gmail.com",
-                phoneNumber: "8075762993",
-                role: "REVIEWER",
-                isVerified: true,
-            },
-            comment: "comcomcomententent"
-        },
-        {
-            id: "1232224",
-            reviewer: {
-                id: "1234",
-                firstName: "Diljith",
-                lastName: "Dileep",
-                email: "diljith2003@gmail.com",
-                phoneNumber: "8075762993",
-                role: "REVIEWER",
-                isVerified: true,
-            },
-            comment: "comcomcomententent"
-        }
-    ]
+    let comments: Review[] = [];
+    if (session) {
+        const temp = session.documentVersions.map((doc, index) => {
+            return (
+                doc.reviews.map((review, index) => {
+                    return review
+                })
+            );
+        })
+        comments = temp.flat(1);
+    }
     return (
         <div className="w-full h-screen xl:flex xl:justify-center xl:pt-16 text-[#111]">
-            <div className="w-full xl:w-[80%] xl:rounded-t-[40px] pt-32 p-4 xl:p-10 2xl:p-16 bg-white relative overflow-y-scroll">
+            <div className="w-full h-full xl:w-[80%] xl:rounded-t-[40px] pt-32 p-4 xl:p-10 2xl:p-16 bg-white relative overflow-y-scroll">
                 <AnimatePresence>
                     {
                         session ? (
@@ -111,9 +68,16 @@ const SessionPage = ({
                                     <h2 className={`w-full text-center text-3xl 2xl:text-5xl font-bold ${oswald.className}`} > COMMENTS </h2>
                                     <div className="flex flex-col gap-4 mt-8">
                                         {
-                                            commentsTemp.map((review) => (
-                                                <Comment key={review.id} {...review} />
-                                            ))
+                                            (comments.length === 0) ? (
+                                                <div className="w-full h-full p-4 flex items-center justify-center">
+                                                    <div className="w-full md:w-1/2 p-4  flex items-center justify-center border border-black border-dashed border-2">
+                                                        No comments yet...
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                comments.map((review) => (
+                                                    <Comment key={review.id} {...review} />
+                                                )))
                                         }
                                     </div>
                                 </div>

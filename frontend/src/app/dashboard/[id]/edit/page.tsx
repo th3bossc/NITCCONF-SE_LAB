@@ -59,7 +59,6 @@ const EditSession = ({ params }: { params: { id: string } }) => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    console.log(formData);
     useEffect(() => {
         if (changedData.title && formData.title == "")
             setTitleRed(true);
@@ -93,8 +92,6 @@ const EditSession = ({ params }: { params: { id: string } }) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
-        console.log(file);
         const sendData = async () => {
             try {
                 const res = await updateSession(params.id, formData, jwt);
@@ -114,10 +111,9 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                     progress: undefined,
                     theme: "dark",
                     transition: Flip,
-                    });
+                });
             }
             catch (error) {
-                console.log(error);           
                 toast.error('Something went wrong!', {
                     position: "bottom-right",
                     autoClose: 1500,
@@ -128,7 +124,7 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                     progress: undefined,
                     theme: "dark",
                     transition: Flip
-                    });
+                });
             }
         }
         sendData();
@@ -136,7 +132,7 @@ const EditSession = ({ params }: { params: { id: string } }) => {
 
     return (
         <div className="w-full h-screen xl:flex xl:justify-center xl:pt-16 text-[#111]">
-            <div className="w-full xl:w-[80%] xl:rounded-t-[40px] pt-32 p-4 xl:p-10 2xl:p-16 bg-white relative overflow-y-scroll">
+            <div className="w-full h-full xl:w-[80%] xl:rounded-t-[40px] pt-32 p-4 xl:p-10 2xl:p-16 bg-white relative overflow-y-scroll">
                 <AnimatePresence>
                     {
                         loading ? (

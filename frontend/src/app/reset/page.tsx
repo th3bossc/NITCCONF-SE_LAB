@@ -19,7 +19,6 @@ const ResetPasswordPage = () => {
     }
 
     const handleSubmit = async () => {
-        console.log(formData)
         if (formData.email === "")
             return;
         await sendPasswordEmail(formData);

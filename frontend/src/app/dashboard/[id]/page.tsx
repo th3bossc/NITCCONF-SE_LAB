@@ -19,6 +19,7 @@ const SlugPage = ({ params }: { params: { id: string } }) => {
     // }, [params.id, jwt])
     useEffect(() => {
         setSession(sessions.find((session) => session.id === params.id) || null);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <div>

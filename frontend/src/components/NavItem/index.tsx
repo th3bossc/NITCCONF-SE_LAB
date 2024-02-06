@@ -7,7 +7,8 @@ import { useAuthContext } from '@/hooks/useAuthContext';
 import { deleteSession } from '@/lib/sessions';
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
-
+import Dialog from '../Dialog';
+import { useRouter } from 'next/navigation';
 const NavItem = ({ session, current, onClick }: {
     session: Session,
     current: string,
@@ -15,14 +16,17 @@ const NavItem = ({ session, current, onClick }: {
 }) => {
     const { jwt, setSessions } = useAuthContext();
     const [hover, setHover] = useState(false);
+    const [dialog, setDialog] = useState(false);
+    const [toDelete, setToDelete] = useState<string | null>(null);
+    const router = useRouter();
 
-    const deleteHandler = async (id: string | undefined) => {
+    const deleteHandler = async (id: string | null) => {
         if (!id)
             return;
         try {
             await deleteSession(id, jwt);
             setSessions(prev => prev.filter(session => session.id !== id));
-            //TODO: add a dialog prompt before deletion
+            router.push("/dashboard/profile")
             toast.success('Deleted session successfully.', {
                 position: "bottom-right",
                 autoClose: 1500,
@@ -33,10 +37,9 @@ const NavItem = ({ session, current, onClick }: {
                 progress: undefined,
                 theme: "dark",
                 transition: Flip,
-                });
+            });
         }
         catch (error) {
-            console.log(error);
             toast.error('Something went wrong!', {
                 position: "bottom-right",
                 autoClose: 1500,
@@ -47,7 +50,7 @@ const NavItem = ({ session, current, onClick }: {
                 progress: undefined,
                 theme: "dark",
                 transition: Flip
-                });
+            });
         }
     }
 
@@ -78,7 +81,11 @@ const NavItem = ({ session, current, onClick }: {
                             initial={{ opacity: 0, x: 10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 10 }}
-                            onClick={() => deleteHandler(session.id)}
+                            // onClick={() => deleteHandler(session.id)}
+                            onClick={() => {
+                                setToDelete(session.id || null)
+                                setDialog(true)
+                            }}
                         >
                             <Image src={deleteIcon} alt="delete-icon" height={25} width={25} />
                         </motion.div>
@@ -86,6 +93,27 @@ const NavItem = ({ session, current, onClick }: {
                 }
             </AnimatePresence>
             <ToastContainer />
+            <AnimatePresence>
+                {
+                    dialog && (
+                        <motion.div
+                            className="fixed top-0 left-0 bg-black/75 w-full h-full z-[100] flex items-center justify-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25, type: "tween" }}
+                        >
+                            <Dialog
+                                setClose={() => setDialog(false)}
+                                eventHandler={() => {
+                                    deleteHandler(toDelete);
+                                    setDialog(false);
+                                }}
+                            />
+                        </motion.div>
+                    )
+                }
+            </AnimatePresence>
         </motion.span>
     )
 }

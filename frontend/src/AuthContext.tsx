@@ -42,7 +42,6 @@ export const AuthContextProvider = ({
 
         }
         catch (error: any) {
-            console.log(error.response);
             localStorage.removeItem('jwt');
             setJwt(null);
             setUser(null);

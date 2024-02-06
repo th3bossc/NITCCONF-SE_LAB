@@ -1,5 +1,6 @@
 "use client";
 
+import Dialog from "@/components/Dialog";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
@@ -14,16 +15,6 @@ export default function RootLayout({
   }>) {
     const {sessions} = useAuthContext();
     const [loading, setLoading] = useState(false);
-    // useEffect(() => {
-    //   const fetchData = async () => {
-    //     setLoading(true)
-    //     const data = await getAllSessions(jwt);
-    //     if (data)
-    //       setSessions(data);
-    //     setLoading(false);
-    //   }
-    //   fetchData()
-    // }, [setSessions, jwt, setLoading])
     return (
       <>
         <AnimatePresence>
