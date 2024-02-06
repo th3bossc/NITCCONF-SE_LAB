@@ -13,7 +13,6 @@ const SessionPage = ({
 }: {
     session: Session | null
 }) => {
-    console.log(session);
     let comments: Review[] = [];
     if (session) {
         const temp = session.documentVersions.map((doc, index) => {

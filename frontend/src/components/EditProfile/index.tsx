@@ -6,7 +6,8 @@ import { UpdateProfileFields, UpdateProfileRequest, User } from "@/types";
 import { useAuthContext } from "@/hooks/useAuthContext";
 import { getProfile, updateProfile } from "@/lib/profile";
 import { motion } from "framer-motion";
-
+import { ToastContainer, toast, Flip } from "react-toastify";
+import 'react-toastify/ReactToastify.css';
 
 const EditProfile = ({
     initialData,
@@ -85,33 +86,52 @@ const EditProfile = ({
             const updatedUser = await getProfile(jwt);
             setUser(updatedUser);
 
-            console.log("profile updated");
+            toast.success('Profile updated successfully.', {
+                position: "bottom-right",
+                autoClose: 1500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip,
+            });
         }
         catch (err) {
-            console.log(err);
-            //TODO: toastify
+            toast.error('Something went wrong!', {
+                position: "bottom-right",
+                autoClose: 1500,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Flip
+            });
         }
     }
 
     return (
-        <motion.div 
-        exit={{opacity:0}}
-        className="w-screen h-screen z-10 fixed top-0 left-0">
+        <motion.div
+            exit={{ opacity: 0 }}
+            className="w-screen h-screen z-10 fixed top-0 left-0">
             <div id="Register-popup"
                 className="bg-black/75 registerContainer">
-                <motion.div 
-                initial={{scale:0.9}}
-                animate={{scale:1}}
-                exit={{scale:1.1,opacity:0}}
-                className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
+                <motion.div
+                    initial={{ scale: 0.9 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 1.1, opacity: 0 }}
+                    className="relative p-4 w-full max-w-md h-full md:h-auto flex items-center justify-center">
 
                     <div className="relative bg-zinc-900 rounded-lg shadow">
                         <motion.button type="button"
                             onClick={setClose}
-                            whileHover={{backgroundColor:"#A276FF"}}
-                            transition={{duration:0.1}}
-                            className="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg   
-                            aria-hidden="true" className="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"
+                            whileHover={{ backgroundColor: "#A276FF" }}
+                            transition={{ duration: 0.1 }}
+                            className="absolute top-3 right-2.5 text-gray-400 bg-transparent rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"><svg
+                                aria-hidden="true" className="w-5 h-5" fill="#c6c7c7" viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path fillRule="evenodd"
                                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -197,6 +217,7 @@ const EditProfile = ({
                     </div>
                 </motion.div>
             </div>
+            <ToastContainer />
         </motion.div>
     )
 }

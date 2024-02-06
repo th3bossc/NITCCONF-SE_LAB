@@ -59,7 +59,6 @@ const EditSession = ({ params }: { params: { id: string } }) => {
         fetchData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
-    console.log(formData);
     useEffect(() => {
         if (changedData.title && formData.title == "")
             setTitleRed(true);
@@ -93,8 +92,6 @@ const EditSession = ({ params }: { params: { id: string } }) => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
-        console.log(file);
         const sendData = async () => {
             try {
                 const res = await updateSession(params.id, formData, jwt);
@@ -114,10 +111,9 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                     progress: undefined,
                     theme: "dark",
                     transition: Flip,
-                    });
+                });
             }
             catch (error) {
-                console.log(error);           
                 toast.error('Something went wrong!', {
                     position: "bottom-right",
                     autoClose: 1500,
@@ -128,7 +124,7 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                     progress: undefined,
                     theme: "dark",
                     transition: Flip
-                    });
+                });
             }
         }
         sendData();

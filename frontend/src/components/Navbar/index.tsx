@@ -40,10 +40,9 @@ const Navbar = ({
                 progress: undefined,
                 theme: "dark",
                 transition: Flip,
-                });
+            });
         }
         catch (error) {
-            console.log(error);
             toast.error('Something went wrong!', {
                 position: "bottom-right",
                 autoClose: 1500,
@@ -54,7 +53,7 @@ const Navbar = ({
                 progress: undefined,
                 theme: "dark",
                 transition: Flip
-                });
+            });
         }
     }
     return (

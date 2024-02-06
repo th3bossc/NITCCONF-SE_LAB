@@ -75,8 +75,7 @@ const AddSession = () => {
     }
 
     const handleSubmit = () => {
-        console.log(formData);
-        console.log(file);
+        (formData);
         const sendData = async () => {
             try {
                 const res = await createSession(formData, jwt);
@@ -102,7 +101,6 @@ const AddSession = () => {
                 }
             }
             catch (error) {
-                console.log(error);
                 toast.error('Something went wrong!', {
                     position: "bottom-right",
                     autoClose: 1500,

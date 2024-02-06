@@ -5,7 +5,6 @@ import { updatePassword } from "@/lib/profile";
 import { ChangeEvent, useState } from "react";
 
 const ResetPasswordPage = ({ params }: { params: { token: string } }) => {
-    console.log(params.token);
 
     const [formData, setFormData] = useState({
         password: "",
