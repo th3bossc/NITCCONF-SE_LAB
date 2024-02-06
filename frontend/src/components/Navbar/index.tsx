@@ -13,6 +13,9 @@ import { deleteSession } from "@/lib/sessions";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
+import Dialog from '../Dialog';
+import { useRouter } from 'next/navigation';
+
 const Navbar = ({
     sessions,
 }: {
@@ -22,14 +25,17 @@ const Navbar = ({
     const pathname = usePathname();
     const current = pathname.split("/")[2];
     const [open, setOpen] = useState(false);
+    const [dialog, setDialog] = useState(false);
+    const [toDelete, setToDelete] = useState<string | null>(null);
+    const router = useRouter();
 
-    const deleteHandler = async (id: string | undefined) => {
+    const deleteHandler = async (id: string | null) => {
         if (!id)
             return;
         try {
             await deleteSession(id, jwt);
             setSessions(prev => prev.filter(session => session.id !== id));
-            //TODO: add a dialog prompt before deletion
+            router.push("/dashboard/profile");
             toast.success('Deleted session successfully.', {
                 position: "bottom-right",
                 autoClose: 1500,
@@ -88,6 +94,7 @@ const Navbar = ({
                                     sessions.map((session) => (
                                         <Link
                                             href={`/dashboard/${session.id}`}
+                                            onClick={() => setOpen(false)}
                                             key={session.id}
                                             className="flex relative"
                                             style={{
@@ -98,7 +105,11 @@ const Navbar = ({
                                             {session.title}
                                             <div
                                                 className="absolute right-0 top-0"
-                                                onClick={() => deleteHandler(session.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setToDelete(session.id || null);
+                                                    setDialog(true)
+                                                }}
                                             >
                                                 <Image src={deleteIcon} alt="delete-icon" height={25} width={25} />
                                             </div>
@@ -131,6 +142,27 @@ const Navbar = ({
                 </AnimatePresence>
             </div>
             <ToastContainer />
+            <AnimatePresence>
+                {
+                    dialog && (
+                        <motion.div
+                            className="fixed top-0 left-0 bg-black/75 w-full h-full z-[100] flex items-center justify-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.25, type: "tween" }}
+                        >
+                            <Dialog
+                                setClose={() => setDialog(false)}
+                                eventHandler={() => {
+                                    deleteHandler(toDelete);
+                                    setDialog(false);
+                                }}
+                            />
+                        </motion.div>
+                    )
+                }
+            </AnimatePresence>
         </div>
     )
 }
