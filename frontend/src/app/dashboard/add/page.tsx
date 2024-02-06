@@ -11,7 +11,7 @@ import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
 const AddSession = () => {
-    const { jwt, user } = useAuthContext();
+    const { jwt, user, setSessions } = useAuthContext();
     const [formData, setFormData] = useState<SessionRequest>({
         title: "",
         description: "",
@@ -83,20 +83,26 @@ const AddSession = () => {
                 const id = res?.id;
                 if (id && file)
                     await uploadDoc(id, file, jwt);
-                    toast.success('Added session successfully.', {
-                        position: "bottom-right",
-                        autoClose: 1500,
-                        hideProgressBar: true,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Flip,
-                        });
+                toast.success('Added session successfully.', {
+                    position: "bottom-right",
+                    autoClose: 1500,
+                    hideProgressBar: true,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Flip,
+                });
+                if (res) {
+                    setSessions((prev) => ([
+                        ...prev,
+                        res,
+                    ]));
+                }
             }
             catch (error) {
-                console.log(error);            
+                console.log(error);
                 toast.error('Something went wrong!', {
                     position: "bottom-right",
                     autoClose: 1500,
@@ -107,9 +113,11 @@ const AddSession = () => {
                     progress: undefined,
                     theme: "dark",
                     transition: Flip
-                    });
+                });
             }
+
         }
+
         sendData();
     }
 
@@ -134,7 +142,7 @@ const AddSession = () => {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                <div className="w-full flex gap-4 items-center justify-center">
+                                <div className="w-full flex flex-col lg:flex-row gap-4 items-center justify-center">
                                     <div className="w-full">
                                         <label htmlFor="language" className="text-lg font-medium mb-2">Language</label>
                                         <input
