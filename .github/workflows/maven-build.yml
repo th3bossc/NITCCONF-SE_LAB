@@ -27,4 +27,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build and test with Maven
-        run: mvn --batch-mode package
+        run: mvn clean verify
+
+      - name: Test report 
+        uses: actions/upload-artifact/v3
+        if: success() || failure()
+        with:
+          name: SpringBoot Report
+          path: target/tests/results
