@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: ./backend/nitconf
+
 jobs:
   build:
 
