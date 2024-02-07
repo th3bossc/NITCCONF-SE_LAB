@@ -1,5 +1,6 @@
 package com.nitconfbackend.nitconf.controllers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -187,23 +189,91 @@ public class SessionControllerTest {
         assertEquals("Updated Language", responseEntity.getBody().getLanguage());
     }
 
+    // @Test
+    // public void testUpdateSession_WrongSessionId() {
+    //     when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
+
+    //     SessionRequest sessionRequest = new SessionRequest();
+    //     sessionRequest.setTitle("Updated Title");
+    //     sessionRequest.setDescription("Updated Description");
+    //     sessionRequest.setLanguage("English");
+    //     sessionRequest.setLevel(Level.INTERMEDIATE);
+    //     sessionRequest.setStatus(Status.PENDING);
+    //     sessionRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
+
+    //     // Call the updateSession method with an invalid session ID
+    //     ResponseEntity<Session> responseEntity = sessionController.updateSession("wrongSessionId", sessionRequest);
+    //     assertThrows(Exception.class, () -> {
+    //         SessionController.updateSession("wrongSessionId", sessionRequest);
+    //     });
+    // }
+
     @Test
-    public void testUpdateSession_WrongSessionId() {
-        // Mock behavior of sessionRepository to return an empty Optional when findById is called with invalid session ID
-        when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
+public void testUpdateSession_WrongSessionId() {
+    // Mock behavior of sessionRepository to return an empty Optional when findById is called with invalid session ID
+    when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        // Prepare a SessionRequest object with valid attributes
-        SessionRequest sessionRequest = new SessionRequest();
-        sessionRequest.setTitle("Updated Title");
-        sessionRequest.setDescription("Updated Description");
-        sessionRequest.setLanguage("English");
-        sessionRequest.setLevel(Level.INTERMEDIATE);
-        sessionRequest.setStatus(Status.PENDING);
-        sessionRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
+    SessionRequest sessionRequest = new SessionRequest();
+    sessionRequest.setTitle("Updated Title");
+    sessionRequest.setDescription("Updated Description");
+    sessionRequest.setLanguage("English");
+    sessionRequest.setLevel(Level.INTERMEDIATE);
+    sessionRequest.setStatus(Status.PENDING);
+    sessionRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
 
-        // Call the updateSession method with an invalid session ID
-        ResponseEntity<Session> responseEntity = sessionController.updateSession("wrongSessionId", sessionRequest);
+    // Call the updateSession method with an invalid session ID and assert that it throws an exception
+    assertThrows(NoSuchElementException.class, () -> {
+        sessionController.updateSession("wrongSessionId", sessionRequest);
+    });
+}
+@Test
+    public void testGetSession_ValidSessionId() {
+        String sessionId = "session123";
 
-        // Assertion is not needed here because the method is expected to throw NoSuchElementException
+        Session session = new Session();
+        session.setId(sessionId);
+
+        when(sessionRepository.findById(sessionId)).thenReturn(Optional.of(session));
+
+        ResponseEntity<Session> responseEntity = sessionController.getSession(sessionId);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(session, responseEntity.getBody());
+    }
+
+    @Test
+    public void testGetSession_InvalidSessionId() {
+        String invalidSessionId = "invalidSessionId";
+
+        when(sessionRepository.findById(invalidSessionId)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            sessionController.getSession(invalidSessionId);
+        });
+    }
+
+    @Test
+    public void testGetAllSessions() {
+        String userEmail = "test@example.com";
+
+        User user = mock(User.class);
+        user.setEmail(userEmail);
+
+        List<Session> sessions = Arrays.asList(new Session(), new Session());
+
+        UserRepository userRepository = mock(UserRepository.class);
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(userEmail);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(user.getSessions()).thenReturn(sessions);
+        ResponseEntity<List<Session>> responseEntity = sessionController.getAllSessions();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(sessions, responseEntity.getBody());
     }
 }
