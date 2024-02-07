@@ -1,4 +1,5 @@
 package com.nitconfbackend.nitconf.controllers;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +35,6 @@ import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.SessionRequest;
 
-
 public class SessionControllerTest {
 
     @Mock
@@ -53,13 +54,13 @@ public class SessionControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void testNewSession_ValidRequest() {
 
-        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
@@ -75,7 +76,7 @@ public class SessionControllerTest {
 
         User mockUser = new User();
         mockUser.setEmail("test@example.com");
-        mockUser.sessions=new ArrayList<Session>();
+        mockUser.sessions = new ArrayList<Session>();
 
         Tag mockTag = new Tag("Java");
         List<Tag> mockTags = new ArrayList<>();
@@ -96,7 +97,7 @@ public class SessionControllerTest {
     @Test
     public void testNewSession_nullLanguage() {
 
-        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
@@ -111,7 +112,7 @@ public class SessionControllerTest {
 
         User mockUser = new User();
         mockUser.setEmail("test@example.com");
-        mockUser.sessions=new ArrayList<Session>();
+        mockUser.sessions = new ArrayList<Session>();
 
         Tag mockTag = new Tag("Java");
         List<Tag> mockTags = new ArrayList<>();
@@ -126,7 +127,7 @@ public class SessionControllerTest {
     @Test
     public void testNewSession_Invalidtag() {
 
-        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
@@ -141,8 +142,7 @@ public class SessionControllerTest {
 
         User mockUser = new User();
         mockUser.setEmail("test@example.com");
-        mockUser.sessions=new ArrayList<Session>();
-
+        mockUser.sessions = new ArrayList<Session>();
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
         ResponseEntity<Session> responseEntity = sessionController.newSession(request);
@@ -152,11 +152,11 @@ public class SessionControllerTest {
     @Test
     public void testUpdateSession_ValidRequest() {
 
-        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
-        
+
         String sessionId = "1";
         SessionRequest request = new SessionRequest();
         request.setTitle("Updated Title");
@@ -187,9 +187,10 @@ public class SessionControllerTest {
         assertEquals("Updated Language", responseEntity.getBody().getLanguage());
     }
 
-    @Test
+    @Test()
     public void testUpdateSession_WrongSessionId() {
-        // Mock behavior of sessionRepository to return an empty Optional when findById is called with invalid session ID
+        // Mock behavior of sessionRepository to return an empty Optional when findById
+        // is called with invalid session ID
         when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
 
         // Prepare a SessionRequest object with valid attributes
@@ -204,6 +205,7 @@ public class SessionControllerTest {
         // Call the updateSession method with an invalid session ID
         ResponseEntity<Session> responseEntity = sessionController.updateSession("wrongSessionId", sessionRequest);
 
-        // Assertion is not needed here because the method is expected to throw NoSuchElementException
+        // Assertion is not needed here because the method is expected to throw
+        // NoSuchElementException
     }
 }

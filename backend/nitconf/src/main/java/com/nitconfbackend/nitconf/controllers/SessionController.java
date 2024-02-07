@@ -158,7 +158,6 @@ public class SessionController {
         return ResponseEntity.ok().build();
     }
 
-    @SuppressWarnings("null")
     @GetMapping("/doc/{id}")
     public ResponseEntity<Resource> getDocument(@PathVariable String id) {
         if (id == null)
