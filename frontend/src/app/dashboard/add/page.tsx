@@ -8,10 +8,14 @@ import { SessionFields, SessionRequest, Tag } from "@/types";
 import { ChangeEvent, useEffect, useState } from "react";
 import Select, { MultiValue } from 'react-select';
 import { ToastContainer, toast, Flip } from "react-toastify";
+import { useRouter } from "next/navigation";
+import ReactLoading from 'react-loading';
 import 'react-toastify/ReactToastify.css';
 
 const AddSession = () => {
+    const router = useRouter();
     const { jwt, user, setSessions } = useAuthContext();
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<SessionRequest>({
         title: "",
         description: "",
@@ -75,29 +79,19 @@ const AddSession = () => {
     }
 
     const handleSubmit = () => {
-        (formData);
         const sendData = async () => {
+            setLoading(true);
             try {
                 const res = await createSession(formData, jwt);
                 const id = res?.id;
                 if (id && file)
                     await uploadDoc(id, file, jwt);
-                toast.success('Added session successfully.', {
-                    position: "bottom-right",
-                    autoClose: 1500,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Flip,
-                });
                 if (res) {
                     setSessions((prev) => ([
                         ...prev,
                         res,
                     ]));
+                    router.push(`/dashboard/${res.id}`);
                 }
             }
             catch (error) {
@@ -113,7 +107,7 @@ const AddSession = () => {
                     transition: Flip
                 });
             }
-
+            setLoading(false);
         }
 
         sendData();
@@ -214,7 +208,20 @@ const AddSession = () => {
                                 </div>
                             </form>
                             <AnimatedButton onClick={handleSubmit}>
-                                Submit
+                                <div className="flex items-center justify-center gap-4">
+                                    Submit
+                                    {
+                                        loading && (
+                                            <ReactLoading
+                                                type="spin"
+                                                color="#fff"
+                                                height={30}
+                                                width={30}
+                                            />
+                                        )
+                                    }
+
+                                </div>
                             </AnimatedButton>
                         </div>
                     ) : (
