@@ -34,7 +34,7 @@ jobs:
       - name: deploy using mvnw
         run: |
           cd backend/nitconf
-          ./mvnw spring-boot:deploy
+          ./mvnw azure-spring-apps:deploy
 
       # - name: deploy to production with artifact
       #   uses: Azure/spring-apps-deploy@v1
