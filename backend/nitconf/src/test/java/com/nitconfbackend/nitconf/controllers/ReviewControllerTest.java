@@ -21,12 +21,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.Authentication;
 
-
 import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Review;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.models.Role;
-
 
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.ReviewRepository;
@@ -52,31 +50,28 @@ public class ReviewControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void testGetReviewsDoc() {
-       
+
         String docId = "1";
         List<Review> reviews = new ArrayList<>();
-      
+
         DocumentVersion documentVersion = new DocumentVersion();
         documentVersion.setReviews(reviews);
 
-       
         when(documentVersionRepository.findById(docId)).thenReturn(Optional.of(documentVersion));
 
-       
         ResponseEntity<List<Review>> responseEntity = reviewController.getReviews(docId);
 
-       
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
     public void testGetReviewsDoc_NullId() {
-       
+
         String nullId = null;
         when(documentVersionRepository.findById(nullId)).thenReturn(Optional.empty());
 
@@ -94,7 +89,6 @@ public class ReviewControllerTest {
             reviewController.getReviews(wrongDocId);
         });
     }
-
 
     @Test
     public void testGetReview_ValidId() {
@@ -127,7 +121,7 @@ public class ReviewControllerTest {
 
     @Test
     public void testCreateReview() {
-        SecurityContext securityContext=mock(SecurityContext.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
@@ -139,14 +133,18 @@ public class ReviewControllerTest {
         DocumentVersion documentVersion = new DocumentVersion();
         documentVersion.setId(documentId);
         documentVersion.setReviews(new ArrayList<Review>());
-        
+
         User user = new User();
         user.setRole(Role.REVIEWER);
 
         when(reviewRepository.save(any(Review.class))).thenReturn(new Review());
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(documentVersionRepository.findById(anyString())).thenReturn(Optional.of(documentVersion)); // Mock to return an Optional containing a DocumentVersion object
-
+        when(documentVersionRepository.findById(anyString())).thenReturn(Optional.of(documentVersion)); // Mock to
+                                                                                                        // return an
+                                                                                                        // Optional
+                                                                                                        // containing a
+                                                                                                        // DocumentVersion
+                                                                                                        // object
 
         ResponseEntity<String> responseEntity = reviewController.createReview(reviewRequest, documentId);
 
@@ -157,8 +155,8 @@ public class ReviewControllerTest {
     @Test
 
     public void testCreateReview_InvalidRole() {
-        
-        SecurityContext securityContext=mock(SecurityContext.class);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
@@ -176,7 +174,4 @@ public class ReviewControllerTest {
 
     }
 
-    
 }
-
-

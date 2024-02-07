@@ -1,0 +1,59 @@
+name: AzureSpringApps
+on: 
+  push:
+    branches:
+      - main
+env:
+  ASC_PACKAGE_PATH: ${{ github.workspace }}
+  AZURE_SUBSCRIPTION: ${{ secrets.SUBSCRIPTION_ID }}
+
+jobs:
+  deploy_to_production:
+    runs-on: ubuntu-latest
+    name: deploy to production with artifact
+    steps:
+      - name: Checkout GitHub Action
+        uses: actions/checkout@v2
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v1
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: maven build, clean
+        run: |
+          cd backend/nitconf
+          mvn clean package
+
+      - name: Login via Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: deploy using mvnw
+        run: |
+          cd backend/nitconf
+          ./mvnw azure-spring-apps:deploy
+
+      # - name: deploy to production with artifact
+      #   uses: Azure/spring-apps-deploy@v1
+      #   with:
+      #     azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+      #     action: Deploy
+      #     service-name: nitconf-backend
+      #     app-name: nitconf-backend
+      #     use-staging-deployment: false
+      #     package: ${{ env.ASC_PACKAGE_PATH }}/**/*.jar
+
+      # - name: Azure CLI Action to deploy to dev with main branch
+      #   uses: Azure/cli@v1.0.9
+      #   with:
+      #     azcliversion: 2.57.0
+      #     inlineScript: |
+      #       az spring app deploy \
+      #       --resource-group SeLabProjects \
+      #       --service nitconf-backend \
+      #       --name nitconf-backend \
+      #       --artifact-path ${{ env.ASC_PACKAGE_PATH }}/**/*.jar \
+      #       --runtime-version Java_17

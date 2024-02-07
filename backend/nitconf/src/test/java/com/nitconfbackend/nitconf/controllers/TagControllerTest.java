@@ -1,4 +1,5 @@
 package com.nitconfbackend.nitconf.controllers;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,15 +31,15 @@ public class TagControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     public void testFindSessions() {
         // Prepare test data
-        String title = "TestTag";
+        String id = "1234";
         Tag tag = new Tag();
-        tag.setTitle(title);
+        tag.setId(id);
         List<Session> sessions = new ArrayList<>();
         Session session1 = new Session();
         Session session2 = new Session();
@@ -46,9 +47,9 @@ public class TagControllerTest {
         sessions.add(session2);
         tag.setSessions(sessions);
 
-        when(tagsRepository.findByTitle(title)).thenReturn(Optional.of(tag));
+        when(tagsRepository.findById(id)).thenReturn(Optional.of(tag));
 
-        ResponseEntity<List<Session>> responseEntity = tagController.FindSessions(title);
+        ResponseEntity<List<Session>> responseEntity = tagController.FindSessions(id);
 
         assertEquals(sessions, responseEntity.getBody());
     }
@@ -71,7 +72,6 @@ public class TagControllerTest {
             tagController.FindSessions(title1);
         });
 
-       
     }
 
     @Test
