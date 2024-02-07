@@ -99,7 +99,10 @@ public class SessionController {
             tag.getSessions().add(session);
             tagsRepo.save(tag);
         });
+<<<<<<< HEAD
 
+=======
+>>>>>>> testing
         return ResponseEntity.ok(session);
     }
 

@@ -174,7 +174,7 @@ The below functionalities require the user to be authenticated. Else an error me
 * The profile details of the user are displayed- First name, Last name, Email, Phone number
 
 #### 4.2.2 Update Profile
-* Purpose: To update the profile details to the user(First name, Last name, Phone number)
+* Purpose: To update the profile details of the user(First name, Last name, Phone number)
 * Input: Valid token, updated user info
 * The user profile details are updated in the database
 

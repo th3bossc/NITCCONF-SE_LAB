@@ -7,4 +7,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewRequest {
     public String comment;
+
+    public void setComment(String comment){
+        this.comment=comment;
+    }
 }

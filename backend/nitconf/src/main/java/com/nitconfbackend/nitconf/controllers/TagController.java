@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
+import com.nitconfbackend.nitconf.types.TagRequest;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.nitconfbackend.nitconf.types.TagRequest;
 
 @RestController
 @RequestMapping("/api/tags")
-public class Tagcontroller {
+public class TagController {
     @Autowired
     private TagsRepository repository;
 

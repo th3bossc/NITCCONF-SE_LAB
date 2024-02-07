@@ -18,6 +18,7 @@ import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.ReviewRequest;
 
 import java.util.List;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -45,12 +46,20 @@ public class ReviewController{
      * @author Ashwin Suresh Babu
      */
     @GetMapping("/doc/{id}")
+<<<<<<< HEAD
     public ResponseEntity<List<Review>> getReviews(@PathVariable String id) {
+=======
+    public ResponseEntity<List<Review>> GetReviewsDoc(@PathVariable String id) {
+>>>>>>> testing
         if (id == null)
             return ResponseEntity.notFound().build();
-        DocumentVersion doc = docRepo.findById(id).orElseThrow();
-        return ResponseEntity.ok(doc.getReviews());
-    }
+            DocumentVersion doc = docRepo.findById(id).orElseThrow();
+
+            //Optional<List<Review>> reviewsOptional = Optional.ofNullable(docRepo.findById(id).orElseThrow().getReviews());
+
+            return ResponseEntity.ok(doc.getReviews());
+        }
+    
 
     
     /**
@@ -98,5 +107,6 @@ public class ReviewController{
         docRepo.save(targetDoc);
         return ResponseEntity.ok("Review created");
     }
+    
     
 }
