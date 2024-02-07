@@ -99,10 +99,6 @@ public class SessionController {
             tag.getSessions().add(session);
             tagsRepo.save(tag);
         });
-<<<<<<< HEAD
-
-=======
->>>>>>> testing
         return ResponseEntity.ok(session);
     }
 
@@ -162,6 +158,7 @@ public class SessionController {
         return ResponseEntity.ok().build();
     }
 
+    @SuppressWarnings("null")
     @GetMapping("/doc/{id}")
     public ResponseEntity<Resource> getDocument(@PathVariable String id) {
         if (id == null)

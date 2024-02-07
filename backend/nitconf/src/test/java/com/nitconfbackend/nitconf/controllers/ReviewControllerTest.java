@@ -68,7 +68,7 @@ public class ReviewControllerTest {
         when(documentVersionRepository.findById(docId)).thenReturn(Optional.of(documentVersion));
 
        
-        ResponseEntity<List<Review>> responseEntity = reviewController.GetReviewsDoc(docId);
+        ResponseEntity<List<Review>> responseEntity = reviewController.getReviews(docId);
 
        
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -80,7 +80,7 @@ public class ReviewControllerTest {
         String nullId = null;
         when(documentVersionRepository.findById(nullId)).thenReturn(Optional.empty());
 
-        ResponseEntity<List<Review>> responseEntity = reviewController.GetReviewsDoc(nullId);
+        ResponseEntity<List<Review>> responseEntity = reviewController.getReviews(nullId);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -91,7 +91,7 @@ public class ReviewControllerTest {
         when(documentVersionRepository.findById(wrongDocId)).thenReturn(Optional.empty());
 
         assertThrows(Exception.class, () -> {
-            reviewController.GetReviewsDoc(wrongDocId);
+            reviewController.getReviews(wrongDocId);
         });
     }
 
