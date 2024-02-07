@@ -49,6 +49,6 @@ jobs:
             --resource-group SeLabProjects \
             --service nitconf-backend \
             --name nitconf-backend \
-            --artifact-path ${{ env.ASC_PACKAGE_PATH }}/backend/**/*.jar \
+            --artifact-path ${{ env.ASC_PACKAGE_PATH }}/**/*.jar \
             --runtime-version Java_17 \
             --jvm-options='-Dspring.profiles.active=dev'
