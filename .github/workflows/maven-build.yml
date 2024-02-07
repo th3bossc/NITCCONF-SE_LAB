@@ -27,5 +27,5 @@ jobs:
     # Run tests
     - name: Run Tests
       run: |
-        cd backend 
+        cd backend/nitconf
         mvn test
