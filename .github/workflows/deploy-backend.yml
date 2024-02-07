@@ -44,6 +44,7 @@ jobs:
       - name: Azure CLI Action to deploy to dev with main branch
         uses: Azure/cli@v1.0.9
         with:
+          azcliversion: 2.57.0
           inlineScript: |
             az spring app deploy \
             --resource-group SeLabProjects \
