@@ -20,7 +20,8 @@ public class NitconfApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(@NonNull CorsRegistry registry) {
-				registry.addMapping("/**").allowedOriginPatterns("*").allowedMethods(RequestMethod.GET.toString(), RequestMethod.POST.toString(), RequestMethod.PUT.toString(), RequestMethod.DELETE.toString());
+				registry.addMapping("/**").allowedOriginPatterns("*").allowedMethods(RequestMethod.GET.toString(),
+						RequestMethod.POST.toString(), RequestMethod.PUT.toString(), RequestMethod.DELETE.toString());
 			};
 		};
 	}

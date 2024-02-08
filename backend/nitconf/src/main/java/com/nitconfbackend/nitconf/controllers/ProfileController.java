@@ -1,6 +1,5 @@
 package com.nitconfbackend.nitconf.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -15,38 +14,35 @@ import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.ProfileRequest;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
-
-
-
-
 @RestController
 @RequestMapping("/api/profile")
+@SecurityRequirement(name = "Bearer Authentication")
 public class ProfileController {
 
     @Autowired
     public UserRepository userRepo;
 
-
     /**
      * profileDetails
      * returns the profile details of the currently logged in user
+     * 
      * @return User : {@link User}
      */
     @GetMapping("")
     public ResponseEntity<User> profileDetails() {
-        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.ok(user);   
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.ok(user);
     }
-
 
     /**
      * updateProfile
      * updates the profile details of the currently logged in user
+     * 
      * @param entity : {@link ProfileRequest}
      * @return success message
      */
@@ -54,7 +50,7 @@ public class ProfileController {
     public ResponseEntity<Object> updateProfile(@RequestBody ProfileRequest entity) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepo.findByEmail(email).orElseThrow();
-        
+
         if (user != null) {
             // userRepo.delete(user);
             if (entity.firstName != null)
@@ -69,11 +65,12 @@ public class ProfileController {
         return ResponseEntity.badRequest().build();
     }
 
-
     /**
      * getUser
-     * if request is done by REVIEWER or PROGRAM_COMMITTE ({@link Role}) returns the profile details of the user with the given id
+     * if request is done by REVIEWER or PROGRAM_COMMITTE ({@link Role}) returns the
+     * profile details of the user with the given id
      * else returns error response
+     * 
      * @param id
      * @return user : {@link User}
      */
@@ -86,5 +83,5 @@ public class ProfileController {
         User user = userRepo.findById(id).orElseThrow();
         return ResponseEntity.ok(user);
     }
-    
+
 }
