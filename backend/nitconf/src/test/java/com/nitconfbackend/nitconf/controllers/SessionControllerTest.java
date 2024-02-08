@@ -304,4 +304,32 @@ public class SessionControllerTest {
         when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, ()->sessionController.updateStatusToRejected(invalidId));
     }
+
+    @Test
+    public void testDeleteSession_ValidId() {
+        String validId = "validId";
+        Session session = new Session();
+        when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
+
+        ResponseEntity<String> responseEntity = sessionController.deleteSession(validId);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("DELETED SESSION", responseEntity.getBody());
+        verify(sessionRepository, times(1)).delete(session);
+    }
+
+    @Test
+    public void testDeleteSession_NullId() {
+        ResponseEntity<String> responseEntity = sessionController.deleteSession(null);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteSession_InvalidId() {
+        String invalidId = "invalidId";
+
+        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, ()->sessionController.deleteSession(invalidId));
+
+    }
 }
