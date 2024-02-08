@@ -17,15 +17,17 @@ import com.nitconfbackend.nitconf.repositories.ReviewRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.ReviewRequest;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/review")
-public class ReviewController{
+public class ReviewController {
 
     @Autowired
     private DocumentVersionRepository docRepo;
@@ -36,10 +38,10 @@ public class ReviewController{
     @Autowired
     private UserRepository userRepo;
 
-
     /**
      * getReviews
      * gets all the reviews of a document
+     * 
      * @param id
      * @return Reviews : {@link Review}
      * @version 1.0
@@ -49,18 +51,18 @@ public class ReviewController{
     public ResponseEntity<List<Review>> getReviews(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-            DocumentVersion doc = docRepo.findById(id).orElseThrow();
+        DocumentVersion doc = docRepo.findById(id).orElseThrow();
 
-            //Optional<List<Review>> reviewsOptional = Optional.ofNullable(docRepo.findById(id).orElseThrow().getReviews());
+        // Optional<List<Review>> reviewsOptional =
+        // Optional.ofNullable(docRepo.findById(id).orElseThrow().getReviews());
 
-            return ResponseEntity.ok(doc.getReviews());
-        }
-    
+        return ResponseEntity.ok(doc.getReviews());
+    }
 
-    
     /**
      * getReview
      * gets the details of a review
+     * 
      * @param id
      * @return Reviews : {@link Review}
      * @version 1.0
@@ -73,11 +75,11 @@ public class ReviewController{
         Review review = revRepo.findById(id).orElseThrow();
         return ResponseEntity.ok(review);
     }
-    
-    
+
     /**
      * createReview
      * Creates a review for a particular abstract.
+     * 
      * @param id
      * @param body {@link ReviewRequest}
      * @return Response : {@link Review}
@@ -95,7 +97,7 @@ public class ReviewController{
         if (profile.role != Role.REVIEWER && profile.role != Role.PROGRAM_COMMITTEE) {
             return ResponseEntity.badRequest().build();
         }
-        DocumentVersion targetDoc = docRepo.findById(id).orElseThrow() ;
+        DocumentVersion targetDoc = docRepo.findById(id).orElseThrow();
         // review.doc=docu;
         review.setReviewer(profile);
         revRepo.save(review);
@@ -103,6 +105,5 @@ public class ReviewController{
         docRepo.save(targetDoc);
         return ResponseEntity.ok("Review created");
     }
-    
-    
+
 }
