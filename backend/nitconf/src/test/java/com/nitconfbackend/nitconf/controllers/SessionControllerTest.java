@@ -180,4 +180,32 @@ public class SessionControllerTest {
         assertThrows(NoSuchElementException.class,
                 () -> sessionController.updateSession("wrongSessionId", sessionRequest));
     }
+
+    @Test
+    public void testGetAllSessions() {
+        String userEmail = "test@example.com";
+
+        User user = mock(User.class);
+        user.setEmail(userEmail);
+
+        List<Session> sessions = Arrays.asList(new Session(), new Session());
+
+        when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(userEmail);
+        SecurityContextHolder.setContext(securityContext);
+
+    
+        when(user.getSessions()).thenReturn(sessions);
+
+        ResponseEntity<List<Session>> responseEntity = sessionController.getAllSessions();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(sessions, responseEntity.getBody());
+        assertEquals(2, responseEntity.getBody().size());
+
+    }
 }
