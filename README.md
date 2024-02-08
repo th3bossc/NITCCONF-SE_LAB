@@ -17,7 +17,7 @@
 ### Documentation & Reference
 - [System Requirement Specification](./docs/SRS.md)
 - [Api Documentation](./docs/apidoc.md)
-- [Try out the Api](https://nitconf-backend.ashyforest-8ec21cce.australiaeast.azurecontainerapps.io/api/docs/swagger) 
+- [Try out the Api](https://nitconf-backend.ashyforest-8ec21cce.australiaeast.azurecontainerapps.io/api/docs/swagger-ui/index.html) 
 - [Backend installtion](./backend/nitconf/README.md)
 - [Frontend installtion](./frontend/README.md)
 
