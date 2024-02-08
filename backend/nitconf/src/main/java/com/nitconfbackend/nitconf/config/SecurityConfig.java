@@ -25,7 +25,7 @@ public class SecurityConfig {
         http
                 .csrf(res -> res.disable())
                 .authorizeHttpRequests(
-                        res -> res.requestMatchers("/api/auth/**", "/api/session/doc/**", "/api/email/**")
+                        res -> res.requestMatchers("/api/auth/**", "/api/session/doc/**", "/api/email/**", "/api/test/")
                                 .permitAll().anyRequest().authenticated())
                 // .authorizeHttpRequests(res -> res.anyRequest().permitAll())
                 .sessionManagement(res -> res.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
