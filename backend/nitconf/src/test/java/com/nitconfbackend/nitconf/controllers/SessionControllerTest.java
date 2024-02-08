@@ -225,4 +225,31 @@ public class SessionControllerTest {
         assertThrows(NoSuchElementException.class,
         () -> sessionController.getAllSessions());
     }
+
+    @Test
+    public void testGetSession_ValidId() {
+        String validId = "validId";
+        Session expectedSession = new Session(); 
+        when(sessionRepository.findById(validId)).thenReturn(Optional.of(expectedSession));
+        ResponseEntity<Session> responseEntity = sessionController.getSession(validId);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(expectedSession, responseEntity.getBody());
+    }
+
+    @Test
+    public void testGetSession_NullId() {
+       
+        ResponseEntity<Session> responseEntity = sessionController.getSession(null);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void testGetSession_WrongId() {
+        String wrongId = "wrongId";
+        when(sessionRepository.findById(wrongId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, ()->sessionController.getSession(wrongId));
+
+    }
 }

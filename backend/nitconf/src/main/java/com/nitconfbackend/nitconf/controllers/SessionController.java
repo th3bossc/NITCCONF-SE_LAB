@@ -88,7 +88,6 @@ public class SessionController {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
-        // session.setUser(currentUser);
 
         sessionRepo.save(session);
 
@@ -211,4 +210,3 @@ public class SessionController {
     }
 
 }
-// New session created to be added to user sessions
