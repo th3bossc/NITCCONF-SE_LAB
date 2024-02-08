@@ -252,4 +252,30 @@ public class SessionControllerTest {
         assertThrows(NoSuchElementException.class, ()->sessionController.getSession(wrongId));
 
     }
+
+    @Test
+    public void testUpdateStatusToAccepted_ValidId() {
+        String validId = "validId";
+        Session session = new Session(); 
+        when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
+        ResponseEntity<String> responseEntity = sessionController.updateStatusToAccepted(validId);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals("UPDATED STATUS TO ACCEPTED", responseEntity.getBody());
+    }
+
+    @Test
+    public void testUpdateStatusToAccepted_NullId() {
+        ResponseEntity<String> responseEntity = sessionController.updateStatusToAccepted(null);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateStatusToAccepted_InvalidId() {
+        String invalidId = "invalidId";
+
+        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, ()->sessionController.updateStatusToAccepted(invalidId));
+    }
 }
