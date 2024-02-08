@@ -1,6 +1,7 @@
 package com.nitconfbackend.nitconf.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -207,5 +208,21 @@ public class SessionControllerTest {
         assertEquals(sessions, responseEntity.getBody());
         assertEquals(2, responseEntity.getBody().size());
 
+    }
+
+    @Test
+    public void testGetAllSessions_WrongEmail() {
+        String wrongEmail = "wrong@example.com";
+
+        when(userRepository.findByEmail(wrongEmail)).thenReturn(Optional.empty());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn(wrongEmail);
+        SecurityContextHolder.setContext(securityContext);
+
+        assertThrows(NoSuchElementException.class,
+        () -> sessionController.getAllSessions());
     }
 }
