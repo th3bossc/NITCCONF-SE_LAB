@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import java.io.IOException;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +25,7 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -36,6 +39,8 @@ import com.nitconfbackend.nitconf.repositories.SessionRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.SessionRequest;
+import com.nitconfbackend.nitconf.service.DocumentUtility;
+
 
 public class SessionControllerTest {
 
@@ -332,4 +337,44 @@ public class SessionControllerTest {
         assertThrows(NoSuchElementException.class, ()->sessionController.deleteSession(invalidId));
 
     }
+    
+    // @Test
+    // public void testUploadPdf_nullFile_FileUploaded() throws IOException {
+    //     String validId = "validId";
+    //     byte[] fileData = "Sample PDF content".getBytes();
+    //     MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf", fileData);
+    //     Session session = new Session(); 
+    //     DocumentUtility documentUtility = mock(DocumentUtility.class);
+
+    //     // Mock sessionRepository behavior to return the session when findById is called with the valid ID
+    //     when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
+    //     // Mock documentUtility behavior to return the byte array of the file
+    //     when(documentUtility.pdfToByte(mockFile)).thenReturn(fileData);
+
+
+    //     ResponseEntity<?> responseEntity = sessionController.uploadPdf(validId, mockFile);
+    //     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+
+    // }
+
+    @Test
+    public void testUploadPdf_NullSessionId() throws IOException {
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "Sample PDF content".getBytes());
+
+        ResponseEntity<?> responseEntity = sessionController.uploadPdf(null, mockFile);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void testUploadPdf_InvalidSessionId() throws IOException {
+        String invalidId = "invalidId";
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "Sample PDF content".getBytes());
+        DocumentUtility documentUtility = mock(DocumentUtility.class);
+
+        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, ()->sessionController.uploadPdf(invalidId, mockFile));
+
+    }
+
 }
