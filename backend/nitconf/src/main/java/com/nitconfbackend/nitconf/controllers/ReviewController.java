@@ -44,8 +44,8 @@ public class ReviewController {
      * 
      * @param id
      * @return Reviews : {@link Review}
-     * @version 1.0
-     * @author Ashwin Suresh Babu
+     * @since 1.0
+     * @author <a href="https://github.com/Xolinnax"> Ashwin Suresh Babu </a>
      */
     @GetMapping("/doc/{id}")
     public ResponseEntity<List<Review>> getReviews(@PathVariable String id) {
@@ -65,8 +65,8 @@ public class ReviewController {
      * 
      * @param id
      * @return Reviews : {@link Review}
-     * @version 1.0
-     * @author Ashwin Suresh Babu
+     * @since 1.0
+     * @author <a href="https://github.com/Xolinnax"> Ashwin Suresh Babu </a>
      */
     @GetMapping("/{id}")
     public ResponseEntity<Review> getReview(@PathVariable String id) {
@@ -83,8 +83,8 @@ public class ReviewController {
      * @param id
      * @param body {@link ReviewRequest}
      * @return Response : {@link Review}
-     * @version 1.0
-     * @author Ashwin Suresh Babu
+     * @since 1.0
+     * @author <a href="https://github.com/Xolinnax"> Ashwin Suresh Babu </a>
      */
     @PostMapping("/{id}")
     public ResponseEntity<String> createReview(@RequestBody ReviewRequest body, @PathVariable String id) {

@@ -32,6 +32,8 @@ public class ProfileController {
      * returns the profile details of the currently logged in user
      * 
      * @return User : {@link User}
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
      */
     @GetMapping("")
     public ResponseEntity<User> profileDetails() {
@@ -45,6 +47,8 @@ public class ProfileController {
      * 
      * @param entity : {@link ProfileRequest}
      * @return success message
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
      */
     @PutMapping("")
     public ResponseEntity<Object> updateProfile(@RequestBody ProfileRequest entity) {
@@ -73,6 +77,8 @@ public class ProfileController {
      * 
      * @param id
      * @return user : {@link User}
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
      */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable @NonNull String id) {

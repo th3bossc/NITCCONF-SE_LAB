@@ -27,16 +27,19 @@ public class AuthController {
     @Autowired
     private UserRepository userRepo;
 
-
     /**
      * registerUser
      * registers a new user
+     * 
      * @param user : {@link RegisterRequest}
      * @return access token : {@link AuthenticationResponse}
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
      */
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> registerUser(@RequestBody RegisterRequest user) {
-        if (user.getFirstName() == null || user.getLastName() == null || user.getEmail() == null || user.getPassword() == null || user.getPhoneNumber() == null)
+        if (user.getFirstName() == null || user.getLastName() == null || user.getEmail() == null
+                || user.getPassword() == null || user.getPhoneNumber() == null)
             return ResponseEntity.badRequest().build();
         Optional<User> userExists = userRepo.findByEmail(user.getEmail());
         if (userExists.isPresent())
@@ -47,8 +50,11 @@ public class AuthController {
     /**
      * login
      * logs in a user
+     * 
      * @param user : {@link AuthenticationRequest}
      * @return access token : {@link AuthenticationResponse}
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
      */
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest user) {
@@ -58,4 +64,3 @@ public class AuthController {
     }
 
 }
-

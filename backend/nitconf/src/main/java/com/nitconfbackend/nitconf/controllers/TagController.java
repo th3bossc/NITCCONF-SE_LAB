@@ -26,6 +26,15 @@ public class TagController {
     @Autowired
     private TagsRepository repository;
 
+    /**
+     * findSessions
+     * Finds the tag with the given id, and returns all sessions that has that tag
+     * 
+     * @param id - id of the Tag
+     * @return List of {@link Tag}s
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @GetMapping("/{id}")
     public ResponseEntity<List<Session>> FindSessions(@PathVariable String id) {
         if (id == null)
@@ -36,12 +45,29 @@ public class TagController {
         return ResponseEntity.ok(relatedSessions);
     }
 
+    /**
+     * findAll
+     * returns a list of all the tags in the database
+     * 
+     * @return List of {@Link Tag}s
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @GetMapping("")
     public ResponseEntity<List<Tag>> FindAll() {
         List<Tag> tags = repository.findAll();
         return ResponseEntity.ok(tags);
     }
 
+    /**
+     * newTAg
+     * creates a new tag with inputted title
+     * 
+     * @param entity {@link TagRequest}
+     * @return {@link Tag}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PostMapping("")
     public ResponseEntity<Tag> newtag(@RequestBody TagRequest entity) {
         Tag newtag = new Tag(entity.title);

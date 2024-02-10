@@ -56,6 +56,14 @@ public class SessionController {
     @Autowired
     private TagsRepository tagsRepo;
 
+    /**
+     * getAllSessions
+     * Returns a list of all sessions of the authenticated user
+     * 
+     * @return Sessions List of {@link Session}s
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @GetMapping("")
     public ResponseEntity<List<Session>> getAllSessions() {
 
@@ -66,6 +74,15 @@ public class SessionController {
         return ResponseEntity.ok(sessions);
     }
 
+    /**
+     * newSession
+     * Creates a new session into the database with the given details
+     * 
+     * @param entity {@link SessionRequest}
+     * @return session {@link session}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PostMapping("")
     public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
@@ -90,8 +107,6 @@ public class SessionController {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
-        // session.setUser(currentUser);
-
         sessionRepo.save(session);
 
         currentUser.getSessions().add(session);
@@ -104,6 +119,19 @@ public class SessionController {
         return ResponseEntity.ok(session);
     }
 
+    /**
+     * updateSession
+     * Finds the session corresponding to the inputted id, and updates the details
+     * with the details provided by the client
+     * In case of any error during searching of the database or updation, an
+     * appropriate error messagage is thrown
+     * 
+     * @param id     - id of the session to be updated
+     * @param entity - {@link SessionRequest}
+     * @return {@link Session}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Session> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
         if (id == null)
@@ -133,6 +161,19 @@ public class SessionController {
         return ResponseEntity.ok(session);
     }
 
+    /**
+     * updloadPdf
+     * Finds the session with the inputted id, and creates a new instance of
+     * DocumentVersion and links the uploaded .pdf file with the session
+     * In case of any error during searching of the database or updation, an
+     * appropriate error messagage is thrown
+     * 
+     * @param id   - id of the session to be updated
+     * @param file - uploaded pdf file
+     * @return success message
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
+     */
     @PutMapping("/doc/{id}")
     public ResponseEntity<?> uploadPdf(@PathVariable String id, @RequestParam("file") MultipartFile file) {
         if (id == null)
@@ -160,6 +201,15 @@ public class SessionController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * getDocument
+     * Finds the session with the inputted id, and sends the pdf file to the user
+     * 
+     * @param id - id of the session
+     * @return {@link Resource}
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
+     */
     @GetMapping("/doc/{id}")
     public ResponseEntity<Resource> getDocument(@PathVariable String id) {
         if (id == null)
@@ -176,6 +226,15 @@ public class SessionController {
                 .body(resource);
     }
 
+    /**
+     * getSession
+     * returns the session with the inputted id.
+     * In case of an invalid id, a 404 error is thrown
+     * 
+     * @return {@link Session}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Session> getSession(@PathVariable String id) {
         if (id == null)
@@ -184,6 +243,16 @@ public class SessionController {
         return ResponseEntity.ok(session);
     }
 
+    /**
+     * updateStatusToAccepted
+     * Updates the status of the session with the inputted id to
+     * <strong>ACCEPTED</strong>
+     * 
+     * @param id - id of the session to be updated
+     * @return "UPDATED STATUS TO ACCEPTED"
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PutMapping("/status/accepted/{id}")
     public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
         if (id == null)
@@ -193,6 +262,16 @@ public class SessionController {
         return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
     }
 
+    /**
+     * updateStatusToAccepted
+     * Updates the status of the session with the inputted id to
+     * <strong>REJECTED</strong>
+     * 
+     * @param id - id of the session to be updated
+     * @return "UPDATED STATUS TO ACCEPTED"
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PutMapping("/status/rejected/{id}")
     public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
         if (id == null)
@@ -202,6 +281,15 @@ public class SessionController {
         return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
 
+    /**
+     * deleteSession
+     * Finds the session with the inputted id, and deletes it, if it exists
+     * 
+     * @param id - id of the session to be deleted
+     * @return "DELETED SESSION"
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSession(@PathVariable String id) {
         if (id == null)
@@ -213,4 +301,3 @@ public class SessionController {
     }
 
 }
-// New session created to be added to user sessions

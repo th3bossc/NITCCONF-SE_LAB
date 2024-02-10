@@ -1,6 +1,5 @@
 package com.nitconfbackend.nitconf.service;
 
-
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
@@ -18,18 +17,19 @@ import io.jsonwebtoken.security.Keys;
 /**
  * JwtService
  * Service class for JWT
+ * 
  * @version 1.0
- * @author Diljith P D
+ * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
  */
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY="96ce18b33f216ffb1da5a7fad4853ae1d374b8759ea3c555";
-
+    private static final String SECRET_KEY = "96ce18b33f216ffb1da5a7fad4853ae1d374b8759ea3c555";
 
     /**
      * extractUsername
      * extracts the username from the given token
+     * 
      * @param token
      * @return username string
      */
@@ -37,10 +37,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-
     /**
      * extractExpiration
      * extracts the expiration date from the given token
+     * 
      * @param token
      * @return expiration date
      */
@@ -51,6 +51,7 @@ public class JwtService {
     /**
      * generateToken
      * generates a JWT token with the given user credentials
+     * 
      * @param userDetails - user details
      * @return token string
      */
@@ -58,17 +59,15 @@ public class JwtService {
         return generateToken(Map.of(), userDetails);
     }
 
-
-    
     private String generateToken(Map<String, Object> claims, UserDetails userDetails) {
         return Jwts
-            .builder()
-            .setClaims(claims)
-            .setSubject(userDetails.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-            .compact();
+                .builder()
+                .setClaims(claims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -78,11 +77,11 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-            .parserBuilder()
-            .setSigningKey(getSignInKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Key getSignInKey() {
