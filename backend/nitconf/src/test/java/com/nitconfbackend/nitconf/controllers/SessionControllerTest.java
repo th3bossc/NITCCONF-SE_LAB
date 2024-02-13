@@ -7,6 +7,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 
 
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nitconfbackend.nitconf.models.Session;
 import com.nitconfbackend.nitconf.models.Status;
@@ -355,6 +360,26 @@ public class SessionControllerTest {
     //     ResponseEntity<?> responseEntity = sessionController.uploadPdf(validId, mockFile);
     //     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
 
+    // }
+    // @Test
+    // public void testUploadPdf() throws IOException {
+    //     // Load the test PDF file
+    //     Path path = Paths.get("backend/nitconf/src/test/java/com/nitconfbackend/trial.pdf");
+    //     String name = "trial.pdf";
+    //     String originalFileName = "trial.pdf";
+    //     String contentType = "application/pdf";
+    //     byte[] content = Files.readAllBytes(path);
+    //     MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
+
+    //     // Mock behavior of dependencies if needed
+    //     // For example, if you need to mock behavior of documentUtility.pdfToByte() method
+
+    //     // Execute the controller method
+    //     ResponseEntity<?> response = sessionController.uploadPdf("session_id", multipartFile);
+
+    //     // Assert the response as per your requirements
+    //     assertEquals(HttpStatus.OK, response.getStatusCode());
+    //     // Add more assertions if needed
     // }
 
     @Test
