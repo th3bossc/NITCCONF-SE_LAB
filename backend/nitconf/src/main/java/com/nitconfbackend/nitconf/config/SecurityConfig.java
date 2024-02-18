@@ -16,23 +16,26 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+        private final JwtAuthFilter jwtAuthFilter;
+        private final AuthenticationProvider authenticationProvider;
 
-    // whitelisted urls
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(res -> res.disable())
-                .authorizeHttpRequests(
-                        res -> res
-                                .requestMatchers("/api/auth/**", "/api/session/doc/**", "/api/email/**", "/api/test/",
-                                        "/api/docs/**")
-                                .permitAll().anyRequest().authenticated())
-                // .authorizeHttpRequests(res -> res.anyRequest().permitAll())
-                .sessionManagement(res -> res.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+        // whitelisted urls
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http.csrf(res -> res.disable())
+                                .authorizeHttpRequests(res -> res
+                                                .requestMatchers(
+                                                                "/api/auth/**",
+                                                                "/api/session/doc/**",
+                                                                "/api/email/**",
+                                                                "/api/test/**",
+                                                                "/api/docs/**",
+                                                                "/content/**")
+                                                .permitAll().anyRequest().authenticated())
+                                // .authorizeHttpRequests(res -> res.anyRequest().permitAll())
+                                .sessionManagement(res -> res.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                return http.build();
+        }
 }

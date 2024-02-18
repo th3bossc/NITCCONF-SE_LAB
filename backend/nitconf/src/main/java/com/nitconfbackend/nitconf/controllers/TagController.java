@@ -14,14 +14,11 @@ import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.types.TagRequest;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/tags")
-@SecurityRequirement(name = "Bearer Authentication")
 public class TagController {
     @Autowired
     private TagsRepository repository;

@@ -17,15 +17,12 @@ import com.nitconfbackend.nitconf.repositories.ReviewRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.ReviewRequest;
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/api/review")
 public class ReviewController {
 
