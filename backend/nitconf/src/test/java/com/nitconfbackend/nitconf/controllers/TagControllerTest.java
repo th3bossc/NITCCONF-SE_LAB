@@ -16,7 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
-import com.nitconfbackend.nitconf.models.Session;
+import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.types.TagRequest;
@@ -40,16 +40,16 @@ public class TagControllerTest {
         String id = "1234";
         Tag tag = new Tag();
         tag.setId(id);
-        List<Session> sessions = new ArrayList<>();
-        Session session1 = new Session();
-        Session session2 = new Session();
+        List<Paper> sessions = new ArrayList<>();
+        Paper session1 = new Paper();
+        Paper session2 = new Paper();
         sessions.add(session1);
         sessions.add(session2);
-        tag.setSessions(sessions);
+        tag.setPapers(sessions);
 
         when(tagsRepository.findById(id)).thenReturn(Optional.of(tag));
 
-        ResponseEntity<List<Session>> responseEntity = tagController.FindSessions(id);
+        ResponseEntity<List<Paper>> responseEntity = tagController.FindSessions(id);
 
         assertEquals(sessions, responseEntity.getBody());
     }
@@ -60,12 +60,12 @@ public class TagControllerTest {
         String title1 = "NonExistent";
         Tag tag = new Tag();
         tag.setTitle(title);
-        List<Session> sessions = new ArrayList<>();
-        Session session1 = new Session();
-        Session session2 = new Session();
+        List<Paper> sessions = new ArrayList<>();
+        Paper session1 = new Paper();
+        Paper session2 = new Paper();
         sessions.add(session1);
         sessions.add(session2);
-        tag.setSessions(sessions);
+        tag.setPapers(sessions);
 
         when(tagsRepository.findByTitle(title1)).thenReturn(Optional.empty());
         assertThrows(Exception.class, () -> {

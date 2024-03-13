@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nitconfbackend.nitconf.models.DocumentVersion;
-import com.nitconfbackend.nitconf.models.Session;
+import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.models.Status;
 
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
-import com.nitconfbackend.nitconf.repositories.SessionRepository;
+import com.nitconfbackend.nitconf.repositories.PaperRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
@@ -38,12 +38,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping("/api/session")
 
-public class SessionController {
+public class PaperController {
     @Autowired
     private UserRepository userRepo;
 
     @Autowired
-    private SessionRepository sessionRepo;
+    private PaperRepository paperRepository;
 
     @Autowired
     private DocumentVersionRepository docRepo;
@@ -55,17 +55,17 @@ public class SessionController {
     private TagsRepository tagsRepo;
 
     @GetMapping("")
-    public ResponseEntity<List<Session>> getAllSessions() {
+    public ResponseEntity<List<Paper>> getAllSessions() {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
 
-        List<Session> sessions = currentUser.getSessions();
-        return ResponseEntity.ok(sessions);
+        List<Paper> papers = currentUser.getPapers();
+        return ResponseEntity.ok(papers);
     }
 
     @PostMapping("")
-    public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
+    public ResponseEntity<Paper> newSession(@RequestBody SessionRequest entity) {
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
                 || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
@@ -78,7 +78,7 @@ public class SessionController {
             }
         });
 
-        Session session = new Session(
+        Paper paper = new Paper(
                 entity.title,
                 entity.description,
                 entity.language,
@@ -89,26 +89,26 @@ public class SessionController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
 
-        sessionRepo.save(session);
+        paperRepository.save(paper);
 
-        currentUser.getSessions().add(session);
+        currentUser.getPapers().add(paper);
         userRepo.save(currentUser);
 
         tags.forEach(tag -> {
-            tag.getSessions().add(session);
+            tag.getPapers().add(paper);
             tagsRepo.save(tag);
         });
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(paper);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Session> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
+    public ResponseEntity<Paper> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
         if (id == null)
             return ResponseEntity.notFound().build();
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
                 || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
+        Paper paper = paperRepository.findById(id).orElseThrow();
 
         List<Tag> tags = new ArrayList<Tag>();
         entity.tags.forEach(tag -> {
@@ -118,26 +118,26 @@ public class SessionController {
             }
         });
 
-        session.setTitle(entity.title);
-        session.setDescription(entity.description);
-        session.setLanguage(entity.language);
-        session.setLevel(entity.level);
-        session.setStatus(entity.status);
-        session.setTags(tags);
+        paper.setTitle(entity.title);
+        paper.setDescription(entity.description);
+        paper.setLanguage(entity.language);
+        paper.setLevel(entity.level);
+        paper.setStatus(entity.status);
+        paper.setTags(tags);
 
-        sessionRepo.save(session);
+        paperRepository.save(paper);
 
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(paper);
     }
 
     @PutMapping("/doc/{id}")
     public ResponseEntity<?> uploadPdf(@PathVariable String id, @RequestParam("file") MultipartFile file) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
+        Paper paper = paperRepository.findById(id).orElseThrow();
         try {
             byte[] data = documentUtility.pdfToByte(file);
-            List<DocumentVersion> allDocs = session.getDocumentVersions();
+            List<DocumentVersion> allDocs = paper.getDocumentVersions();
             if (data == null)
                 return ResponseEntity.notFound().build();
             DocumentVersion newDoc = new DocumentVersion(
@@ -147,8 +147,8 @@ public class SessionController {
             // session
             );
             docRepo.save(newDoc);
-            session.getDocumentVersions().add(newDoc);
-            sessionRepo.save(session);
+            paper.getDocumentVersions().add(newDoc);
+            paperRepository.save(paper);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -161,8 +161,8 @@ public class SessionController {
     public ResponseEntity<Resource> getDocument(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        List<DocumentVersion> allDocs = session.getDocumentVersions();
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        List<DocumentVersion> allDocs = paper.getDocumentVersions();
         ByteArrayResource resource = documentUtility.downloadFile(allDocs);
         if (resource == null)
             return ResponseEntity.notFound().build();
@@ -174,19 +174,19 @@ public class SessionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Session> getSession(@PathVariable String id) {
+    public ResponseEntity<Paper> getSession(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        return ResponseEntity.ok(session);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        return ResponseEntity.ok(paper);
     }
 
     @PutMapping("/status/accepted/{id}")
     public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        session.setStatus(Status.ACCEPTED);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        paper.setStatus(Status.ACCEPTED);
         return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
     }
 
@@ -194,8 +194,8 @@ public class SessionController {
     public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        session.setStatus(Status.REJECTED);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        paper.setStatus(Status.REJECTED);
         return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
 
@@ -203,9 +203,9 @@ public class SessionController {
     public ResponseEntity<String> deleteSession(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        if (session != null)
-            sessionRepo.delete(session);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        if (paper != null)
+            paperRepository.delete(paper);
         return ResponseEntity.ok("DELETED SESSION");
     }
 

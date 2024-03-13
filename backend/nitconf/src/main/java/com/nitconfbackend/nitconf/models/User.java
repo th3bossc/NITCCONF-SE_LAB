@@ -22,20 +22,23 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="users")
+@Document(collection = "users")
 public class User implements UserDetails {
-    @Id public String id;
+    @Id
+    public String id;
     public String firstName;
     public String lastName;
-    @Indexed(unique = true) public String email;
+    @Indexed(unique = true)
+    public String email;
     public String phoneNumber;
-    @JsonIgnore public String password;
+    @JsonIgnore
+    public String password;
     public Role role;
     public Boolean isVerified;
 
     @JsonIgnore
     @DBRef
-    public List<Session> sessions;
+    public List<Paper> papers;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -46,7 +49,7 @@ public class User implements UserDetails {
     @JsonIgnore
     public String getUsername() {
         return email;
-    }   
+    }
 
     @Override
     @JsonIgnore
@@ -56,23 +59,23 @@ public class User implements UserDetails {
 
     @Override
     @JsonIgnore
-    public boolean isAccountNonLocked() { 
+    public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
     @JsonIgnore
-    public boolean isCredentialsNonExpired() { 
+    public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
     @JsonIgnore
-    public boolean isEnabled() { 
+    public boolean isEnabled() {
         return true;
     }
 
-    @Override //not required if password field is called password
+    @Override // not required if password field is called password
     public String getPassword() {
         return password;
     }

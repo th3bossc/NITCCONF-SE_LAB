@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.nitconfbackend.nitconf.models.Session;
+import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.types.TagRequest;
@@ -24,11 +24,11 @@ public class TagController {
     private TagsRepository repository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Session>> FindSessions(@PathVariable String id) {
+    public ResponseEntity<List<Paper>> FindSessions(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.badRequest().build();
         Tag tag = repository.findById(id).orElseThrow();
-        List<Session> relatedSessions = tag.getSessions();
+        List<Paper> relatedSessions = tag.getPapers();
 
         return ResponseEntity.ok(relatedSessions);
     }

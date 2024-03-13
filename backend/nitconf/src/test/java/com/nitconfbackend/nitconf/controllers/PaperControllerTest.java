@@ -1,18 +1,11 @@
 package com.nitconfbackend.nitconf.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -32,34 +25,35 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.nitconfbackend.nitconf.models.Session;
+import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Status;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.models.Level;
 
-import com.nitconfbackend.nitconf.repositories.SessionRepository;
+import com.nitconfbackend.nitconf.repositories.PaperRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.types.SessionRequest;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
 
-
-public class SessionControllerTest {
+public class PaperControllerTest {
 
     @Mock
     private UserRepository userRepository;
 
     @Mock
-    private SessionRepository sessionRepository;
+    private PaperRepository sessionRepository;
 
     @Mock
     private TagsRepository tagsRepository;
 
+    @Mock
+    private DocumentUtility documentUtility;
+
     @InjectMocks
-    private SessionController sessionController;
+    private PaperController sessionController;
 
     @Mock
     private Authentication authentication;
@@ -88,7 +82,7 @@ public class SessionControllerTest {
 
         User mockUser = new User();
         mockUser.setEmail("test@example.com");
-        mockUser.sessions = new ArrayList<Session>();
+        mockUser.papers = new ArrayList<Paper>();
 
         Tag mockTag = new Tag("Java");
         List<Tag> mockTags = new ArrayList<>();
@@ -97,10 +91,10 @@ public class SessionControllerTest {
         // Mock repository behavior
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
-        when(sessionRepository.save(any(Session.class))).thenReturn(new Session());
+        when(sessionRepository.save(any(Paper.class))).thenReturn(new Paper());
 
         // Test
-        ResponseEntity<Session> responseEntity = sessionController.newSession(request);
+        ResponseEntity<Paper> responseEntity = sessionController.newSession(request);
 
         // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -124,7 +118,7 @@ public class SessionControllerTest {
 
         User mockUser = new User();
         mockUser.setEmail("test@example.com");
-        mockUser.sessions = new ArrayList<Session>();
+        mockUser.papers = new ArrayList<Paper>();
 
         Tag mockTag = new Tag("Java");
         List<Tag> mockTags = new ArrayList<>();
@@ -155,7 +149,7 @@ public class SessionControllerTest {
         tags.add("Java");
         request.setTags(tags);
 
-        Session mockSession = new Session();
+        Paper mockSession = new Paper();
         mockSession.setId(sessionId);
 
         Tag mockTag = new Tag("Java");
@@ -164,9 +158,9 @@ public class SessionControllerTest {
 
         when(sessionRepository.findById(anyString())).thenReturn(Optional.of(mockSession));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
-        when(sessionRepository.save(any(Session.class))).thenReturn(mockSession);
+        when(sessionRepository.save(any(Paper.class))).thenReturn(mockSession);
 
-        ResponseEntity<Session> responseEntity = sessionController.updateSession(sessionId, request);
+        ResponseEntity<Paper> responseEntity = sessionController.updateSession(sessionId, request);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("Updated Title", responseEntity.getBody().getTitle());
@@ -199,7 +193,7 @@ public class SessionControllerTest {
         User user = mock(User.class);
         user.setEmail(userEmail);
 
-        List<Session> sessions = Arrays.asList(new Session(), new Session());
+        List<Paper> sessions = Arrays.asList(new Paper(), new Paper());
 
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
 
@@ -209,10 +203,9 @@ public class SessionControllerTest {
         when(authentication.getName()).thenReturn(userEmail);
         SecurityContextHolder.setContext(securityContext);
 
-    
-        when(user.getSessions()).thenReturn(sessions);
+        when(user.getPapers()).thenReturn(sessions);
 
-        ResponseEntity<List<Session>> responseEntity = sessionController.getAllSessions();
+        ResponseEntity<List<Paper>> responseEntity = sessionController.getAllSessions();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(sessions, responseEntity.getBody());
@@ -233,15 +226,15 @@ public class SessionControllerTest {
         SecurityContextHolder.setContext(securityContext);
 
         assertThrows(NoSuchElementException.class,
-        () -> sessionController.getAllSessions());
+                () -> sessionController.getAllSessions());
     }
 
     @Test
     public void testGetSession_ValidId() {
         String validId = "validId";
-        Session expectedSession = new Session(); 
+        Paper expectedSession = new Paper();
         when(sessionRepository.findById(validId)).thenReturn(Optional.of(expectedSession));
-        ResponseEntity<Session> responseEntity = sessionController.getSession(validId);
+        ResponseEntity<Paper> responseEntity = sessionController.getSession(validId);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(expectedSession, responseEntity.getBody());
@@ -249,8 +242,8 @@ public class SessionControllerTest {
 
     @Test
     public void testGetSession_NullId() {
-       
-        ResponseEntity<Session> responseEntity = sessionController.getSession(null);
+
+        ResponseEntity<Paper> responseEntity = sessionController.getSession(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -259,14 +252,14 @@ public class SessionControllerTest {
     public void testGetSession_WrongId() {
         String wrongId = "wrongId";
         when(sessionRepository.findById(wrongId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, ()->sessionController.getSession(wrongId));
+        assertThrows(NoSuchElementException.class, () -> sessionController.getSession(wrongId));
 
     }
 
     @Test
     public void testUpdateStatusToAccepted_ValidId() {
         String validId = "validId";
-        Session session = new Session(); 
+        Paper session = new Paper();
         when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
         ResponseEntity<String> responseEntity = sessionController.updateStatusToAccepted(validId);
 
@@ -286,13 +279,13 @@ public class SessionControllerTest {
         String invalidId = "invalidId";
 
         when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, ()->sessionController.updateStatusToAccepted(invalidId));
+        assertThrows(NoSuchElementException.class, () -> sessionController.updateStatusToAccepted(invalidId));
     }
 
     @Test
     public void testUpdateStatusToRejected_ValidId() {
         String validId = "validId";
-        Session session = new Session(); 
+        Paper session = new Paper();
         when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
         ResponseEntity<String> responseEntity = sessionController.updateStatusToRejected(validId);
 
@@ -312,13 +305,13 @@ public class SessionControllerTest {
         String invalidId = "invalidId";
 
         when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, ()->sessionController.updateStatusToRejected(invalidId));
+        assertThrows(NoSuchElementException.class, () -> sessionController.updateStatusToRejected(invalidId));
     }
 
     @Test
     public void testDeleteSession_ValidId() {
         String validId = "validId";
-        Session session = new Session();
+        Paper session = new Paper();
         when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
 
         ResponseEntity<String> responseEntity = sessionController.deleteSession(validId);
@@ -339,52 +332,60 @@ public class SessionControllerTest {
         String invalidId = "invalidId";
 
         when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, ()->sessionController.deleteSession(invalidId));
+        assertThrows(NoSuchElementException.class, () -> sessionController.deleteSession(invalidId));
 
     }
-    
+
     // @Test
     // public void testUploadPdf_nullFile_FileUploaded() throws IOException {
-    //     String validId = "validId";
-    //     byte[] fileData = "Sample PDF content".getBytes();
-    //     MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf", fileData);
-    //     Session session = new Session(); 
-    //     DocumentUtility documentUtility = mock(DocumentUtility.class);
+    // String validId = "validId";
+    // byte[] fileData = "Sample PDF content".getBytes();
+    // MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf",
+    // "application/pdf", fileData);
+    // Session session = new Session();
+    // DocumentUtility documentUtility = mock(DocumentUtility.class);
 
-    //     // Mock sessionRepository behavior to return the session when findById is called with the valid ID
-    //     when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
-    //     // Mock documentUtility behavior to return the byte array of the file
-    //     when(documentUtility.pdfToByte(mockFile)).thenReturn(fileData);
+    // // Mock sessionRepository behavior to return the session when findById is
+    // // called with the valid ID
+    // when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
+    // // Mock documentUtility behavior to return the byte array of the file
+    // when(documentUtility.pdfToByte(mockFile)).thenReturn(fileData);
 
-
-    //     ResponseEntity<?> responseEntity = sessionController.uploadPdf(validId, mockFile);
-    //     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-
+    // ResponseEntity<?> responseEntity = sessionController.uploadPdf(validId,
+    // mockFile);
+    // assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     // }
+
     // @Test
     // public void testUploadPdf() throws IOException {
-    //     // Load the test PDF file
-    //     Path path = Paths.get("backend/nitconf/src/test/java/com/nitconfbackend/trial.pdf");
-    //     String name = "trial.pdf";
-    //     String originalFileName = "trial.pdf";
-    //     String contentType = "application/pdf";
-    //     byte[] content = Files.readAllBytes(path);
-    //     MultipartFile multipartFile = new MockMultipartFile(name, originalFileName, contentType, content);
+    // // Path path = Paths.get("src/test/java/com/nitconfbackend/trial.pdf");
+    // String name = "trial.pdf";
+    // String originalFileName = "trial.pdf";
+    // String contentType = "application/pdf";
+    // byte[] content = "Sample PDF content".getBytes();
+    // String mockId = "session_id";
 
-    //     // Mock behavior of dependencies if needed
-    //     // For example, if you need to mock behavior of documentUtility.pdfToByte() method
+    // MultipartFile multipartFile = new MockMultipartFile(name, originalFileName,
+    // contentType, content);
 
-    //     // Execute the controller method
-    //     ResponseEntity<?> response = sessionController.uploadPdf("session_id", multipartFile);
+    // Session mockSession = new Session(
+    // "title",
+    // "description",
+    // "language",
+    // Level.BEGINNER,
+    // Status.PENDING,
+    // new ArrayList<Tag>());
 
-    //     // Assert the response as per your requirements
-    //     assertEquals(HttpStatus.OK, response.getStatusCode());
-    //     // Add more assertions if needed
+    // when(sessionRepository.findById(mockId)).thenReturn(Optional.of(mockSession));
+    // ResponseEntity<?> response = sessionController.uploadPdf(mockId,
+    // multipartFile);
+    // assertEquals(HttpStatus.OK, response.getStatusCode());
     // }
 
     @Test
     public void testUploadPdf_NullSessionId() throws IOException {
-        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "Sample PDF content".getBytes());
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf",
+                "Sample PDF content".getBytes());
 
         ResponseEntity<?> responseEntity = sessionController.uploadPdf(null, mockFile);
 
@@ -394,11 +395,12 @@ public class SessionControllerTest {
     @Test
     public void testUploadPdf_InvalidSessionId() throws IOException {
         String invalidId = "invalidId";
-        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf", "Sample PDF content".getBytes());
-        DocumentUtility documentUtility = mock(DocumentUtility.class);
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf",
+                "Sample PDF content".getBytes());
 
+        mock(DocumentUtility.class);
         when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, ()->sessionController.uploadPdf(invalidId, mockFile));
+        assertThrows(NoSuchElementException.class, () -> sessionController.uploadPdf(invalidId, mockFile));
 
     }
 
