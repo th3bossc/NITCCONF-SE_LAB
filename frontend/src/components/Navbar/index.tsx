@@ -6,10 +6,10 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { oswald } from "@/fonts";
 import { usePathname } from "next/navigation";
-import { Session } from "@/types";
+import { Paper } from "@/types";
 import Link from "next/link";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { deleteSession } from "@/lib/sessions";
+import { deletePaper } from "@/lib/papers";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
@@ -17,11 +17,11 @@ import Dialog from '../Dialog';
 import { useRouter } from 'next/navigation';
 
 const Navbar = ({
-    sessions,
+    papers,
 }: {
-    sessions: Session[],
+    papers: Paper[],
 }) => {
-    const { jwt, setSessions } = useAuthContext();
+    const { jwt, setPapers } = useAuthContext();
     const pathname = usePathname();
     const current = pathname.split("/")[2];
     const [open, setOpen] = useState(false);
@@ -33,10 +33,10 @@ const Navbar = ({
         if (!id)
             return;
         try {
-            await deleteSession(id, jwt);
-            setSessions(prev => prev.filter(session => session.id !== id));
+            await deletePaper(id, jwt);
+            setPapers(prev => prev.filter(paper => paper.id !== id));
             router.push("/dashboard/profile");
-            toast.success('Deleted session successfully.', {
+            toast.success('Deleted paper successfully.', {
                 position: "bottom-right",
                 autoClose: 1500,
                 hideProgressBar: true,
@@ -91,23 +91,23 @@ const Navbar = ({
                                 }}
                             >
                                 {
-                                    sessions.map((session) => (
+                                    papers.map((paper) => (
                                         <Link
-                                            href={`/dashboard/${session.id}`}
+                                            href={`/dashboard/${paper.id}`}
                                             onClick={() => setOpen(false)}
-                                            key={session.id}
+                                            key={paper.id}
                                             className="flex relative"
                                             style={{
-                                                color: current === session.id ? "var(--primary)" : "#fff",
-                                                textDecoration: current === session.id ? "underline" : "none"
+                                                color: current === paper.id ? "var(--primary)" : "#fff",
+                                                textDecoration: current === paper.id ? "underline" : "none"
                                             }}
                                         >
-                                            {session.title}
+                                            {paper.title}
                                             <div
                                                 className="absolute right-0 top-0"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    setToDelete(session.id || null);
+                                                    setToDelete(paper.id || null);
                                                     setDialog(true)
                                                 }}
                                             >
@@ -123,7 +123,7 @@ const Navbar = ({
                                         textDecoration: current === "add" ? "underline" : "none"
                                     }}
                                 >
-                                    Add new session +
+                                    Add new paper +
                                 </Link>
                                 <div className="w-full p-[0.1rem] bg-white my-4" />
                                 <Link

@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,9 +17,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection="sessions")
-public class Session {
-    @Id public String id;
+@Document(collection = "sessions")
+public class Paper {
+    @Id
+    public String id;
     public String title;
     public String description;
     public String language;
@@ -32,7 +32,7 @@ public class Session {
     @DBRef
     public List<DocumentVersion> documentVersions;
 
-    public Session(String title, String description, String language, Level level, Status status, List<Tag> tags) {
+    public Paper(String title, String description, String language, Level level, Status status, List<Tag> tags) {
         this.title = title;
         this.description = description;
         this.language = language;

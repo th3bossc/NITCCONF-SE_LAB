@@ -27,7 +27,7 @@ const PdfLink = ({
             whileHover={{rotate: 5}}
             className="w-[40px] h-[40px] xl:w-[200px] xl:h-[200px] bg-black rounded-lg flex justify-center items-center"
         >
-            <Link href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/session/doc/${id}`}>
+            <Link href={`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/paper/doc/${id}`}>
                     <Image src={pdfImage} alt="pdf" width={100} height={100} />
             </Link>
         </motion.div>

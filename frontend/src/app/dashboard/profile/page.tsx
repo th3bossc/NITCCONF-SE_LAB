@@ -10,7 +10,7 @@ import AnimatedButton from "@/components/AnimatedButton";
 import { useState } from "react";
 import EditProfile from "@/components/EditProfile";
 const Profile = () => {
-    const { user, sessions, logOut } = useAuthContext();
+    const { user, papers, logOut } = useAuthContext();
     const [editProfile, setEditProfile] = useState(false);
     return (
         <div className="w-full h-screen flex justify-center items-center">
@@ -68,10 +68,10 @@ const Profile = () => {
 
                     <div className="text-lg lg:text-2xl  flex items-center gap-1">
                         <span className="font-medium">
-                            Number of registered sessions: &nbsp;
+                            Number of papers submitted: &nbsp;
                         </span>
                         <span className={`${oswald.className} font-bold text-nitconfprimary`}>
-                            {sessions.length || 'N/A'}
+                            {papers.length || 'N/A'}
                         </span>
                     </div>
 

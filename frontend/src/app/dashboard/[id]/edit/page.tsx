@@ -2,9 +2,9 @@
 
 import AnimatedButton from "@/components/AnimatedButton";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { createSession, getSession, updateSession, uploadDoc } from "@/lib/sessions";
+import { updatePaper, uploadDoc } from "@/lib/papers";
 import { getTags } from "@/lib/tags";
-import { SessionFields, SessionRequest, Tag } from "@/types";
+import { PaperFields, PaperRequest, Tag } from "@/types";
 import { ChangeEvent, useEffect, useState } from "react";
 import Select, { MultiValue } from 'react-select';
 import ReactLoading from 'react-loading';
@@ -13,11 +13,11 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 
-const EditSession = ({ params }: { params: { id: string } }) => {
+const EditPaper = ({ params }: { params: { id: string } }) => {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    const { jwt, updateSessions, sessions } = useAuthContext();
-    const [formData, setFormData] = useState<SessionRequest>({
+    const { jwt, updatePapers, papers } = useAuthContext();
+    const [formData, setFormData] = useState<PaperRequest>({
         title: "",
         description: "",
         language: "",
@@ -26,7 +26,7 @@ const EditSession = ({ params }: { params: { id: string } }) => {
         status: "PENDING",
     });
 
-    const [changedData, setChangedData] = useState<SessionFields>({
+    const [changedData, setChangedData] = useState<PaperFields>({
         title: false,
         description: false,
         language: false,
@@ -42,14 +42,14 @@ const EditSession = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const session = sessions.find((session) => session.id === params.id);
+            const paper = papers.find((paper) => paper.id === params.id);
             setFormData({
-                title: session?.title || "",
-                description: session?.description || "",
-                language: session?.language || "",
-                level: session?.level || "BEGINNER",
-                tags: session?.tags.map((tag) => tag.id || "") || [],
-                status: session?.status || "PENDING",
+                title: paper?.title || "",
+                description: paper?.description || "",
+                language: paper?.language || "",
+                level: paper?.level || "BEGINNER",
+                tags: paper?.tags.map((tag) => tag.id || "") || [],
+                status: paper?.status || "PENDING",
             });
             const res = await getTags(jwt);
             if (res)
@@ -94,14 +94,14 @@ const EditSession = ({ params }: { params: { id: string } }) => {
     const handleSubmit = () => {
         const sendData = async () => {
             try {
-                const res = await updateSession(params.id, formData, jwt);
-                updateSessions();
+                const res = await updatePaper(params.id, formData, jwt);
+                updatePapers();
                 const id = res?.id;
                 if (id && file) {
                     await uploadDoc(id, file, jwt);
                 }
                 router.push(`/dashboard/${id}`);
-                toast.success('Edited session successfully.', {
+                toast.success('Edited paper successfully.', {
                     position: "bottom-right",
                     autoClose: 1500,
                     hideProgressBar: true,
@@ -146,7 +146,7 @@ const EditSession = ({ params }: { params: { id: string } }) => {
                             </motion.div>
                         ) : (
                             <div className="flex flex-col items-center">
-                                <h1 className="text-3xl font-bold mb-4">Edit Session</h1>
+                                <h1 className="text-3xl font-bold mb-4">Edit Paper</h1>
                                 <form className="w-full flex flex-col items-center">
                                     <div className="w-full">
                                         <label htmlFor="title" className="text-lg font-medium mb-2">Title</label>
@@ -252,4 +252,4 @@ const EditSession = ({ params }: { params: { id: string } }) => {
     )
 }
 
-export default EditSession;
+export default EditPaper;

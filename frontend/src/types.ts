@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react"
 
-export type Session = {
+export type Paper = {
     id?: string,
     title: string,
     description: string,
@@ -15,7 +15,7 @@ export type Session = {
 export type Tag = {
     id?: string,
     title: string,
-    sessions: Session[],
+    papers: Paper[],
 }
 
 export type Review = {
@@ -53,13 +53,13 @@ export type AuthDetails = {
     isLoggedIn: boolean,
     user: User | null,
     setUser: Dispatch<SetStateAction<User | null>>,
-    sessions: Session[],
-    setSessions: Dispatch<SetStateAction<Session[]>>
+    papers: Paper[],
+    setPapers: Dispatch<SetStateAction<Paper[]>>
     jwt: string | null,
     logIn: (jwt: string) => void
     logOut: () => void,
     loading: boolean,
-    updateSessions: () => void,
+    updatePapers: () => void,
 }
 
 
@@ -103,7 +103,7 @@ export type UpdateProfileFields = {
     phoneNumber: boolean,
 }
 
-export type SessionRequest = {
+export type PaperRequest = {
     title: string,
     description: string,
     language: string,
@@ -112,7 +112,7 @@ export type SessionRequest = {
     status: Status,
 }
 
-export type SessionFields = {
+export type PaperFields = {
     title: boolean,
     description: boolean,
     language: boolean,

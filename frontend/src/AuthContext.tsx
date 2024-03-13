@@ -1,10 +1,10 @@
 "use client";
 
 import { createContext, useCallback, useEffect, useState } from "react";
-import { AuthDetails, Session, Tag, User } from "./types";
+import { AuthDetails, Paper, User } from "./types";
 import { getProfile } from "./lib/profile";
 import { useRouter, usePathname } from "next/navigation";
-import { getAllSessions } from "./lib/sessions";
+import { getAllPapers } from "./lib/papers";
 
 export const AuthContext = createContext<AuthDetails | null>(null);
 
@@ -17,7 +17,7 @@ export const AuthContextProvider = ({
     const [user, setUser] = useState<User | null>(null);
     const [jwt, setJwt] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
-    const [sessions, setSessions] = useState<Session[]>([]);
+    const [papers, setPapers] = useState<Paper[]>([]);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -30,14 +30,15 @@ export const AuthContextProvider = ({
             const currentUser = await getProfile(token);
             localStorage.setItem('jwt', token);
             setJwt(token);
-            const currentSessions = await getAllSessions(token);
+            const currentPapers = await getAllPapers(token);
             setUser(currentUser);
-            if (currentSessions)
-                setSessions(currentSessions);
+            if (currentPapers)
+                setPapers(currentPapers);
             if (currentPath === "dashboard") {
                 setLoading(false)
                 return;
             }
+            console.log(currentUser);
             router.push('/dashboard/profile');
 
         }
@@ -46,14 +47,6 @@ export const AuthContextProvider = ({
             setJwt(null);
             setUser(null);
             router.push("/");
-            /*
-            TODO: error handling
-            if (error.response.status === 500)
-                SERVER IS NOT RESPONDING
-            else
-                INVALID TOKEN
-            */
-
         }
         setLoading(false);
     }, [router, pathname])
@@ -78,13 +71,13 @@ export const AuthContextProvider = ({
         router.push("/");
     }
 
-    const updateSessions = useCallback(async (): Promise<void> => {
+    const updatePapers = useCallback(async (): Promise<void> => {
         if (!jwt)
             return;
         setLoading(true);
-        const currentSessions = await getAllSessions(jwt!);
-        if (currentSessions)
-            setSessions(currentSessions);
+        const currentPapers = await getAllPapers(jwt!);
+        if (currentPapers)
+            setPapers(currentPapers);
         setLoading(false);
     }, [jwt]);
 
@@ -94,13 +87,13 @@ export const AuthContextProvider = ({
                 isLoggedIn,
                 user,
                 setUser,
-                sessions,
-                setSessions,
+                papers,
+                setPapers,
                 jwt,
                 logIn,
                 logOut,
                 loading,
-                updateSessions,
+                updatePapers,
             }}
         >
             {children}

@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nitconfbackend.nitconf.models.DocumentVersion;
-import com.nitconfbackend.nitconf.models.Session;
+import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
 import com.nitconfbackend.nitconf.models.Status;
 
 import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
-import com.nitconfbackend.nitconf.repositories.SessionRepository;
+import com.nitconfbackend.nitconf.repositories.PaperRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
-import com.nitconfbackend.nitconf.types.SessionRequest;
+import com.nitconfbackend.nitconf.types.PaperRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,13 +36,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("/api/session")
-public class SessionController {
+@RequestMapping("/api/paper")
+
+public class PaperController {
     @Autowired
     private UserRepository userRepo;
 
     @Autowired
-    private SessionRepository sessionRepo;
+    private PaperRepository paperRepository;
 
     @Autowired
     private DocumentVersionRepository docRepo;
@@ -53,35 +54,18 @@ public class SessionController {
     @Autowired
     private TagsRepository tagsRepo;
 
-    /**
-     * getAllSessions
-     * Returns a list of all sessions of the authenticated user
-     * 
-     * @return Sessions List of {@link Session}s
-     * @since 1.0
-     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
-     */
     @GetMapping("")
-    public ResponseEntity<List<Session>> getAllSessions() {
+    public ResponseEntity<List<Paper>> getAllPapers() {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
 
-        List<Session> sessions = currentUser.getSessions();
-        return ResponseEntity.ok(sessions);
+        List<Paper> papers = currentUser.getPapers();
+        return ResponseEntity.ok(papers);
     }
 
-    /**
-     * newSession
-     * Creates a new session into the database with the given details
-     * 
-     * @param entity {@link SessionRequest}
-     * @return session {@link session}
-     * @since 1.0
-     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
-     */
     @PostMapping("")
-    public ResponseEntity<Session> newSession(@RequestBody SessionRequest entity) {
+    public ResponseEntity<Paper> newPaper(@RequestBody PaperRequest entity) {
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
                 || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
@@ -94,7 +78,7 @@ public class SessionController {
             }
         });
 
-        Session session = new Session(
+        Paper paper = new Paper(
                 entity.title,
                 entity.description,
                 entity.language,
@@ -104,39 +88,27 @@ public class SessionController {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
-        sessionRepo.save(session);
 
-        currentUser.getSessions().add(session);
+        paperRepository.save(paper);
+
+        currentUser.getPapers().add(paper);
         userRepo.save(currentUser);
 
         tags.forEach(tag -> {
-            tag.getSessions().add(session);
+            tag.getPapers().add(paper);
             tagsRepo.save(tag);
         });
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(paper);
     }
 
-    /**
-     * updateSession
-     * Finds the session corresponding to the inputted id, and updates the details
-     * with the details provided by the client
-     * In case of any error during searching of the database or updation, an
-     * appropriate error messagage is thrown
-     * 
-     * @param id     - id of the session to be updated
-     * @param entity - {@link SessionRequest}
-     * @return {@link Session}
-     * @since 1.0
-     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
-     */
     @PutMapping("/{id}")
-    public ResponseEntity<Session> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
+    public ResponseEntity<Paper> updatePaper(@PathVariable String id, @RequestBody PaperRequest entity) {
         if (id == null)
             return ResponseEntity.notFound().build();
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
                 || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
+        Paper paper = paperRepository.findById(id).orElseThrow();
 
         List<Tag> tags = new ArrayList<Tag>();
         entity.tags.forEach(tag -> {
@@ -146,39 +118,26 @@ public class SessionController {
             }
         });
 
-        session.setTitle(entity.title);
-        session.setDescription(entity.description);
-        session.setLanguage(entity.language);
-        session.setLevel(entity.level);
-        session.setStatus(entity.status);
-        session.setTags(tags);
+        paper.setTitle(entity.title);
+        paper.setDescription(entity.description);
+        paper.setLanguage(entity.language);
+        paper.setLevel(entity.level);
+        paper.setStatus(entity.status);
+        paper.setTags(tags);
 
-        sessionRepo.save(session);
+        paperRepository.save(paper);
 
-        return ResponseEntity.ok(session);
+        return ResponseEntity.ok(paper);
     }
 
-    /**
-     * updloadPdf
-     * Finds the session with the inputted id, and creates a new instance of
-     * DocumentVersion and links the uploaded .pdf file with the session
-     * In case of any error during searching of the database or updation, an
-     * appropriate error messagage is thrown
-     * 
-     * @param id   - id of the session to be updated
-     * @param file - uploaded pdf file
-     * @return success message
-     * @since 1.0
-     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
-     */
     @PutMapping("/doc/{id}")
     public ResponseEntity<?> uploadPdf(@PathVariable String id, @RequestParam("file") MultipartFile file) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
+        Paper paper = paperRepository.findById(id).orElseThrow();
         try {
             byte[] data = documentUtility.pdfToByte(file);
-            List<DocumentVersion> allDocs = session.getDocumentVersions();
+            List<DocumentVersion> allDocs = paper.getDocumentVersions();
             if (data == null)
                 return ResponseEntity.notFound().build();
             DocumentVersion newDoc = new DocumentVersion(
@@ -188,8 +147,8 @@ public class SessionController {
             // session
             );
             docRepo.save(newDoc);
-            session.getDocumentVersions().add(newDoc);
-            sessionRepo.save(session);
+            paper.getDocumentVersions().add(newDoc);
+            paperRepository.save(paper);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             return ResponseEntity.badRequest().build();
@@ -198,21 +157,12 @@ public class SessionController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * getDocument
-     * Finds the session with the inputted id, and sends the pdf file to the user
-     * 
-     * @param id - id of the session
-     * @return {@link Resource}
-     * @since 1.0
-     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
-     */
     @GetMapping("/doc/{id}")
     public ResponseEntity<Resource> getDocument(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        List<DocumentVersion> allDocs = session.getDocumentVersions();
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        List<DocumentVersion> allDocs = paper.getDocumentVersions();
         ByteArrayResource resource = documentUtility.downloadFile(allDocs);
         if (resource == null)
             return ResponseEntity.notFound().build();
@@ -223,77 +173,39 @@ public class SessionController {
                 .body(resource);
     }
 
-    /**
-     * getSession
-     * returns the session with the inputted id.
-     * In case of an invalid id, a 404 error is thrown
-     * 
-     * @return {@link Session}
-     * @since 1.0
-     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<Session> getSession(@PathVariable String id) {
+    public ResponseEntity<Paper> getPaper(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        return ResponseEntity.ok(session);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        return ResponseEntity.ok(paper);
     }
 
-    /**
-     * updateStatusToAccepted
-     * Updates the status of the session with the inputted id to
-     * <strong>ACCEPTED</strong>
-     * 
-     * @param id - id of the session to be updated
-     * @return "UPDATED STATUS TO ACCEPTED"
-     * @since 1.0
-     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
-     */
     @PutMapping("/status/accepted/{id}")
     public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        session.setStatus(Status.ACCEPTED);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        paper.setStatus(Status.ACCEPTED);
         return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
     }
 
-    /**
-     * updateStatusToAccepted
-     * Updates the status of the session with the inputted id to
-     * <strong>REJECTED</strong>
-     * 
-     * @param id - id of the session to be updated
-     * @return "UPDATED STATUS TO ACCEPTED"
-     * @since 1.0
-     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
-     */
     @PutMapping("/status/rejected/{id}")
     public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        session.setStatus(Status.REJECTED);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        paper.setStatus(Status.REJECTED);
         return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
 
-    /**
-     * deleteSession
-     * Finds the session with the inputted id, and deletes it, if it exists
-     * 
-     * @param id - id of the session to be deleted
-     * @return "DELETED SESSION"
-     * @since 1.0
-     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
-     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSession(@PathVariable String id) {
+    public ResponseEntity<String> deletePaper(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
-        Session session = sessionRepo.findById(id).orElseThrow();
-        if (session != null)
-            sessionRepo.delete(session);
+        Paper paper = paperRepository.findById(id).orElseThrow();
+        if (paper != null)
+            paperRepository.delete(paper);
         return ResponseEntity.ok("DELETED SESSION");
     }
 

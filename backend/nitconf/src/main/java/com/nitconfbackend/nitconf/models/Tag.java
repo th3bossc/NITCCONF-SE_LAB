@@ -13,24 +13,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(collection="tags")
+@Document(collection = "tags")
 public class Tag {
-    @Id public String id;
+    @Id
+    public String id;
     public String title;
 
     @DBRef
     @JsonIgnore
-    public List<Session> sessions;
-
+    public List<Paper> papers;
 
     public Tag(String title) {
         this.title = title;
-        this.sessions= new ArrayList<Session>();
+        this.papers = new ArrayList<Paper>();
     }
 }
-
-
