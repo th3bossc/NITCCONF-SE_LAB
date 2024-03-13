@@ -89,6 +89,29 @@ public class ProfileControllerTest {
     }
 
     @Test
+    void testGetUser_invalidPerms() {
+        String validId = "test_id";
+        User sampleUser = new User(
+                "test_id",
+                "testFirstName",
+                "testLastName",
+                "testEmail",
+                "testPhoneNumber",
+                "testPassword",
+                Role.USER,
+                true,
+                new ArrayList<>());
+        when(authentication.getName()).thenReturn(sampleUser.email);
+        when(userRepo.findByEmail(sampleUser.email)).thenReturn(Optional.of(sampleUser));
+        when(userRepo.findById(sampleUser.id)).thenReturn(Optional.of(sampleUser));
+
+        ResponseEntity<User> response = profileController.getUser(validId);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+    }
+
+    @Test
     void testProfileDetails() {
         User sampleUser = new User(
                 "test_id",
