@@ -8,6 +8,5 @@ import lombok.NoArgsConstructor;
 public class ProfileRequest {
     public String firstName;
     public String lastName;
-    public String email;
     public String phoneNumber;
 }

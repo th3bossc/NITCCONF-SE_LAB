@@ -52,18 +52,14 @@ public class ProfileController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepo.findByEmail(email).orElseThrow();
 
-        if (user != null) {
-            // userRepo.delete(user);
-            if (entity.firstName != null)
-                user.setFirstName(entity.firstName);
-            if (entity.lastName != null)
-                user.setLastName(entity.lastName);
-            if (entity.phoneNumber != null)
-                user.setPhoneNumber(entity.phoneNumber);
-            userRepo.save(user);
-            return ResponseEntity.ok("Updated successfully");
-        }
-        return ResponseEntity.badRequest().build();
+        if (entity.firstName != null)
+            user.setFirstName(entity.firstName);
+        if (entity.lastName != null)
+            user.setLastName(entity.lastName);
+        if (entity.phoneNumber != null)
+            user.setPhoneNumber(entity.phoneNumber);
+        userRepo.save(user);
+        return ResponseEntity.ok("Updated successfully");
     }
 
     /**
