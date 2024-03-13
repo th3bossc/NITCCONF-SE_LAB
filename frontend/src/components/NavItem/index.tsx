@@ -1,20 +1,20 @@
-import { Session } from '@/types';
+import { Paper } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import deleteIcon from '/public/trash.svg';
 import { useState } from 'react';
 import { useAuthContext } from '@/hooks/useAuthContext';
-import { deleteSession } from '@/lib/sessions';
+import { deletePaper } from '@/lib/papers';
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import Dialog from '../Dialog';
 import { useRouter } from 'next/navigation';
-const NavItem = ({ session, current, onClick }: {
-    session: Session,
+const NavItem = ({ paper, current, onClick }: {
+    paper: Paper,
     current: string,
     onClick: () => void
 }) => {
-    const { jwt, setSessions } = useAuthContext();
+    const { jwt, setPapers } = useAuthContext();
     const [hover, setHover] = useState(false);
     const [dialog, setDialog] = useState(false);
     const [toDelete, setToDelete] = useState<string | null>(null);
@@ -24,10 +24,10 @@ const NavItem = ({ session, current, onClick }: {
         if (!id)
             return;
         try {
-            await deleteSession(id, jwt);
-            setSessions(prev => prev.filter(session => session.id !== id));
+            await deletePaper(id, jwt);
+            setPapers(prev => prev.filter(paper => paper.id !== id));
             router.push("/dashboard/profile")
-            toast.success('Deleted session successfully.', {
+            toast.success('Deleted paper successfully.', {
                 position: "bottom-right",
                 autoClose: 1500,
                 hideProgressBar: true,
@@ -61,15 +61,15 @@ const NavItem = ({ session, current, onClick }: {
             onMouseOver={() => setHover(true)}
             onMouseLeave={() => setHover(false)}
             style={{
-                color: current === session.id ? "var(--primary)" : "#fff"
+                color: current === paper.id ? "var(--primary)" : "#fff"
             }}
             onClick={onClick}
 
         >
-            {session.title}
+            {paper.title}
 
             {
-                current === session.id && (
+                current === paper.id && (
                     <motion.span layoutId="current-item" className="absolute top-0 h-full left-0 w-[0.5rem] rounded-r-lg bg-nitconfprimary" />
                 )
             }
@@ -81,9 +81,8 @@ const NavItem = ({ session, current, onClick }: {
                             initial={{ opacity: 0, x: 10 }}
                             animate={{ opacity: 1, x: 0 }}
                             exit={{ opacity: 0, x: 10 }}
-                            // onClick={() => deleteHandler(session.id)}
                             onClick={() => {
-                                setToDelete(session.id || null)
+                                setToDelete(paper.id || null)
                                 setDialog(true)
                             }}
                         >

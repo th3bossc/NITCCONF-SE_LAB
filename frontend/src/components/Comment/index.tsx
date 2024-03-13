@@ -1,7 +1,6 @@
 import { Review } from "@/types";
 
 const Comment = ({
-    id,
     comment,
     reviewer,
 }: Review) => {

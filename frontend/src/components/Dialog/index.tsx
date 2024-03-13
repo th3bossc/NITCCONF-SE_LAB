@@ -15,8 +15,8 @@ const Dialog = ({ setClose, eventHandler }: {
             exit={{ scale: 1.1, opacity: 0 }}
             transition={{ duration: 0.25, type: "tween" }}
         >
-            <h1 className={`${oswald.className} font-medium text-2xl w-full text-center`} > Delete Session? </h1>
-            <span className="text-center w-full block pt-8"> Deleting the session can&apos;t be undone. </span>
+            <h1 className={`${oswald.className} font-medium text-2xl w-full text-center`} > Delete Paper? </h1>
+            <span className="text-center w-full block pt-8"> Deleting the paper can&apos;t be undone. </span>
             <span className="text-center w-full block pt-8"> Are you sure you want to proceed? </span>
             <div className="mt-auto w-full absolute bottom-4 left-0 flex justify-center items-center">
                 <AnimatedButton onClick={eventHandler}>

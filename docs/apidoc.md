@@ -20,17 +20,17 @@ TABLE OF CONTENTS
     * 3.1 [Get Reviews for Document](#31-get-reviews-for-document)
     * 3.2 [Get Review](#32-get-review)
     * 3.3 [Create Review](#33-create-review)
-* 4-SESSION
-    * 4.1 [Get all sessions](#41-get-all-sessions)
-    * 4.2 [Create new session](#42-create-new-session)
-    * 4.3 [Get session](#43-get-session)
-    * 4.4 [Update session](#44-update-session)
+* 4-PAPER
+    * 4.1 [Get all papers](#41-get-all-papers)
+    * 4.2 [Create new paper](#42-create-new-paper)
+    * 4.3 [Get paper](#43-get-paper)
+    * 4.4 [Update paper](#44-update-paper)
     * 4.5 [Upload PDF](#45-upload-pdf)
-    * 4.6 [Get latest PDF of session](#46-get-latest-pdf-of-session)
+    * 4.6 [Get latest PDF of paper](#46-get-latest-pdf-of-paper)
     * 4.7 [Update status to ACCEPTED](#47-update-status-to-accepted)
     * 4.8 [Update status to REJECTED](#48-update-status-to-rejected)
 * 5-TAG
-    * 5.1 [Get sessions with given tag](#51-get-sessions-with-given-tag)
+    * 5.1 [Get papers with given tag](#51-get-papers-with-given-tag)
     * 5.2 [Get all tags](#52-get-all-tags)
     * 5.3 [Create new tag](#53-create-new-tag)
 
@@ -191,11 +191,11 @@ TABLE OF CONTENTS
 
 ![](./screenshots/createReview.png)
 
-## 4 SESSION
+## 4 PAPER
 
-### 4.1 Get all sessions
-    [GET] /api/session
-    Returns all the sessions pertaining to the user
+### 4.1 Get all papers
+    [GET] /api/paper
+    Returns all the papers pertaining to the user
     Headers: { Authorization: "Bearer <token>" }
     Body: { None }
     Response: List of {
@@ -229,9 +229,9 @@ TABLE OF CONTENTS
 
 ![](./screenshots/getAllSessions.png)
 
-### 4.2 Create new session
-    [POST] /api/session    
-    Creates a new session for the user
+### 4.2 Create new paper
+    [POST] /api/paper    
+    Creates a new paper for the user
     Headers: { Authorization: "Bearer <token>" }
     Body: { 
         title: string,
@@ -270,9 +270,9 @@ TABLE OF CONTENTS
 
 ![](./screenshots/createSession.png)
 
-### 4.3 Get session
-    [GET] /api/session/<id:string>
-    Returns the session with given id
+### 4.3 Get paper
+    [GET] /api/paper/<id:string>
+    Returns the paper with given id
     Headers: { Authorization: "Bearer <token>" }
     Body: { None }
     Response: {
@@ -306,11 +306,11 @@ TABLE OF CONTENTS
 
 ![](./screenshots/getASession.png)
 
-### 4.4 Update session
-    [PUT] /api/session/<id:string>
-    Updates the details for the session with given id 
+### 4.4 Update paper
+    [PUT] /api/paper/<id:string>
+    Updates the details for the paper with given id 
     Headers: { Authorization: "Bearer <token>" }
-    Body: { id: string, check SessionRequest.java }
+    Body: { id: string, check PaperRequest.java }
     Response: {
         id: string,
         title: string,
@@ -343,26 +343,26 @@ TABLE OF CONTENTS
 ![](./screenshots/updateSession.png)
 
 ### 4.5 Upload PDF
-    [PUT] /api/session/doc/<id:string>
-    Uploads the PDF file to the session with given id
+    [PUT] /api/paper/doc/<id:string>
+    Uploads the PDF file to the paper with given id
     Headers: { Authorization: "Bearer <token>" }
     Body: { id: string, file: PDF }
     Response: { None }
 
 ![](./screenshots/uploadNewDoc.png)
 
-### 4.6 Get latest PDF of session
-    [GET] /api/session/doc/<id:string>
-    Returns the latest document of the given session id
+### 4.6 Get latest PDF of Paper
+    [GET] /api/paper/doc/<id:string>
+    Returns the latest document of the given paper id
     Headers: { Authorization: "Bearer <token>" }
     Body: { id: string }
-    Response: PDF file of session id
+    Response: PDF file of paper id
 
 ![](./screenshots/getLatestDoc.png)
 
 ### 4.7 Update status to ACCEPTED
-    [PUT] /api/session/status/accepted/<id:string>
-    Sets the status of session with given id as ACCEPTED
+    [PUT] /api/paper/status/accepted/<id:string>
+    Sets the status of paper with given id as ACCEPTED
     Headers: { Authorization: "Bearer <token>" }
     Body: { id: string }
     Response: "UPDATED STATUS TO ACCEPTED"
@@ -370,8 +370,8 @@ TABLE OF CONTENTS
 ![](./screenshots/acceptDoc.png)
 
 ### 4.8 Update status to REJECTED
-    [PUT] /api/session/doc/rejected/<id:string>
-    Sets the status of session with given id as REJECTED
+    [PUT] /api/paper/doc/rejected/<id:string>
+    Sets the status of paper with given id as REJECTED
     Headers: { Authorization: "Bearer <token>" }
     Body: {  id: string}
     Response: "UPDATED STATUS TO REJECTED"
@@ -380,9 +380,9 @@ TABLE OF CONTENTS
 
 ## 5 TAG
 
-### 5.1 Get sessions with given tag
+### 5.1 Get papers with given tag
     [GET] /api/tags/<title:string>
-    Returns all the sessions containing the tag with given title
+    Returns all the papers containing the tag with given title
     Headers: { Authorization: "Bearer <token>" }
     Body: { title: string }
     Response: List of {

@@ -27,7 +27,7 @@ import com.nitconfbackend.nitconf.repositories.PaperRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
-import com.nitconfbackend.nitconf.types.SessionRequest;
+import com.nitconfbackend.nitconf.types.PaperRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
-@RequestMapping("/api/session")
+@RequestMapping("/api/paper")
 
 public class PaperController {
     @Autowired
@@ -55,7 +55,7 @@ public class PaperController {
     private TagsRepository tagsRepo;
 
     @GetMapping("")
-    public ResponseEntity<List<Paper>> getAllSessions() {
+    public ResponseEntity<List<Paper>> getAllPapers() {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepo.findByEmail(email).orElseThrow();
@@ -65,7 +65,7 @@ public class PaperController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Paper> newSession(@RequestBody SessionRequest entity) {
+    public ResponseEntity<Paper> newPaper(@RequestBody PaperRequest entity) {
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
                 || entity.status == null || entity.tags == null)
             return ResponseEntity.badRequest().build();
@@ -102,7 +102,7 @@ public class PaperController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Paper> updateSession(@PathVariable String id, @RequestBody SessionRequest entity) {
+    public ResponseEntity<Paper> updatePaper(@PathVariable String id, @RequestBody PaperRequest entity) {
         if (id == null)
             return ResponseEntity.notFound().build();
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
@@ -174,7 +174,7 @@ public class PaperController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Paper> getSession(@PathVariable String id) {
+    public ResponseEntity<Paper> getPaper(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
         Paper paper = paperRepository.findById(id).orElseThrow();
@@ -200,7 +200,7 @@ public class PaperController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteSession(@PathVariable String id) {
+    public ResponseEntity<String> deletePaper(@PathVariable String id) {
         if (id == null)
             return ResponseEntity.notFound().build();
         Paper paper = paperRepository.findById(id).orElseThrow();

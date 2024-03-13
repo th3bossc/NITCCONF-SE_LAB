@@ -35,7 +35,7 @@ import com.nitconfbackend.nitconf.models.Level;
 import com.nitconfbackend.nitconf.repositories.PaperRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
-import com.nitconfbackend.nitconf.types.SessionRequest;
+import com.nitconfbackend.nitconf.types.PaperRequest;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
 
 public class PaperControllerTest {
@@ -70,7 +70,7 @@ public class PaperControllerTest {
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
-        SessionRequest request = new SessionRequest();
+        PaperRequest request = new PaperRequest();
         request.setTitle("Test Title");
         request.setDescription("Test Description");
         request.setLanguage("English");
@@ -94,7 +94,7 @@ public class PaperControllerTest {
         when(sessionRepository.save(any(Paper.class))).thenReturn(new Paper());
 
         // Test
-        ResponseEntity<Paper> responseEntity = sessionController.newSession(request);
+        ResponseEntity<Paper> responseEntity = sessionController.newPaper(request);
 
         // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -107,7 +107,7 @@ public class PaperControllerTest {
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
-        SessionRequest request = new SessionRequest();
+        PaperRequest request = new PaperRequest();
         request.setTitle("Test Title");
         request.setDescription("Test Description");
         request.setLevel(Level.INTERMEDIATE);
@@ -127,7 +127,7 @@ public class PaperControllerTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
 
-        assertEquals(HttpStatus.BAD_REQUEST, sessionController.newSession(request).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, sessionController.newPaper(request).getStatusCode());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class PaperControllerTest {
         when(authentication.getName()).thenReturn("test@example.com");
 
         String sessionId = "1";
-        SessionRequest request = new SessionRequest();
+        PaperRequest request = new PaperRequest();
         request.setTitle("Updated Title");
         request.setDescription("Updated Description");
         request.setLanguage("Updated Language");
@@ -160,7 +160,7 @@ public class PaperControllerTest {
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
         when(sessionRepository.save(any(Paper.class))).thenReturn(mockSession);
 
-        ResponseEntity<Paper> responseEntity = sessionController.updateSession(sessionId, request);
+        ResponseEntity<Paper> responseEntity = sessionController.updatePaper(sessionId, request);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("Updated Title", responseEntity.getBody().getTitle());
@@ -174,7 +174,7 @@ public class PaperControllerTest {
         // is called with invalid session ID
         when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        SessionRequest sessionRequest = new SessionRequest();
+        PaperRequest sessionRequest = new PaperRequest();
         sessionRequest.setTitle("Updated Title");
         sessionRequest.setDescription("Updated Description");
         sessionRequest.setLanguage("English");
@@ -183,7 +183,7 @@ public class PaperControllerTest {
         sessionRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
 
         assertThrows(NoSuchElementException.class,
-                () -> sessionController.updateSession("wrongSessionId", sessionRequest));
+                () -> sessionController.updatePaper("wrongSessionId", sessionRequest));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class PaperControllerTest {
 
         when(user.getPapers()).thenReturn(sessions);
 
-        ResponseEntity<List<Paper>> responseEntity = sessionController.getAllSessions();
+        ResponseEntity<List<Paper>> responseEntity = sessionController.getAllPapers();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(sessions, responseEntity.getBody());
@@ -226,7 +226,7 @@ public class PaperControllerTest {
         SecurityContextHolder.setContext(securityContext);
 
         assertThrows(NoSuchElementException.class,
-                () -> sessionController.getAllSessions());
+                () -> sessionController.getAllPapers());
     }
 
     @Test
@@ -234,7 +234,7 @@ public class PaperControllerTest {
         String validId = "validId";
         Paper expectedSession = new Paper();
         when(sessionRepository.findById(validId)).thenReturn(Optional.of(expectedSession));
-        ResponseEntity<Paper> responseEntity = sessionController.getSession(validId);
+        ResponseEntity<Paper> responseEntity = sessionController.getPaper(validId);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(expectedSession, responseEntity.getBody());
@@ -243,7 +243,7 @@ public class PaperControllerTest {
     @Test
     public void testGetSession_NullId() {
 
-        ResponseEntity<Paper> responseEntity = sessionController.getSession(null);
+        ResponseEntity<Paper> responseEntity = sessionController.getPaper(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -252,7 +252,7 @@ public class PaperControllerTest {
     public void testGetSession_WrongId() {
         String wrongId = "wrongId";
         when(sessionRepository.findById(wrongId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.getSession(wrongId));
+        assertThrows(NoSuchElementException.class, () -> sessionController.getPaper(wrongId));
 
     }
 
@@ -314,7 +314,7 @@ public class PaperControllerTest {
         Paper session = new Paper();
         when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
 
-        ResponseEntity<String> responseEntity = sessionController.deleteSession(validId);
+        ResponseEntity<String> responseEntity = sessionController.deletePaper(validId);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("DELETED SESSION", responseEntity.getBody());
         verify(sessionRepository, times(1)).delete(session);
@@ -322,7 +322,7 @@ public class PaperControllerTest {
 
     @Test
     public void testDeleteSession_NullId() {
-        ResponseEntity<String> responseEntity = sessionController.deleteSession(null);
+        ResponseEntity<String> responseEntity = sessionController.deletePaper(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -332,7 +332,7 @@ public class PaperControllerTest {
         String invalidId = "invalidId";
 
         when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.deleteSession(invalidId));
+        assertThrows(NoSuchElementException.class, () -> sessionController.deletePaper(invalidId));
 
     }
 

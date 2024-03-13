@@ -2,9 +2,9 @@
 
 import AnimatedButton from "@/components/AnimatedButton";
 import { useAuthContext } from "@/hooks/useAuthContext";
-import { createSession, uploadDoc } from "@/lib/sessions";
+import { createPaper, uploadDoc } from "@/lib/papers";
 import { getTags } from "@/lib/tags";
-import { SessionFields, SessionRequest, Tag } from "@/types";
+import { PaperFields, PaperRequest, Tag } from "@/types";
 import { ChangeEvent, useEffect, useState } from "react";
 import Select, { MultiValue } from 'react-select';
 import { ToastContainer, toast, Flip } from "react-toastify";
@@ -12,11 +12,11 @@ import { useRouter } from "next/navigation";
 import ReactLoading from 'react-loading';
 import 'react-toastify/ReactToastify.css';
 
-const AddSession = () => {
+const AddPaper = () => {
     const router = useRouter();
-    const { jwt, user, setSessions } = useAuthContext();
+    const { jwt, user, setPapers } = useAuthContext();
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState<SessionRequest>({
+    const [formData, setFormData] = useState<PaperRequest>({
         title: "",
         description: "",
         language: "",
@@ -25,7 +25,7 @@ const AddSession = () => {
         status: "PENDING",
     });
 
-    const [changedData, setChangedData] = useState<SessionFields>({
+    const [changedData, setChangedData] = useState<PaperFields>({
         title: false,
         description: false,
         language: false,
@@ -82,12 +82,12 @@ const AddSession = () => {
         const sendData = async () => {
             setLoading(true);
             try {
-                const res = await createSession(formData, jwt);
+                const res = await createPaper(formData, jwt);
                 const id = res?.id;
                 if (id && file)
                     await uploadDoc(id, file, jwt);
                 if (res) {
-                    setSessions((prev) => ([
+                    setPapers((prev) => ([
                         ...prev,
                         res,
                     ]));
@@ -119,7 +119,7 @@ const AddSession = () => {
                 {
                     user && user.isVerified ? (
                         <div className="flex flex-col items-center">
-                            <h1 className="text-3xl font-bold mb-4">Add Session</h1>
+                            <h1 className="text-3xl font-bold mb-4">Add Paper</h1>
                             <form className="w-full flex flex-col items-center">
                                 <div className="w-full">
                                     <label htmlFor="title" className="text-lg font-medium mb-2">Title</label>
@@ -226,7 +226,7 @@ const AddSession = () => {
                         </div>
                     ) : (
                         <div className="flex items-center justify-center w-full h-full">
-                            <span> You need to verify your email before creating a new session </span>
+                            <span> You need to verify your email before creating a new paper </span>
                         </div>
                     )
                 }
@@ -236,4 +236,4 @@ const AddSession = () => {
     )
 }
 
-export default AddSession;
+export default AddPaper;
