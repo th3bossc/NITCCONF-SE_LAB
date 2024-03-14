@@ -44,7 +44,7 @@ public class PaperControllerTest {
     private UserRepository userRepository;
 
     @Mock
-    private PaperRepository sessionRepository;
+    private PaperRepository paperRepository;
 
     @Mock
     private TagsRepository tagsRepository;
@@ -53,7 +53,7 @@ public class PaperControllerTest {
     private DocumentUtility documentUtility;
 
     @InjectMocks
-    private PaperController sessionController;
+    private PaperController paperController;
 
     @Mock
     private Authentication authentication;
@@ -64,7 +64,7 @@ public class PaperControllerTest {
     }
 
     @Test
-    public void testNewSession_ValidRequest() {
+    public void testNewPaper_ValidRequest() {
 
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
@@ -91,17 +91,17 @@ public class PaperControllerTest {
         // Mock repository behavior
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
-        when(sessionRepository.save(any(Paper.class))).thenReturn(new Paper());
+        when(paperRepository.save(any(Paper.class))).thenReturn(new Paper());
 
         // Test
-        ResponseEntity<Paper> responseEntity = sessionController.newPaper(request);
+        ResponseEntity<Paper> responseEntity = paperController.newPaper(request);
 
         // Verify
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testNewSession_nullLanguage() {
+    public void testNewPaper_nullLanguage() {
 
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
@@ -127,18 +127,18 @@ public class PaperControllerTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
 
-        assertEquals(HttpStatus.BAD_REQUEST, sessionController.newPaper(request).getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, paperController.newPaper(request).getStatusCode());
     }
 
     @Test
-    public void testUpdateSession_ValidRequest() {
+    public void testUpdatePaper_ValidRequest() {
 
         SecurityContext securityContext = mock(SecurityContext.class);
         SecurityContextHolder.setContext(securityContext);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getName()).thenReturn("test@example.com");
 
-        String sessionId = "1";
+        String paperId = "1";
         PaperRequest request = new PaperRequest();
         request.setTitle("Updated Title");
         request.setDescription("Updated Description");
@@ -149,18 +149,18 @@ public class PaperControllerTest {
         tags.add("Java");
         request.setTags(tags);
 
-        Paper mockSession = new Paper();
-        mockSession.setId(sessionId);
+        Paper mockPaper = new Paper();
+        mockPaper.setId(paperId);
 
         Tag mockTag = new Tag("Java");
         List<Tag> mockTags = new ArrayList<>();
         mockTags.add(mockTag);
 
-        when(sessionRepository.findById(anyString())).thenReturn(Optional.of(mockSession));
+        when(paperRepository.findById(anyString())).thenReturn(Optional.of(mockPaper));
         when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
-        when(sessionRepository.save(any(Paper.class))).thenReturn(mockSession);
+        when(paperRepository.save(any(Paper.class))).thenReturn(mockPaper);
 
-        ResponseEntity<Paper> responseEntity = sessionController.updatePaper(sessionId, request);
+        ResponseEntity<Paper> responseEntity = paperController.updatePaper(paperId, request);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("Updated Title", responseEntity.getBody().getTitle());
@@ -169,31 +169,31 @@ public class PaperControllerTest {
     }
 
     @Test
-    public void testUpdateSession_WrongSessionId() {
-        // Mock behavior of sessionRepository to return an empty Optional when findById
-        // is called with invalid session ID
-        when(sessionRepository.findById(anyString())).thenReturn(Optional.empty());
+    public void testUpdatePaper_WrongPaperId() {
+        // Mock behavior of paperRepository to return an empty Optional when findById
+        // is called with invalid paper ID
+        when(paperRepository.findById(anyString())).thenReturn(Optional.empty());
 
-        PaperRequest sessionRequest = new PaperRequest();
-        sessionRequest.setTitle("Updated Title");
-        sessionRequest.setDescription("Updated Description");
-        sessionRequest.setLanguage("English");
-        sessionRequest.setLevel(Level.INTERMEDIATE);
-        sessionRequest.setStatus(Status.PENDING);
-        sessionRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
+        PaperRequest paperRequest = new PaperRequest();
+        paperRequest.setTitle("Updated Title");
+        paperRequest.setDescription("Updated Description");
+        paperRequest.setLanguage("English");
+        paperRequest.setLevel(Level.INTERMEDIATE);
+        paperRequest.setStatus(Status.PENDING);
+        paperRequest.setTags(Arrays.asList("Tag1", "Tag2", "Tag3"));
 
         assertThrows(NoSuchElementException.class,
-                () -> sessionController.updatePaper("wrongSessionId", sessionRequest));
+                () -> paperController.updatePaper("wrongPaperId", paperRequest));
     }
 
     @Test
-    public void testGetAllSessions() {
+    public void testGetAllPapers() {
         String userEmail = "test@example.com";
 
         User user = mock(User.class);
         user.setEmail(userEmail);
 
-        List<Paper> sessions = Arrays.asList(new Paper(), new Paper());
+        List<Paper> papers = Arrays.asList(new Paper(), new Paper());
 
         when(userRepository.findByEmail(userEmail)).thenReturn(Optional.of(user));
 
@@ -203,18 +203,18 @@ public class PaperControllerTest {
         when(authentication.getName()).thenReturn(userEmail);
         SecurityContextHolder.setContext(securityContext);
 
-        when(user.getPapers()).thenReturn(sessions);
+        when(user.getPapers()).thenReturn(papers);
 
-        ResponseEntity<List<Paper>> responseEntity = sessionController.getAllPapers();
+        ResponseEntity<List<Paper>> responseEntity = paperController.getAllPapers();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(sessions, responseEntity.getBody());
+        assertEquals(papers, responseEntity.getBody());
         assertEquals(2, responseEntity.getBody().size());
 
     }
 
     @Test
-    public void testGetAllSessions_WrongEmail() {
+    public void testGetAllPapers_WrongEmail() {
         String wrongEmail = "wrong@example.com";
 
         when(userRepository.findByEmail(wrongEmail)).thenReturn(Optional.empty());
@@ -226,42 +226,42 @@ public class PaperControllerTest {
         SecurityContextHolder.setContext(securityContext);
 
         assertThrows(NoSuchElementException.class,
-                () -> sessionController.getAllPapers());
+                () -> paperController.getAllPapers());
     }
 
     @Test
-    public void testGetSession_ValidId() {
+    public void testGetPaper_ValidId() {
         String validId = "validId";
-        Paper expectedSession = new Paper();
-        when(sessionRepository.findById(validId)).thenReturn(Optional.of(expectedSession));
-        ResponseEntity<Paper> responseEntity = sessionController.getPaper(validId);
+        Paper expectedPaper = new Paper();
+        when(paperRepository.findById(validId)).thenReturn(Optional.of(expectedPaper));
+        ResponseEntity<Paper> responseEntity = paperController.getPaper(validId);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(expectedSession, responseEntity.getBody());
+        assertEquals(expectedPaper, responseEntity.getBody());
     }
 
     @Test
-    public void testGetSession_NullId() {
+    public void testGetPaper_NullId() {
 
-        ResponseEntity<Paper> responseEntity = sessionController.getPaper(null);
+        ResponseEntity<Paper> responseEntity = paperController.getPaper(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testGetSession_WrongId() {
+    public void testGetPaper_WrongId() {
         String wrongId = "wrongId";
-        when(sessionRepository.findById(wrongId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.getPaper(wrongId));
+        when(paperRepository.findById(wrongId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> paperController.getPaper(wrongId));
 
     }
 
     @Test
     public void testUpdateStatusToAccepted_ValidId() {
         String validId = "validId";
-        Paper session = new Paper();
-        when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
-        ResponseEntity<String> responseEntity = sessionController.updateStatusToAccepted(validId);
+        Paper paper = new Paper();
+        when(paperRepository.findById(validId)).thenReturn(Optional.of(paper));
+        ResponseEntity<String> responseEntity = paperController.updateStatusToAccepted(validId);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("UPDATED STATUS TO ACCEPTED", responseEntity.getBody());
@@ -269,7 +269,7 @@ public class PaperControllerTest {
 
     @Test
     public void testUpdateStatusToAccepted_NullId() {
-        ResponseEntity<String> responseEntity = sessionController.updateStatusToAccepted(null);
+        ResponseEntity<String> responseEntity = paperController.updateStatusToAccepted(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -278,16 +278,16 @@ public class PaperControllerTest {
     public void testUpdateStatusToAccepted_InvalidId() {
         String invalidId = "invalidId";
 
-        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.updateStatusToAccepted(invalidId));
+        when(paperRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> paperController.updateStatusToAccepted(invalidId));
     }
 
     @Test
     public void testUpdateStatusToRejected_ValidId() {
         String validId = "validId";
-        Paper session = new Paper();
-        when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
-        ResponseEntity<String> responseEntity = sessionController.updateStatusToRejected(validId);
+        Paper paper = new Paper();
+        when(paperRepository.findById(validId)).thenReturn(Optional.of(paper));
+        ResponseEntity<String> responseEntity = paperController.updateStatusToRejected(validId);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("UPDATED STATUS TO REJECTED", responseEntity.getBody());
@@ -295,7 +295,7 @@ public class PaperControllerTest {
 
     @Test
     public void testUpdateStatusToRejected_NullId() {
-        ResponseEntity<String> responseEntity = sessionController.updateStatusToRejected(null);
+        ResponseEntity<String> responseEntity = paperController.updateStatusToRejected(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -304,35 +304,35 @@ public class PaperControllerTest {
     public void testUpdateStatusToRejected_InvalidId() {
         String invalidId = "invalidId";
 
-        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.updateStatusToRejected(invalidId));
+        when(paperRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> paperController.updateStatusToRejected(invalidId));
     }
 
     @Test
-    public void testDeleteSession_ValidId() {
+    public void testDeletePaper_ValidId() {
         String validId = "validId";
-        Paper session = new Paper();
-        when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
+        Paper paper = new Paper();
+        when(paperRepository.findById(validId)).thenReturn(Optional.of(paper));
 
-        ResponseEntity<String> responseEntity = sessionController.deletePaper(validId);
+        ResponseEntity<String> responseEntity = paperController.deletePaper(validId);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals("DELETED SESSION", responseEntity.getBody());
-        verify(sessionRepository, times(1)).delete(session);
+        verify(paperRepository, times(1)).delete(paper);
     }
 
     @Test
-    public void testDeleteSession_NullId() {
-        ResponseEntity<String> responseEntity = sessionController.deletePaper(null);
+    public void testDeletePaper_NullId() {
+        ResponseEntity<String> responseEntity = paperController.deletePaper(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testDeleteSession_InvalidId() {
+    public void testDeletePaper_InvalidId() {
         String invalidId = "invalidId";
 
-        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.deletePaper(invalidId));
+        when(paperRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> paperController.deletePaper(invalidId));
 
     }
 
@@ -342,16 +342,16 @@ public class PaperControllerTest {
     // byte[] fileData = "Sample PDF content".getBytes();
     // MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf",
     // "application/pdf", fileData);
-    // Session session = new Session();
+    // Paper paper = new Paper();
     // DocumentUtility documentUtility = mock(DocumentUtility.class);
 
-    // // Mock sessionRepository behavior to return the session when findById is
+    // // Mock paperRepository behavior to return the paper when findById is
     // // called with the valid ID
-    // when(sessionRepository.findById(validId)).thenReturn(Optional.of(session));
+    // when(paperRepository.findById(validId)).thenReturn(Optional.of(paper));
     // // Mock documentUtility behavior to return the byte array of the file
     // when(documentUtility.pdfToByte(mockFile)).thenReturn(fileData);
 
-    // ResponseEntity<?> responseEntity = sessionController.uploadPdf(validId,
+    // ResponseEntity<?> responseEntity = paperController.uploadPdf(validId,
     // mockFile);
     // assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     // }
@@ -363,12 +363,12 @@ public class PaperControllerTest {
     // String originalFileName = "trial.pdf";
     // String contentType = "application/pdf";
     // byte[] content = "Sample PDF content".getBytes();
-    // String mockId = "session_id";
+    // String mockId = "paper_id";
 
     // MultipartFile multipartFile = new MockMultipartFile(name, originalFileName,
     // contentType, content);
 
-    // Session mockSession = new Session(
+    // Paper mockPaper = new Paper(
     // "title",
     // "description",
     // "language",
@@ -376,31 +376,31 @@ public class PaperControllerTest {
     // Status.PENDING,
     // new ArrayList<Tag>());
 
-    // when(sessionRepository.findById(mockId)).thenReturn(Optional.of(mockSession));
-    // ResponseEntity<?> response = sessionController.uploadPdf(mockId,
+    // when(paperRepository.findById(mockId)).thenReturn(Optional.of(mockPaper));
+    // ResponseEntity<?> response = paperController.uploadPdf(mockId,
     // multipartFile);
     // assertEquals(HttpStatus.OK, response.getStatusCode());
     // }
 
     @Test
-    public void testUploadPdf_NullSessionId() throws IOException {
+    public void testUploadPdf_NullPaperId() throws IOException {
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf",
                 "Sample PDF content".getBytes());
 
-        ResponseEntity<?> responseEntity = sessionController.uploadPdf(null, mockFile);
+        ResponseEntity<?> responseEntity = paperController.uploadPdf(null, mockFile);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
-    public void testUploadPdf_InvalidSessionId() throws IOException {
+    public void testUploadPdf_InvalidPaperId() throws IOException {
         String invalidId = "invalidId";
         MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf",
                 "Sample PDF content".getBytes());
 
         mock(DocumentUtility.class);
-        when(sessionRepository.findById(invalidId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> sessionController.uploadPdf(invalidId, mockFile));
+        when(paperRepository.findById(invalidId)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> paperController.uploadPdf(invalidId, mockFile));
 
     }
 

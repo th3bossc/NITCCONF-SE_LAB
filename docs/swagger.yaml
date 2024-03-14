@@ -13,13 +13,13 @@ servers:
 - url: https://nitconf-backend.ashyforest-8ec21cce.australiaeast.azurecontainerapps.io
   description: Azure hosted server
 paths:
-  /api/session/{id}:
+  /api/paper/{id}:
     get:
       tags:
-      - session-controller
-      summary: Get Session
-      description: This endpoint is used to get the details of a session
-      operationId: getSession
+      - paper-controller
+      summary: Get Paper
+      description: This endpoint is used to get the details of a paper
+      operationId: getpaper
       parameters:
       - name: id
         in: path
@@ -32,15 +32,15 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/Paper'
       security:
       - Bearer Authentication: []
     put:
       tags:
-      - session-controller
-      summary: Update Session
-      description: This endpoint is used to update the details of a session
-      operationId: updateSession
+      - paper-controller
+      summary: Update Paper
+      description: This endpoint is used to update the details of a paper
+      operationId: updatepaper
       parameters:
       - name: id
         in: path
@@ -51,7 +51,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SessionRequest'
+              $ref: '#/components/schemas/paperRequest'
         required: true
       responses:
         "200":
@@ -59,15 +59,15 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/Paper'
       security:
       - Bearer Authentication: []
     delete:
       tags:
-      - session-controller
-      summary: Delete Session
-      description: This endpoint is used to delete a session
-      operationId: deleteSession
+      - paper-controller
+      summary: Delete Paper
+      description: This endpoint is used to delete a paper
+      operationId: deletepaper
       parameters:
       - name: id
         in: path
@@ -83,12 +83,12 @@ paths:
                 type: string
       security:
       - Bearer Authentication: []
-  /api/session/status/rejected/{id}:
+  /api/paper/status/rejected/{id}:
     put:
       tags:
-      - session-controller
+      - paper-controller
       summary: Update Status to Rejected (extended support)
-      description: This endpoint is used to update the status of a session to REJECTED
+      description: This endpoint is used to update the status of a paper to REJECTED
       operationId: updateStatusToRejected
       parameters:
       - name: id
@@ -105,12 +105,12 @@ paths:
                 type: string
       security:
       - Bearer Authentication: []
-  /api/session/status/accepted/{id}:
+  /api/paper/status/accepted/{id}:
     put:
       tags:
-      - session-controller
+      - paper-controller
       summary: Update Status to Accepted (extended support)
-      description: This endpoint is used to update the status of a session to ACCEPTED
+      description: This endpoint is used to update the status of a paper to ACCEPTED
       operationId: updateStatusToAccepted
       parameters:
       - name: id
@@ -127,12 +127,12 @@ paths:
                 type: string
       security:
       - Bearer Authentication: []
-  /api/session/doc/{id}:
+  /api/paper/doc/{id}:
     get:
       tags:
-      - session-controller
+      - paper-controller
       summary: Get PDF
-      description: This endpoint is used to get the latest pdf file of a session
+      description: This endpoint is used to get the latest pdf file of a paper
       operationId: getDocument
       parameters:
       - name: id
@@ -152,9 +152,9 @@ paths:
       - Bearer Authentication: []
     put:
       tags:
-      - session-controller
+      - paper-controller
       summary: Upload PDF
-      description: This endpoint is used to upload a pdf file to a session
+      description: This endpoint is used to upload a pdf file to a paper
       operationId: uploadPdf
       parameters:
       - name: id
@@ -286,14 +286,14 @@ paths:
                 $ref: '#/components/schemas/Tag'
       security:
       - Bearer Authentication: []
-  /api/session:
+  /api/paper:
     get:
       tags:
-      - session-controller
-      summary: Get All Sessions
-      description: This endpoint is used to get all the sessions of the currently
+      - paper-controller
+      summary: Get All papers
+      description: This endpoint is used to get all the papers of the currently
         logged in user
-      operationId: getAllSessions
+      operationId: getAllpapers
       responses:
         "200":
           description: OK
@@ -302,20 +302,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Session'
+                  $ref: '#/components/schemas/Paper'
       security:
       - Bearer Authentication: []
     post:
       tags:
-      - session-controller
-      summary: New Session
-      description: This endpoint is used to create a new session
-      operationId: newSession
+      - paper-controller
+      summary: New Paper
+      description: This endpoint is used to create a new paper
+      operationId: newpaper
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SessionRequest'
+              $ref: '#/components/schemas/paperRequest'
         required: true
       responses:
         "200":
@@ -323,7 +323,7 @@ paths:
           content:
             '*/*':
               schema:
-                $ref: '#/components/schemas/Session'
+                $ref: '#/components/schemas/Paper'
       security:
       - Bearer Authentication: []
   /api/review/{id}:
@@ -471,9 +471,9 @@ paths:
     get:
       tags:
       - tag-controller
-      summary: Find Sessions
-      description: This endpoint is used to find all the sessions of a tag
-      operationId: FindSessions
+      summary: Find papers
+      description: This endpoint is used to find all the papers of a tag
+      operationId: Findpapers
       parameters:
       - name: id
         in: path
@@ -488,7 +488,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Session'
+                  $ref: '#/components/schemas/Paper'
       security:
       - Bearer Authentication: []
   /api/review/doc/{id}:
@@ -560,7 +560,7 @@ paths:
                 type: string
 components:
   schemas:
-    SessionRequest:
+    paperRequest:
       type: object
       properties:
         title:
@@ -616,7 +616,7 @@ components:
           $ref: '#/components/schemas/User'
         comment:
           type: string
-    Session:
+    Paper:
       type: object
       properties:
         id:
