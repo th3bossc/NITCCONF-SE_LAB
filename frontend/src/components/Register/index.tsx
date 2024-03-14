@@ -8,13 +8,15 @@ import { useAuthContext } from "@/hooks/useAuthContext";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { motion } from "framer-motion";
+import ReactLoading from 'react-loading';
 
 const Register = ({
     setClose,
 }: {
     setClose: () => void
 }) => {
-    const { jwt, logIn } = useAuthContext();
+    const { logIn } = useAuthContext();
+    const [submitted, setSubmitted] = useState(false);
     const [fNameRed, setFNameRed] = useState(false);
     const [lNameRed, setLNameRed] = useState(false);
     const [userRed, setUserRed] = useState(false);
@@ -86,9 +88,10 @@ const Register = ({
         }));
     }
 
-    const submit = async () => {
+    const handleSubmit = async () => {
         if (fNameRed || lNameRed || userRed || passRed || phoneRed)
             return;
+        setSubmitted(true);
         try {
             const { token } = await register(formData);
             logIn(token)
@@ -106,6 +109,7 @@ const Register = ({
                 transition: Flip
             });
         }
+        setSubmitted(false);
     }
 
     return (
@@ -211,9 +215,21 @@ const Register = ({
 
                             <div className="submitButtonContainer mt-5">
                                 <AnimatedButton
-                                    onClick={submit}
+                                    onClick={handleSubmit}
                                 >
-                                    <div className="submitButton">Submit</div>
+                                    <div className="flex items-center justify-center gap-4">
+                                        Submit
+                                        {
+                                            submitted && (
+                                                <ReactLoading
+                                                    type="spin"
+                                                    color="#A276FF"
+                                                    height={30}
+                                                    width={30}
+                                                />
+                                            )
+                                        }
+                                    </div>
                                 </AnimatedButton>
                             </div>
                         </div>

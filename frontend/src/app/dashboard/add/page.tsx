@@ -214,7 +214,7 @@ const AddPaper = () => {
                                         loading && (
                                             <ReactLoading
                                                 type="spin"
-                                                color="#fff"
+                                                color="#A276FF"
                                                 height={30}
                                                 width={30}
                                             />

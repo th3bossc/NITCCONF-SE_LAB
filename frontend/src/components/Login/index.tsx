@@ -9,13 +9,15 @@ import { useRouter } from "next/navigation";
 import { ToastContainer, toast, Flip } from "react-toastify";
 import 'react-toastify/ReactToastify.css';
 import { motion } from "framer-motion";
+import ReactLoading from 'react-loading';
 
 const Login = ({
     setClose,
 }: {
     setClose: () => void
 }) => {
-    const { jwt, logIn } = useAuthContext();
+    const { logIn } = useAuthContext();
+    const [submitted, setSubmitted] = useState(false);
     const [userRed, setUserRed] = useState(false);
     const [passRed, setPassRed] = useState(false);
     const router = useRouter();
@@ -58,6 +60,7 @@ const Login = ({
     }
 
     const handleSubmit = async () => {
+        setSubmitted(true);
         try {
             const { token } = await login(formData);
             logIn(token);
@@ -75,6 +78,7 @@ const Login = ({
                 transition: Flip
             });
         }
+        setSubmitted(false);
     }
 
     const handleResetPassword = async () => {
@@ -151,7 +155,19 @@ const Login = ({
                                 <AnimatedButton
                                     onClick={handleSubmit}
                                 >
-                                    <div className="submitButton">Submit</div>
+                                    <div className="flex items-center justify-center gap-4">
+                                        Submit
+                                        {
+                                            submitted && (
+                                                <ReactLoading
+                                                    type="spin"
+                                                    color="#A276FF"
+                                                    height={30}
+                                                    width={30}
+                                                />
+                                            )
+                                        }
+                                    </div>
                                 </AnimatedButton>
                             </div>
                         </div>
