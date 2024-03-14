@@ -41,3 +41,9 @@ export const sendPasswordEmail = async (body: { email: string }) => {
         return
     await axios.post(`${url}/api/email/reset`, body);
 }
+
+export const resendVerificationEmail = async (body: { email: string }) => {
+    if (!url)
+        return;
+    await axios.post(`${url}/api/email/resend`, body);
+}
