@@ -9,12 +9,36 @@ import warningIcon from '/public/alert.svg';
 import AnimatedButton from "@/components/AnimatedButton";
 import { useState } from "react";
 import EditProfile from "@/components/EditProfile";
+import { resendVerificationEmail } from "@/lib/profile";
 const Profile = () => {
     const { user, papers, logOut } = useAuthContext();
     const [editProfile, setEditProfile] = useState(false);
+
+    const resendEmailHandler = async () => {
+        if (!user)
+            return;
+        try {
+            resendVerificationEmail({
+                email: user?.email,
+            });
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+
     return (
-        <div className="w-full h-screen flex justify-center items-center">
-            <div className="w-full h-full lg:w-[900px] lg:h-[500px] bg-[#d2d2d2] lg:bg-backgroundprimary rounded-lg text-black p-10 pt-32 xl:p-10 relative overflow-hidden z-10 shadow-2xl">
+        <div className="w-full h-screen lg:flex justify-center items-center flex-col gap-5">
+            <div className="w-full lg:w-[900px] h-64 lg:h-10 bg-[#aaaaaa] rounded-lg text-black text-center p-10 pt-32 xl:p-10 relative z-10 shadow-2xl flex flex-col justify-center items-center">
+                <span className="font-semibold text-xl">
+                    A verification link has been sent to your account
+                </span>
+                <span className="font-medium">
+                    Still can&apos;t find the email? <button className="underline text-blue-600" onClick={resendEmailHandler}> Click here </button>
+                </span>
+            </div>
+            <div className="mt-4 lg:mt-0 w-full h-full lg:w-[900px] lg:h-[500px] bg-[#d2d2d2] lg:bg-backgroundprimary rounded-lg text-black p-10 pt-32 xl:p-10 relative overflow-hidden z-10 shadow-2xl">
                 <div className="absolute top-0 left-0 w-full h-full -z-10 hidden lg:block" >
                     <Image src={profileBg} alt="profile-bg" />
                 </div>
@@ -51,7 +75,6 @@ const Profile = () => {
                             !user?.isVerified && (
                                 <span className="text-red-500 ml-2 flex gap-2 items-center">
                                     <Image className="inline" src={warningIcon} alt="warning-icon" height={25} width={25} />
-                                    (Not verified)
                                 </span>
                             )
                         }

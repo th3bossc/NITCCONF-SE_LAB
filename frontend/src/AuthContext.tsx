@@ -38,7 +38,6 @@ export const AuthContextProvider = ({
                 setLoading(false)
                 return;
             }
-            console.log(currentUser);
             router.push('/dashboard/profile');
 
         }

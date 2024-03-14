@@ -17,7 +17,6 @@ const Sidebar = ({
     const pathname = usePathname();
     const router = useRouter();
     const current = pathname.split("/")[2];
-    console.log(papers);
     return (
         <div className={`w-full h-screen bg-backgroundprimary flex flex-col ${oswald.className}`}>
             <div className="font-bold w-full text-center pt-16 text-2xl">
