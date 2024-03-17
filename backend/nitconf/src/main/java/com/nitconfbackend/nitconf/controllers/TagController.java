@@ -57,7 +57,7 @@ public class TagController {
     }
 
     /**
-     * newTAg
+     * newTag
      * creates a new tag with inputted title
      * 
      * @param entity {@link TagRequest}

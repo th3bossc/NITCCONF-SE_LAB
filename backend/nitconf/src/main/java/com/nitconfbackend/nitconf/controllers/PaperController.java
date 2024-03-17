@@ -28,6 +28,7 @@ import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
 import com.nitconfbackend.nitconf.types.PaperRequest;
+import com.nitconfbackend.nitconf.types.TagRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +55,15 @@ public class PaperController {
     @Autowired
     private TagsRepository tagsRepo;
 
+
+    /**
+     * getAllPapers
+     * returns a list of all the papers of logged in user
+     * 
+     * @return List of {@Link Paper}s
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @GetMapping("")
     public ResponseEntity<List<Paper>> getAllPapers() {
 
@@ -64,6 +74,15 @@ public class PaperController {
         return ResponseEntity.ok(papers);
     }
 
+    /**
+     * newPaper
+     * Creates and returns a new paper with inputted title and tag list
+     * 
+     * @param entity {@link PaperRequest}
+     * @return {@Link Paper}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PostMapping("")
     public ResponseEntity<Paper> newPaper(@RequestBody PaperRequest entity) {
         if (entity.title == null || entity.language == null || entity.description == null || entity.level == null
@@ -101,6 +120,15 @@ public class PaperController {
         return ResponseEntity.ok(paper);
     }
 
+    /**
+     * updatePaper
+     * Updates paper details with inputted information
+     * 
+     * @param entity {@link PaperRequest}
+     * @return {@Link Paper}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Paper> updatePaper(@PathVariable String id, @RequestBody PaperRequest entity) {
         if (id == null)
@@ -130,6 +158,14 @@ public class PaperController {
         return ResponseEntity.ok(paper);
     }
 
+    /**
+     * uploadPdf
+     *  Uploads the PDF file to the paper with given id
+     * 
+     * @return Response: Success message
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
+     */
     @PutMapping("/doc/{id}")
     public ResponseEntity<?> uploadPdf(@PathVariable String id, @RequestParam("file") MultipartFile file) {
         if (id == null)
@@ -144,7 +180,6 @@ public class PaperController {
                     "New Submission",
                     data,
                     allDocs.size() + 1
-            // session
             );
             docRepo.save(newDoc);
             paper.getDocumentVersions().add(newDoc);
@@ -157,6 +192,14 @@ public class PaperController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * getDocument
+     * Returns the latest document of the given paper id
+     * 
+     * @return {@Link Paper}
+     * @since 1.0
+     * @author <a href="https://th3bossc.github.io/Portfolio"> Diljith P D</a>
+     */
     @GetMapping("/doc/{id}")
     public ResponseEntity<Resource> getDocument(@PathVariable String id) {
         if (id == null)
@@ -173,6 +216,14 @@ public class PaperController {
                 .body(resource);
     }
 
+
+    /**
+     * getPaper
+     * Returns the paper with given id     
+     * @return {@Link Paper}
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Paper> getPaper(@PathVariable String id) {
         if (id == null)
@@ -181,6 +232,13 @@ public class PaperController {
         return ResponseEntity.ok(paper);
     }
 
+    /**
+     * updateStatusToAccepted
+     * Sets the status of paper with given id as ACCEPTED    
+     * @return Response: Success message
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PutMapping("/status/accepted/{id}")
     public ResponseEntity<String> updateStatusToAccepted(@PathVariable String id) {
         if (id == null)
@@ -190,6 +248,13 @@ public class PaperController {
         return ResponseEntity.ok("UPDATED STATUS TO ACCEPTED");
     }
 
+    /**
+     * updateStatusToRejected
+     * Sets the status of paper with given id as REJECTED    
+     * @return Response: Success message
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @PutMapping("/status/rejected/{id}")
     public ResponseEntity<String> updateStatusToRejected(@PathVariable String id) {
         if (id == null)
@@ -199,6 +264,13 @@ public class PaperController {
         return ResponseEntity.ok("UPDATED STATUS TO REJECTED");
     }
 
+    /**
+     * deletePaper
+     * Deletes the paper with given id     
+     * @return Response: Success message
+     * @since 1.0
+     * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePaper(@PathVariable String id) {
         if (id == null)
