@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.nitconfbackend.nitconf.models.Paper;
@@ -71,7 +72,13 @@ public class TagControllerTest {
         assertThrows(Exception.class, () -> {
             tagController.FindSessions(title1);
         });
+    }
 
+    @Test
+    public void testFindSessions_nullId() {
+        String id = null;
+        ResponseEntity<List<Paper>> responseEntity = tagController.FindSessions(id);
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test

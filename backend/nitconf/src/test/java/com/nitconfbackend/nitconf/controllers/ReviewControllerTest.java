@@ -153,7 +153,6 @@ public class ReviewControllerTest {
     }
 
     @Test
-
     public void testCreateReview_InvalidRole() {
 
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -172,6 +171,22 @@ public class ReviewControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, reviewController.createReview(reviewRequest, documentId).getStatusCode());
 
+    }
+
+    @Test
+    public void testCreateReview_nullId() {
+        ReviewRequest reviewRequest = new ReviewRequest();
+        reviewRequest.setComment("Test comment");
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
+
+        ResponseEntity<String> responseEntity = reviewController.createReview(reviewRequest, null);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
 }

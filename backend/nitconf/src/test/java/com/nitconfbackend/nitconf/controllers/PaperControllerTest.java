@@ -131,6 +131,68 @@ public class PaperControllerTest {
     }
 
     @Test
+    public void testNewPaper_invalidTags() {
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+        PaperRequest request = new PaperRequest();
+        request.setTitle("Test Title");
+        request.setDescription("Test Description");
+        request.setLevel(Level.INTERMEDIATE);
+        request.setStatus(Status.PENDING);
+        request.setLanguage("Malayalam");
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        request.setTags(tags);
+
+        User mockUser = new User();
+        mockUser.setEmail("test@example.com");
+        mockUser.papers = new ArrayList<Paper>();
+
+        Tag mockTag = new Tag("Java");
+        List<Tag> mockTags = new ArrayList<>();
+        mockTags.add(mockTag);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(mockUser));
+        when(tagsRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> paperController.newPaper(request));
+    }
+
+    @Test
+    public void testNewPaper_invalidUser() {
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        SecurityContextHolder.setContext(securityContext);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("test@example.com");
+        PaperRequest request = new PaperRequest();
+        request.setTitle("Test Title");
+        request.setDescription("Test Description");
+        request.setLevel(Level.INTERMEDIATE);
+        request.setStatus(Status.PENDING);
+        request.setLanguage("Malayalam");
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        request.setTags(tags);
+
+        User mockUser = new User();
+        mockUser.setEmail("test@example.com");
+        mockUser.papers = new ArrayList<Paper>();
+
+        Tag mockTag = new Tag("Java");
+        List<Tag> mockTags = new ArrayList<>();
+        mockTags.add(mockTag);
+
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
+
+        assertThrows(NoSuchElementException.class, () -> paperController.newPaper(request));
+    }
+
+    @Test
     public void testUpdatePaper_ValidRequest() {
 
         SecurityContext securityContext = mock(SecurityContext.class);
@@ -184,6 +246,57 @@ public class PaperControllerTest {
 
         assertThrows(NoSuchElementException.class,
                 () -> paperController.updatePaper("wrongPaperId", paperRequest));
+    }
+
+    @Test
+    public void testUpdatePaper_emptyLanguage() {
+        String paperId = "1";
+        PaperRequest request = new PaperRequest();
+        request.setTitle("Updated Title");
+        request.setDescription("Updated Description");
+        request.setLevel(Level.ADVANCED);
+        request.setStatus(Status.PENDING);
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        request.setTags(tags);
+
+        Paper mockPaper = new Paper();
+        mockPaper.setId(paperId);
+
+        Tag mockTag = new Tag("Java");
+        List<Tag> mockTags = new ArrayList<>();
+        mockTags.add(mockTag);
+
+        when(paperRepository.findById(anyString())).thenReturn(Optional.of(mockPaper));
+        when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
+
+        assertEquals(HttpStatus.BAD_REQUEST, paperController.updatePaper(paperId, request).getStatusCode());
+    }
+
+    @Test
+    public void testUpdatePaper_invalidTags() {
+        String paperId = "1";
+        PaperRequest request = new PaperRequest();
+        request.setTitle("Updated Title");
+        request.setDescription("Updated Description");
+        request.setLanguage("Updated Language");
+        request.setLevel(Level.ADVANCED);
+        request.setStatus(Status.PENDING);
+        List<String> tags = new ArrayList<>();
+        tags.add("Java");
+        request.setTags(tags);
+
+        Paper mockPaper = new Paper();
+        mockPaper.setId(paperId);
+
+        Tag mockTag = new Tag("Java");
+        List<Tag> mockTags = new ArrayList<>();
+        mockTags.add(mockTag);
+
+        when(paperRepository.findById(anyString())).thenReturn(Optional.of(mockPaper));
+        when(tagsRepository.findById(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> paperController.updatePaper(paperId, request));
     }
 
     @Test

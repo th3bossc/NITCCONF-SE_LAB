@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthenticationService service;
 
     @Autowired
-    private UserRepository userRepo;
+    private final UserRepository userRepo;
 
     /**
      * registerUser
