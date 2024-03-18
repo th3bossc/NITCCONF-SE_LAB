@@ -28,7 +28,6 @@ import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
 import com.nitconfbackend.nitconf.service.DocumentUtility;
 import com.nitconfbackend.nitconf.types.PaperRequest;
-import com.nitconfbackend.nitconf.types.TagRequest;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
