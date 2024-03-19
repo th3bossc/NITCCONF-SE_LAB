@@ -25,11 +25,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Status;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
+import com.jayway.jsonpath.internal.Path;
 import com.nitconfbackend.nitconf.models.Level;
 
 import com.nitconfbackend.nitconf.repositories.PaperRepository;
@@ -508,7 +510,7 @@ public class PaperControllerTest {
 
     // @Test
     // public void testUploadPdf() throws IOException {
-    // // Path path = Paths.get("src/test/java/com/nitconfbackend/trial.pdf");
+    // Path path = Paths.get("src/test/java/com/nitconfbackend/trial.pdf");
     // String name = "trial.pdf";
     // String originalFileName = "trial.pdf";
     // String contentType = "application/pdf";
@@ -551,6 +553,27 @@ public class PaperControllerTest {
         mock(DocumentUtility.class);
         when(paperRepository.findById(invalidId)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> paperController.uploadPdf(invalidId, mockFile));
+
+    }
+
+    @Test
+    public void testUploadPdf_DocVersionIsNull() throws IOException {
+        String paperId= "paperId";
+        Paper mockPaper = new Paper();
+        mockPaper.setId(paperId);
+
+        MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf", "application/pdf",
+                "Sample PDF content".getBytes());
+
+        Tag mockTag = new Tag("Java");
+        List<Tag> mockTags = new ArrayList<>();
+        mockTags.add(mockTag);
+        when(paperRepository.findById(anyString())).thenReturn(Optional.of(mockPaper));
+        when(tagsRepository.findById(anyString())).thenReturn(Optional.of(mockTag));
+
+        ResponseEntity<?> response = paperController.uploadPdf(paperId, mockFile);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
     }
 
