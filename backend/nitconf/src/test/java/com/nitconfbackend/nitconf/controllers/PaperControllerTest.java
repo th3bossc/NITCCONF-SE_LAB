@@ -443,6 +443,22 @@ public class PaperControllerTest {
     }
 
     @Test
+    public void testGetDocument_IdNull() {
+       
+        ResponseEntity<?> responseEntity = paperController.getDocument(null);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+
+    }
+
+    @Test
+    public void testGetDocument_InvalidId() {
+        
+        String invalidId = "invalidId";
+        assertThrows(NoSuchElementException.class, () -> paperController.getDocument(invalidId));
+    }
+
+    @Test
     public void testDeletePaper_ValidId() {
         String validId = "validId";
         Paper paper = new Paper();
