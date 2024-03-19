@@ -8,6 +8,8 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -509,8 +511,8 @@ public class PaperControllerTest {
     // }
 
     // @Test
-    // public void testUploadPdf() throws IOException {
-    // Path path = Path.get("src/test/java/com/nitconfbackend/trial.pdf");
+    // public void testUploadPdf(){
+    // java.nio.file.Path path = Paths.get("src/test/java/com/nitconfbackend/trial.pdf");
     // String name = "trial.pdf";
     // String originalFileName = "trial.pdf";
     // String contentType = "application/pdf";
@@ -577,42 +579,43 @@ public class PaperControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
     }
+    // @Test
+    // public void testUploadPdf_Success() throws Exception {
+        
+    //     DocumentUtility documentUtility = mock(DocumentUtility.class);
+        
+    //     Paper paper = new Paper("Test Paper", "Test Description", "English", Level.BEGINNER, Status.PENDING, new ArrayList<>());
+    //     when(paperRepository.findById(anyString())).thenReturn(java.util.Optional.of(paper));
+
+    //     String mockId = "paper_id";
+    //     Paper mockPaper = new Paper(
+    //         "title",
+    //         "description",
+    //         "language",
+    //         Level.BEGINNER,
+    //         Status.PENDING,
+    //         new ArrayList<Tag>());
+        
+    //         when(paperRepository.findById(mockId)).thenReturn(Optional.of(mockPaper));
+    //     String filePath = "../../../trial.pdf";
+       
+    //     MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", Files.readAllBytes(Paths.get(filePath)));
+    //     when(documentUtility.pdfToByte(any())).thenReturn(mockMultipartFile.getBytes());
+
+    //     // Call uploadPdf method with valid paper id and mock MultipartFile
+    //     ResponseEntity<?> responseEntity = paperController.uploadPdf(mockId, mockMultipartFile);
+
+    //     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        
+
+    //     //assertEquals(1, paper.getDocumentVersions().size());
+    // }
+
 
 }
 
 
 
 
-    // @Test
-    // public void testUploadPdf_Success() throws Exception {
-    //     // Mock PaperRepository
-    //     PaperRepository paperRepository = mock(PaperRepository.class);
-    //     // Mock DocumentVersionRepository
-    //     DocumentVersionRepository documentVersionRepository = mock(DocumentVersionRepository.class);
-    //     // Mock DocumentUtility
-    //     DocumentUtility documentUtility = mock(DocumentUtility.class);
-    //     // Create PaperController instance and inject mocks
-    //     PaperController paperController = new PaperController(paperRepository, documentVersionRepository, documentUtility);
-
-    //     // Mock Paper instance
-    //     Paper paper = new Paper("Test Paper", "Test Description", "English", Level.BEGINNER, Status.DRAFT, new ArrayList<>());
-    //     when(paperRepository.findById(anyString())).thenReturn(java.util.Optional.of(paper));
-
-    //     // Mock MultipartFile
-    //     String filePath = "path/to/your/pdf/file.pdf";
-    //     MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "file.pdf", MediaType.APPLICATION_PDF_VALUE, Files.readAllBytes(Paths.get(filePath)));
-    //     when(documentUtility.pdfToByte(any())).thenReturn(mockMultipartFile.getBytes());
-
-    //     // Call uploadPdf method with valid paper id and mock MultipartFile
-    //     ResponseEntity<?> responseEntity = paperController.uploadPdf("paperId", mockMultipartFile);
-
-    //     // Verify that ResponseEntity returns success status
-    //     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-    //     // Verify that save method of DocumentVersionRepository is called once
-    //     verify(documentVersionRepository, times(1)).save(any());
-    //     // Verify that documentVersions list of the paper is updated with the new document version
-    //     assertEquals(1, paper.getDocumentVersions().size());
-    // }
-
+    
 
