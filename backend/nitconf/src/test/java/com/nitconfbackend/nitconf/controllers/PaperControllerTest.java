@@ -300,6 +300,25 @@ public class PaperControllerTest {
     }
 
     @Test
+    public void testUpdatePaper_NullId() {
+       
+        PaperRequest paperRequest = new PaperRequest();
+        paperRequest.setTitle("Sample Title");
+        paperRequest.setDescription("Sample Description");
+        paperRequest.setLanguage("English");
+        paperRequest.setLevel(Level.INTERMEDIATE);
+        paperRequest.setStatus(Status.PENDING);
+        paperRequest.setTags(new ArrayList<String>());
+
+        // Call the updatePaper method with null id
+        ResponseEntity<Paper> responseEntity = paperController.updatePaper(null, paperRequest);
+        
+        // Verify that ResponseEntity.notFound() is returned
+        assertEquals(ResponseEntity.notFound().build(), responseEntity);
+        
+    }
+
+    @Test
     public void testGetAllPapers() {
         String userEmail = "test@example.com";
 
@@ -325,6 +344,8 @@ public class PaperControllerTest {
         assertEquals(2, responseEntity.getBody().size());
 
     }
+
+
 
     @Test
     public void testGetAllPapers_WrongEmail() {
