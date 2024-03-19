@@ -175,6 +175,7 @@ public class PaperController {
             List<DocumentVersion> allDocs = paper.getDocumentVersions();
             if (data == null)
                 return ResponseEntity.notFound().build();
+                
             DocumentVersion newDoc = new DocumentVersion(
                     "New Submission",
                     data,
