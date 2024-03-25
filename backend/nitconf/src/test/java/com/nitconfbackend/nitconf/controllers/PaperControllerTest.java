@@ -4,12 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -21,7 +20,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.Authentication;
-
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -33,9 +33,9 @@ import com.nitconfbackend.nitconf.models.Paper;
 import com.nitconfbackend.nitconf.models.Status;
 import com.nitconfbackend.nitconf.models.Tag;
 import com.nitconfbackend.nitconf.models.User;
-import com.jayway.jsonpath.internal.Path;
+import com.nitconfbackend.nitconf.models.DocumentVersion;
 import com.nitconfbackend.nitconf.models.Level;
-
+import com.nitconfbackend.nitconf.repositories.DocumentVersionRepository;
 import com.nitconfbackend.nitconf.repositories.PaperRepository;
 import com.nitconfbackend.nitconf.repositories.TagsRepository;
 import com.nitconfbackend.nitconf.repositories.UserRepository;
@@ -52,6 +52,9 @@ public class PaperControllerTest {
 
     @Mock
     private TagsRepository tagsRepository;
+
+    @Mock
+    private DocumentVersionRepository docRepository;
 
     @Mock
     private DocumentUtility documentUtility;
@@ -305,7 +308,7 @@ public class PaperControllerTest {
 
     @Test
     public void testUpdatePaper_NullId() {
-       
+
         PaperRequest paperRequest = new PaperRequest();
         paperRequest.setTitle("Sample Title");
         paperRequest.setDescription("Sample Description");
@@ -316,10 +319,10 @@ public class PaperControllerTest {
 
         // Call the updatePaper method with null id
         ResponseEntity<Paper> responseEntity = paperController.updatePaper(null, paperRequest);
-        
+
         // Verify that ResponseEntity.notFound() is returned
         assertEquals(ResponseEntity.notFound().build(), responseEntity);
-        
+
     }
 
     @Test
@@ -348,8 +351,6 @@ public class PaperControllerTest {
         assertEquals(2, responseEntity.getBody().size());
 
     }
-
-
 
     @Test
     public void testGetAllPapers_WrongEmail() {
@@ -447,8 +448,57 @@ public class PaperControllerTest {
     }
 
     @Test
+    public void testGetDocument() {
+        String id = "paperId";
+        Paper paper = new Paper(
+                "title",
+                "description",
+                "language",
+                Level.BEGINNER,
+                Status.PENDING,
+                new ArrayList<Tag>());
+
+        DocumentVersion sampleDoc = new DocumentVersion(
+                "changesDesc",
+                "file".getBytes(),
+                1
+
+        );
+
+        paper.getDocumentVersions().add(sampleDoc);
+
+        when(paperRepository.findById(id)).thenReturn(Optional.of(paper));
+        when(documentUtility.downloadFile(paper.getDocumentVersions()))
+                .thenReturn(new ByteArrayResource(sampleDoc.getFile()));
+
+        ResponseEntity<Resource> response = paperController.getDocument(id);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    public void testGetDocument_DocsIsNull() {
+        String id = "paperId";
+        Paper paper = new Paper(
+                "title",
+                "description",
+                "language",
+                Level.BEGINNER,
+                Status.PENDING,
+                new ArrayList<Tag>());
+
+        when(paperRepository.findById(id)).thenReturn(Optional.of(paper));
+        when(documentUtility.downloadFile(paper.getDocumentVersions())).thenReturn(null);
+
+        ResponseEntity<Resource> response = paperController.getDocument(id);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
     public void testGetDocument_IdNull() {
-       
+
         ResponseEntity<?> responseEntity = paperController.getDocument(null);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -457,7 +507,7 @@ public class PaperControllerTest {
 
     @Test
     public void testGetDocument_InvalidId() {
-        
+
         String invalidId = "invalidId";
         assertThrows(NoSuchElementException.class, () -> paperController.getDocument(invalidId));
     }
@@ -487,55 +537,30 @@ public class PaperControllerTest {
 
         when(paperRepository.findById(invalidId)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> paperController.deletePaper(invalidId));
-
     }
 
-    // @Test
-    // public void testUploadPdf_nullFile_FileUploaded() throws IOException {
-    // String validId = "validId";
-    // byte[] fileData = "Sample PDF content".getBytes();
-    // MockMultipartFile mockFile = new MockMultipartFile("file", "test.pdf",
-    // "application/pdf", fileData);
-    // Paper paper = new Paper();
-    // DocumentUtility documentUtility = mock(DocumentUtility.class);
+    @Test
+    public void testUploadPdf() throws Exception {
+        String id = "paperId";
+        byte[] pdfData = "PDF content".getBytes();
+        MockMultipartFile multipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", pdfData);
+        Paper paper = new Paper(
+                "title",
+                "description",
+                "language",
+                Level.BEGINNER,
+                Status.PENDING,
+                new ArrayList<Tag>());
 
-    // // Mock paperRepository behavior to return the paper when findById is
-    // // called with the valid ID
-    // when(paperRepository.findById(validId)).thenReturn(Optional.of(paper));
-    // // Mock documentUtility behavior to return the byte array of the file
-    // when(documentUtility.pdfToByte(mockFile)).thenReturn(fileData);
+        when(paperRepository.findById(eq(id))).thenReturn(Optional.of(paper));
+        when(documentUtility.pdfToByte(any(MultipartFile.class))).thenReturn(pdfData);
+        when(paperRepository.save(any(Paper.class))).thenReturn(paper);
+        when(docRepository.save(any(DocumentVersion.class))).thenReturn(new DocumentVersion());
 
-    // ResponseEntity<?> responseEntity = paperController.uploadPdf(validId,
-    // mockFile);
-    // assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-    // }
+        ResponseEntity<?> response = paperController.uploadPdf(id, multipartFile);
 
-    // @Test
-    // public void testUploadPdf(){
-    // java.nio.file.Path path = Paths.get("src/test/java/com/nitconfbackend/trial.pdf");
-    // String name = "trial.pdf";
-    // String originalFileName = "trial.pdf";
-    // String contentType = "application/pdf";
-    // byte[] content = "Sample PDF content".getBytes();
-    // String mockId = "paper_id";
-
-    // MultipartFile multipartFile = new MockMultipartFile(name, originalFileName,
-    // contentType, content);
-
-    // Paper mockPaper = new Paper(
-    // "title",
-    // "description",
-    // "language",
-    // Level.BEGINNER,
-    // Status.PENDING,
-    // new ArrayList<Tag>());
-
-    // when(paperRepository.findById(mockId)).thenReturn(Optional.of(mockPaper));
-    // ResponseEntity<?> response = paperController.uploadPdf(mockId,
-    // multipartFile);
-    // assertEquals(HttpStatus.OK, response.getStatusCode());
-    // }
-
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
 
     @Test
     public void testUploadPdf_NullPaperId() throws IOException {
@@ -561,7 +586,7 @@ public class PaperControllerTest {
 
     @Test
     public void testUploadPdf_DocVersionIsNull() throws IOException {
-        String paperId= "paperId";
+        String paperId = "paperId";
         Paper mockPaper = new Paper();
         mockPaper.setId(paperId);
 
@@ -577,45 +602,5 @@ public class PaperControllerTest {
         ResponseEntity<?> response = paperController.uploadPdf(paperId, mockFile);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-
     }
-    // @Test
-    // public void testUploadPdf_Success() throws Exception {
-        
-    //     DocumentUtility documentUtility = mock(DocumentUtility.class);
-        
-    //     Paper paper = new Paper("Test Paper", "Test Description", "English", Level.BEGINNER, Status.PENDING, new ArrayList<>());
-    //     when(paperRepository.findById(anyString())).thenReturn(java.util.Optional.of(paper));
-
-    //     String mockId = "paper_id";
-    //     Paper mockPaper = new Paper(
-    //         "title",
-    //         "description",
-    //         "language",
-    //         Level.BEGINNER,
-    //         Status.PENDING,
-    //         new ArrayList<Tag>());
-        
-    //         when(paperRepository.findById(mockId)).thenReturn(Optional.of(mockPaper));
-    //     String filePath = "../../../trial.pdf";
-       
-    //     MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test.pdf", "application/pdf", Files.readAllBytes(Paths.get(filePath)));
-    //     when(documentUtility.pdfToByte(any())).thenReturn(mockMultipartFile.getBytes());
-
-    //     // Call uploadPdf method with valid paper id and mock MultipartFile
-    //     ResponseEntity<?> responseEntity = paperController.uploadPdf(mockId, mockMultipartFile);
-
-    //     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        
-
-    //     //assertEquals(1, paper.getDocumentVersions().size());
-    // }
-
-
 }
-
-
-
-
-    
-

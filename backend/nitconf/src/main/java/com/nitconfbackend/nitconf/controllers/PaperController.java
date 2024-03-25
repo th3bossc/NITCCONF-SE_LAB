@@ -54,7 +54,6 @@ public class PaperController {
     @Autowired
     private TagsRepository tagsRepo;
 
-
     /**
      * getAllPapers
      * returns a list of all the papers of logged in user
@@ -159,7 +158,7 @@ public class PaperController {
 
     /**
      * uploadPdf
-     *  Uploads the PDF file to the paper with given id
+     * Uploads the PDF file to the paper with given id
      * 
      * @return Response: Success message
      * @since 1.0
@@ -175,12 +174,11 @@ public class PaperController {
             List<DocumentVersion> allDocs = paper.getDocumentVersions();
             if (data == null)
                 return ResponseEntity.notFound().build();
-                
+
             DocumentVersion newDoc = new DocumentVersion(
                     "New Submission",
                     data,
-                    allDocs.size() + 1
-            );
+                    allDocs.size() + 1);
             docRepo.save(newDoc);
             paper.getDocumentVersions().add(newDoc);
             paperRepository.save(paper);
@@ -216,10 +214,10 @@ public class PaperController {
                 .body(resource);
     }
 
-
     /**
      * getPaper
-     * Returns the paper with given id     
+     * Returns the paper with given id
+     * 
      * @return {@Link Paper}
      * @since 1.0
      * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
@@ -234,7 +232,8 @@ public class PaperController {
 
     /**
      * updateStatusToAccepted
-     * Sets the status of paper with given id as ACCEPTED    
+     * Sets the status of paper with given id as ACCEPTED
+     * 
      * @return Response: Success message
      * @since 1.0
      * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
@@ -250,7 +249,8 @@ public class PaperController {
 
     /**
      * updateStatusToRejected
-     * Sets the status of paper with given id as REJECTED    
+     * Sets the status of paper with given id as REJECTED
+     * 
      * @return Response: Success message
      * @since 1.0
      * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
@@ -266,7 +266,8 @@ public class PaperController {
 
     /**
      * deletePaper
-     * Deletes the paper with given id     
+     * Deletes the paper with given id
+     * 
      * @return Response: Success message
      * @since 1.0
      * @author <a href="https://github.com/Sreeshu123"> Sreeshma Sangesh </a>
@@ -276,8 +277,7 @@ public class PaperController {
         if (id == null)
             return ResponseEntity.notFound().build();
         Paper paper = paperRepository.findById(id).orElseThrow();
-        if (paper != null)
-            paperRepository.delete(paper);
+        paperRepository.delete(paper);
         return ResponseEntity.ok("DELETED SESSION");
     }
 
